@@ -1,0 +1,309 @@
+#! /usr/bin/env python
+
+###################################################################
+##								 ##
+## Name: TWrate.py						 ##
+## Author: Kevin Nash 						 ##
+## Date: 5/28/2015						 ##
+## Purpose: This program creates the numerator and denominator 	 ##
+##          used by TWTrigger_Maker.py to create trigger  	 ##
+##          Efficiency curves.					 ##
+##								 ##
+###################################################################
+
+import os
+import glob
+import math
+from math import sqrt,exp
+import ROOT
+from ROOT import std,ROOT,TFile,TLorentzVector,TMath,gROOT, TF1,TH1F,TH1D,TH2F,TH2D
+from ROOT import TVector
+from ROOT import TFormula
+
+import sys
+from DataFormats.FWLite import Events, Handle
+from optparse import OptionParser
+from array import *
+
+parser = OptionParser()
+
+parser.add_option('-s', '--set', metavar='F', type='string', action='store',
+                  default	=	'data',
+                  dest		=	'set',
+                  help		=	'dataset (ie data,ttbar etc)')
+parser.add_option('-u', '--ptreweight', metavar='F', type='string', action='store',
+                  default	=	'none',
+                  dest		=	'ptreweight',
+                  help		=	'on or off')
+parser.add_option('-S', '--split', metavar='F', type='string', action='store',
+                  default	=	'file',
+                  dest		=	'split',
+                  help		=	'split by event of file')
+
+parser.add_option('-n', '--num', metavar='F', type='string', action='store',
+                  default	=	'all',
+                  dest		=	'num',
+                  help		=	'job number')
+parser.add_option('-j', '--jobs', metavar='F', type='string', action='store',
+                  default	=	'1',
+                  dest		=	'jobs',
+                  help		=	'number of jobs')
+parser.add_option('-g', '--grid', metavar='F', type='string', action='store',
+                  default	=	'off',
+                  dest		=	'grid',
+                  help		=	'running on grid off or on')
+parser.add_option('-b', '--bx', metavar='F', type='string', action='store',
+                  default	=	'25ns',
+                  dest		=	'bx',
+                  help		=	'bunch crossing 50ns or 25ns')
+
+
+
+(options, args) = parser.parse_args()
+
+
+gROOT.Macro("rootlogon.C")
+
+
+import Bstar_Functions	
+from Bstar_Functions import *
+
+#Load up cut values based on what selection we want to run 
+Cuts = LoadCuts("default")
+wpt = Cuts['wpt']
+tpt = Cuts['tpt']
+dy = Cuts['dy']
+tmass = Cuts['tmass']
+nsubjets = Cuts['nsubjets']
+tau32 = Cuts['tau32']
+minmass = Cuts['minmass']
+sjbtag = Cuts['sjbtag']
+wmass = Cuts['wmass']
+eta1 = Cuts['eta1']
+eta2 = Cuts['eta2']
+
+
+
+
+print "Options summary"
+print "=================="
+for  opt,value in options.__dict__.items():
+	#print str(option)+ ": " + str(options[option]) 
+	print str(opt) +': '+ str(value)
+print "=================="
+print ""
+
+#If running on the grid we access the script within a tarred directory
+di = ""
+if options.grid == 'on':
+	di = "tardir/"
+	sys.path.insert(0, 'tardir/')
+
+
+#For large datasets we need to parallelize the processing
+jobs=int(options.jobs)
+if jobs != 1:
+	num=int(options.num)
+	jobs=int(options.jobs)
+	print "Running over " +str(jobs)+ " jobs"
+	print "This will process job " +str(num)
+else:
+	print "Running over all events"
+
+
+#Based on what set we want to analyze, we find all Ntuple root files 
+files = Load_Ntuples(options.set,options.bx)
+jobiter = 0
+splitfiles = []
+# We select all the events:    
+if jobs != 1 and options.split=="file":
+    for ifile in range(1,len(files)+1):
+    	if (ifile-1) % jobs == 0:
+		jobiter+=1
+	count_index = ifile  - (jobiter-1)*jobs
+	if count_index==num:
+		splitfiles.append(files[ifile-1])
+
+    events = Events(splitfiles)
+if options.split=="event" or jobs == 1:	  
+	events = Events(files)
+print "Event array created"
+#Here we load up handles and labels.
+#These are used to grab entries from the Ntuples.
+#To see all the current types in an Ntuple use edmDumpEventContent /PathtoNtuple/Ntuple.root
+
+AK8HL = Initlv("jetsAK8")
+	
+BDiscHandle 	= 	Handle (  "vector<float>"  )
+BDiscLabel  	= 	( "jetsAK8" , "jetAK8CSV")
+
+TbitHandle 	= 	Handle (  "vector<float>"  )
+TbitLabel  	= 	( "TriggerUserData" , "triggerBitTree")
+
+
+TstrHandle 	= 	Handle (  "vector<string>"  )
+TstrLabel  	= 	( "TriggerUserData" , "triggerNameTree")
+
+TpsHandle 	= 	Handle (  "vector<int>"  )
+TpsLabel  	= 	( "TriggerUserData" , "triggerPrescaleTree")
+
+#minmassHandle 	= 	Handle (  "vector<float> "  )
+#minmassLabel  	= 	( "jetsAK8" , "jetAK8minmass")
+
+#nSubjetsHandle 	= 	Handle (  "vector<float> "  )
+#nSubjetsLabel  	= 	( "jetsAK8" , "jetAK8nSubJets")
+
+
+softDropMassHandle 	= 	Handle (  "vector<float> "  )
+softDropMassLabel  	= 	( "jetsAK8" , "jetAK8softDropMass")
+
+tau1Handle 	= 	Handle (  "vector<float> "  )
+tau1Label  	= 	( "jetsAK8" , "jetAK8tau1")
+
+tau2Handle 	= 	Handle (  "vector<float> "  )
+tau2Label  	= 	( "jetsAK8" , "jetAK8tau2")
+
+tau3Handle 	= 	Handle (  "vector<float> "  )
+tau3Label  	= 	( "jetsAK8" , "jetAK8tau3")
+
+topMassHandle 	= 	Handle (  "vector<float> "  )
+topMassLabel  	= 	( "jetsAK8" , "jetAK8topMass")
+
+subjetsCSVHandle 	= 	Handle (  "vector<float> "  )
+subjetsCSVLabel  	= 	( "subjetsCmsTopTag" , "subjetCmsTopTagCSV")
+
+subjets0indexHandle 	= 	Handle (  "vector<float> "  )
+subjets0indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex0")
+
+subjets1indexHandle 	= 	Handle (  "vector<float> "  )
+subjets1indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex1")
+
+subjets2indexHandle 	= 	Handle (  "vector<float> "  )
+subjets2indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex2")
+
+subjets3indexHandle 	= 	Handle (  "vector<float> "  )
+subjets3indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex3")
+
+
+puHandle    	= 	Handle("int")
+puLabel     	= 	(  "eventUserData", "puNtrueInt" )
+
+
+
+
+npvHandle = Handle( "vector<int>" )
+npvLabel = ( "eventUserData", "puNInt" )
+#---------------------------------------------------------------------------------------------------------------------#
+
+#Create the output file
+if jobs != 1:
+	f = TFile( "TWPileup"+options.set+"_job"+options.num+"of"+options.jobs+".root", "recreate" )
+else:
+	f = TFile( "TWPileup"+options.set+".root", "recreate" )
+
+
+
+
+print "Creating histograms"
+
+#Define Histograms
+f.cd()
+#---------------------------------------------------------------------------------------------------------------------#
+
+
+
+npvtruehistUW	    = ROOT.TH1F("npvtruehistUW",     "mass W' in b+1",     	  	      80, 0, 80 )
+npvtruehistUW.Sumw2()
+
+npvhistUW	    = ROOT.TH1F("npvhistUW",     "mass W' in b+1",     	  	      80, 0, 80 )
+npvhist	    = ROOT.TH1F("npvhist",     "mass W' in b+1",     	  	      80, 0, 80 )
+
+npvhistUW.Sumw2()
+npvhist.Sumw2()
+
+#npvVnsubjets 	    = ROOT.TH2F("npv vs nsubjets",     "npv vs nsubjets",     	  	      50, 0, 50 , 4 , 1 , 5)
+#npvVminmass 	    = ROOT.TH2F("npv vs minmass",     "npv vs minmass",     	  	      50, 0, 50 , 50 , 0 , 250)
+npvVtop 	    = ROOT.TH2F("npv vs top mass",     "npv vs top mass",     	  	      50, 0, 50 , 130 , 0 , 650)
+npvVbtag		    = ROOT.TH2F("npv vs b tag",     "npv vs b tag",     	  	      50, 0, 50 , 25 , 0 , 1)
+npv_SUB 	    = ROOT.TProfile("npv_sub",     "npv_sub",     	  	      50, 0, 50, 1, 5)
+npv_MIN 	    = ROOT.TProfile("npv_min",     "npv_min",    	  	      50, 0, 50, 0, 250)
+npv_TOP 	    = ROOT.TProfile("npv_top",     "npv_top",     	  	      50, 0, 50, 0, 650)
+npv_TAG 	    = ROOT.TProfile("npv_tag",     "npv_tag",     	  	      50, 0, 50, 0, 1)
+
+#---------------------------------------------------------------------------------------------------------------------#
+
+# loop over events
+#---------------------------------------------------------------------------------------------------------------------#
+
+count = 0
+
+print "Start looping"
+#initialize the ttree variables
+totevents = events.size()
+print str(totevents)  +  ' Events total'
+PFIRST = True
+for event in events:
+    count	= 	count + 1
+
+    if count % 100000 == 0 :
+      print  '--------- Processing Event ' + str(count) +'   -- percent complete ' + str(100*count/totevents) + '% -- '
+
+   # if count > 100000 :
+	#break
+
+
+    #Here we split up event processing based on number of jobs 
+    #This is set up to have jobs range from 1 to the total number of jobs (ie dont start at job 0)
+    if jobs != 1 and options.split=="event":
+    	if (count - 1) % jobs == 0:
+		jobiter+=1
+	count_index = count - (jobiter-1)*jobs
+	if count_index!=num:
+		continue 
+	
+
+
+
+    event.getByLabel (softDropMassLabel, softDropMassHandle)
+    topmass = softDropMassHandle.product()
+
+    event.getByLabel (BDiscLabel, BDiscHandle)
+    b = BDiscHandle.product()
+
+    event.getByLabel (npvLabel, npvHandle)
+    npv = npvHandle.product()
+
+    event.getByLabel (puLabel, puHandle)
+    npvtrue = puHandle.product()
+
+    #event.getByLabel (nSubjetsLabel, nSubjetsHandle)
+    #nsub = nSubjetsHandle.product()
+
+    #event.getByLabel (minmassLabel, minmassHandle)
+    #minm = minmassHandle.product()
+    
+
+
+    npvhistUW.Fill(npv[0])  
+    npvtruehistUW.Fill(float(npvtrue[0]))
+    #npvhist.Fill(npv[0],weight)
+
+
+    if len(b) > 0 :
+	npvVbtag.Fill(npv[0], b[0])
+	npv_TAG.Fill(npv[0], b[0])
+    if len(topmass) > 0 :
+	npvVtop.Fill(npv[0], topmass[0])
+	npv_TOP.Fill(npv[0], topmass[0])
+    #if len(nsub) > 0 :
+	#npvVnsubjets.Fill(npv[0], nsub[0])
+	#npv_SUB.Fill(npv[0], nsub[0])
+    #if len(minm) > 0 :
+	#npvVminmass.Fill(npv[0], minm[0])
+	#npv_MIN.Fill(npv[0], minm[0])
+
+f.cd()
+f.Write()
+f.Close()
+
+print "number of events: " + str(count)

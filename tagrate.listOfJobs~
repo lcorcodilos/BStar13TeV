@@ -1,0 +1,174 @@
+#--------------------------rate_sideband----------------------------------
+python ./tardir/TWrate.py -s data -n 1  -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 2  -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 3  -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 4  -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 5  -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 6  -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 7  -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 8  -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 9  -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 10 -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 11 -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 12 -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 13 -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 14 -j 15 -g on -c rate_sideband
+python ./tardir/TWrate.py -s data -n 15 -j 15 -g on -c rate_sideband
+
+python ./tardir/TWrate.py -s ttbar -g on -c rate_sideband
+
+python ./tardir/TWrate.py -s QCDHT500 -n 1 -j 2  -g on -c rate_sideband
+python ./tardir/TWrate.py -s QCDHT700 -n 1 -j 2  -g on -c rate_sideband
+python ./tardir/TWrate.py -s QCDHT1000   -n 1 -j 2  -g on -c rate_sideband
+python ./tardir/TWrate.py -s QCDHT1500   -n 1 -j 2  -g on -c rate_sideband
+python ./tardir/TWrate.py -s QCDHT2000  -n 1 -j 2  -g on -c rate_sideband
+
+
+python ./tardir/TWrate.py -s QCDHT500 -n 2 -j 2  -g on -c rate_sideband
+python ./tardir/TWrate.py -s QCDHT700 -n 2 -j 2  -g on -c rate_sideband
+python ./tardir/TWrate.py -s QCDHT1000   -n 2 -j 2  -g on -c rate_sideband
+python ./tardir/TWrate.py -s QCDHT1500   -n 2 -j 2  -g on -c rate_sideband
+python ./tardir/TWrate.py -s QCDHT2000  -n 2 -j 2  -g on -c rate_sideband
+
+#python ./tardir/TWrate.py -s QCDPT300 -n 1 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT470 -n 1 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT600 -n 1 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT800 -n 1 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT1000 -n 1 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT1400 -n 1 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT1800 -n 1 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT2400 -n 1 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT3200 -n 1 -j 2  -g on -c rate_sideband
+
+#python ./tardir/TWrate.py -s QCDPT300 -n 2 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT470 -n 2 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT600 -n 2 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT800 -n 2 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT1000 -n 2 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT1400 -n 2 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT1800 -n 2 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT2400 -n 2 -j 2  -g on -c rate_sideband
+#python ./tardir/TWrate.py -s QCDPT3200 -n 2 -j 2  -g on -c rate_sideband
+
+python ./tardir/TWrate.py -s singletop_tW -g on -c rate_sideband
+python ./tardir/TWrate.py -s singletop_tWB -g on -c rate_sideband
+
+python ./tardir/TWrate.py -s signalLH1200 -g on -c rate_sideband
+#python ./tardir/TWrate.py -s signalRH1200 -g on -c rate_sideband
+
+python ./tardir/TWrate.py -s signalLH1400 -g on -c rate_sideband
+#python ./tardir/TWrate.py -s signalRH1400 -g on -c rate_sideband
+
+python ./tardir/TWrate.py -s signalLH1600 -g on -c rate_sideband
+#python ./tardir/TWrate.py -s signalRH1600 -g on -c rate_sideband
+
+python ./tardir/TWrate.py -s signalLH1800 -g on -c rate_sideband
+#python ./tardir/TWrate.py -s signalRH1800 -g on -c rate_sideband
+
+python ./tardir/TWrate.py -s signalLH2000 -g on -c rate_sideband
+#python ./tardir/TWrate.py -s signalRH2000 -g on -c rate_sideband
+
+python ./tardir/TWrate.py -s signalLH2200 -g on -c rate_sideband
+#python ./tardir/TWrate.py -s signalRH2200 -g on -c rate_sideband
+
+python ./tardir/TWrate.py -s signalLH2400 -g on -c rate_sideband
+#python ./tardir/TWrate.py -s signalRH2400 -g on -c rate_sideband
+
+python ./tardir/TWrate.py -s signalLH2600 -g on -c rate_sideband
+#python ./tardir/TWrate.py -s signalRH2600 -g on -c rate_sideband
+
+python ./tardir/TWrate.py -s signalLH2800 -g on -c rate_sideband
+#python ./tardir/TWrate.py -s signalRH2800 -g on -c rate_sideband
+
+python ./tardir/TWrate.py -s signalLH3000 -g on -c rate_sideband
+#python ./tardir/TWrate.py -s signalRH3000 -g on -c rate_sideband
+
+
+#--------------------------rate_default----------------------------------
+python ./tardir/TWrate.py -s data -n 1  -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 2  -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 3  -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 4  -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 5  -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 6  -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 7  -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 8  -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 9  -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 10 -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 11 -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 12 -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 13 -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 14 -j 15 -g on -c rate_default
+python ./tardir/TWrate.py -s data -n 15 -j 15 -g on -c rate_default
+
+python ./tardir/TWrate.py -s ttbar -g on -c rate_default
+
+python ./tardir/TWrate.py -s QCDHT500 -n 1 -j 2  -g on -c rate_default
+python ./tardir/TWrate.py -s QCDHT700 -n 1 -j 2  -g on -c rate_default
+python ./tardir/TWrate.py -s QCDHT1000   -n 1 -j 2  -g on -c rate_default
+python ./tardir/TWrate.py -s QCDHT1500   -n 1 -j 2  -g on -c rate_default
+python ./tardir/TWrate.py -s QCDHT2000  -n 1 -j 2  -g on -c rate_default
+
+
+python ./tardir/TWrate.py -s QCDHT500 -n 2 -j 2  -g on -c rate_default
+python ./tardir/TWrate.py -s QCDHT700 -n 2 -j 2  -g on -c rate_default
+python ./tardir/TWrate.py -s QCDHT1000   -n 2 -j 2  -g on -c rate_default
+python ./tardir/TWrate.py -s QCDHT1500   -n 2 -j 2  -g on -c rate_default
+python ./tardir/TWrate.py -s QCDHT2000  -n 2 -j 2  -g on -c rate_default
+
+#python ./tardir/TWrate.py -s QCDPT300 -n 1 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT470 -n 1 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT600 -n 1 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT800 -n 1 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT1000 -n 1 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT1400 -n 1 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT1800 -n 1 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT2400 -n 1 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT3200 -n 1 -j 2  -g on -c rate_default
+
+#python ./tardir/TWrate.py -s QCDPT300 -n 2 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT470 -n 2 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT600 -n 2 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT800 -n 2 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT1000 -n 2 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT1400 -n 2 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT1800 -n 2 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT2400 -n 2 -j 2  -g on -c rate_default
+#python ./tardir/TWrate.py -s QCDPT3200 -n 2 -j 2  -g on -c rate_default
+
+python ./tardir/TWrate.py -s singletop_tW -g on -c rate_default
+python ./tardir/TWrate.py -s singletop_tWB -g on -c rate_default
+
+python ./tardir/TWrate.py -s signalLH1200 -g on -c rate_default
+#python ./tardir/TWrate.py -s signalRH1200 -g on -c rate_default
+
+python ./tardir/TWrate.py -s signalLH1400 -g on -c rate_default
+#python ./tardir/TWrate.py -s signalRH1400 -g on -c rate_default
+
+python ./tardir/TWrate.py -s signalLH1600 -g on -c rate_default
+#python ./tardir/TWrate.py -s signalRH1600 -g on -c rate_default
+
+python ./tardir/TWrate.py -s signalLH1800 -g on -c rate_default
+#python ./tardir/TWrate.py -s signalRH1800 -g on -c rate_default
+
+python ./tardir/TWrate.py -s signalLH2000 -g on -c rate_default
+#python ./tardir/TWrate.py -s signalRH2000 -g on -c rate_default
+
+python ./tardir/TWrate.py -s signalLH2200 -g on -c rate_default
+#python ./tardir/TWrate.py -s signalRH2200 -g on -c rate_default
+
+python ./tardir/TWrate.py -s signalLH2400 -g on -c rate_default
+#python ./tardir/TWrate.py -s signalRH2400 -g on -c rate_default
+
+python ./tardir/TWrate.py -s signalLH2600 -g on -c rate_default
+#python ./tardir/TWrate.py -s signalRH2600 -g on -c rate_default
+
+python ./tardir/TWrate.py -s signalLH2800 -g on -c rate_default
+#python ./tardir/TWrate.py -s signalRH2800 -g on -c rate_default
+
+python ./tardir/TWrate.py -s signalLH3000 -g on -c rate_default
+#python ./tardir/TWrate.py -s signalRH3000 -g on -c rate_default
+
+
+
+

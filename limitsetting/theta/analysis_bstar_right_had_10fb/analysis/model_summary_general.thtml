@@ -1,0 +1,19 @@
+<p>Observables (xmin, xmax, nbins):</p>
+<ul>
+<li>mtw_allhad_type11 (500, 4000, 70)</li>
+</ul>
+<p>Background processes:</p>
+<ul>
+<li>qcd</li>
+<li>ttbar</li>
+</ul>
+<p>Signal processes:</p><ul>
+<li>bs1200</li>
+<li>bs1600</li>
+<li>bs2000</li>
+</ul>
+<p>Nuisance parameters (includes only those which apply to the background-only model):</p>
+<ul>
+<li>bkg (morph only)</li>
+<li>ttbar_overall (rate only)</li>
+</ul>

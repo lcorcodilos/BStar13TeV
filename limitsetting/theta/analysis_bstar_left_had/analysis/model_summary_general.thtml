@@ -1,0 +1,37 @@
+<p>Observables (xmin, xmax, nbins):</p>
+<ul>
+<li>mtw_allhad (500, 4000, 70)</li>
+</ul>
+<p>Background processes:</p>
+<ul>
+<li>qcd</li>
+<li>ttbar</li>
+</ul>
+<p>Signal processes:</p><ul>
+<li>bs1200</li>
+<li>bs1400</li>
+<li>bs1600</li>
+<li>bs1800</li>
+<li>bs2000</li>
+<li>bs2200</li>
+<li>bs2400</li>
+<li>bs2600</li>
+<li>bs2800</li>
+<li>bs3000</li>
+</ul>
+<p>Nuisance parameters (includes only those which apply to the background-only model):</p>
+<ul>
+<li>Alt (morph only)</li>
+<li>Fit (morph only)</li>
+<li>TwoD (morph only)</li>
+<li>jer (morph only)</li>
+<li>jes (morph only)</li>
+<li>lumi (rate only)</li>
+<li>modm (morph only)</li>
+<li>pile (morph only)</li>
+<li>q2 (morph only)</li>
+<li>trig (morph only)</li>
+<li>ttag (morph only)</li>
+<li>ttbar_xsec (rate only)</li>
+<li>wtag (rate only)</li>
+</ul>

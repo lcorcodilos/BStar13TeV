@@ -1,0 +1,6 @@
+source ./tardir/thetaGridbs.sh 0
+source ./tardir/thetaGridbs.sh 1
+source ./tardir/thetaGridbs.sh 2
+source ./tardir/thetaGridbs.sh 3
+source ./tardir/thetaGridbs.sh 4
+source ./tardir/thetaGridbs.sh 5

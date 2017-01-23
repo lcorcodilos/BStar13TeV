@@ -1,0 +1,10 @@
+<h2>Stackplots</h2>
+<p>Everything normalized to expectation, i.e., to the normalization in the template input file, possibly scaled via the python script file.</p>
+<p>Color Code:</p><ul>
+<li><span style="background: #ef2929;">&nbsp;&nbsp;&nbsp;</span> bs1200</li>
+<li><span style="background: #cc0000;">&nbsp;&nbsp;&nbsp;</span> bs1600</li>
+<li><span style="background: #a40000;">&nbsp;&nbsp;&nbsp;</span> bs2000</li>
+<li><span style="background: #edd400;">&nbsp;&nbsp;&nbsp;</span> qcd</li>
+<li><span style="background: #f57900;">&nbsp;&nbsp;&nbsp;</span> ttbar</li>
+</ul>
+<p>Observable 'mtw_allhad_type11':<br /><img src="plots/mtw_allhad_type11_stack.png" /></p>

@@ -1,0 +1,4 @@
+tar czvf tarball.tgz TBPileup.py Wprime_Functions.py rootlogon.C TBTrigger.py
+./development/runManySections.py --createCommandFile --cmssw --addLog --setTarball=tarball.tgz \pile.listOfJobs commands.cmd
+./runManySections.py --submitCondor commands.cmd
+condor_q knash

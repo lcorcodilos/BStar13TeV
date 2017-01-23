@@ -1,0 +1,202 @@
+python ./tardir/TWanalyzer.py -s data -j 5 -n 1 -g on -v analyzer -c sideband1 
+python ./tardir/TWanalyzer.py -s data -j 5 -n 2 -g on -v analyzer -c sideband1 
+python ./tardir/TWanalyzer.py -s data -j 5 -n 3 -g on -v analyzer -c sideband1 
+python ./tardir/TWanalyzer.py -s data -j 5 -n 4 -g on -v analyzer -c sideband1 
+python ./tardir/TWanalyzer.py -s data -j 5 -n 5 -g on -v analyzer -c sideband1 
+
+python ./tardir/TWanalyzer.py -s data -j 5 -n 1 -g on -v analyzer -c sideband1 -y up
+python ./tardir/TWanalyzer.py -s data -j 5 -n 2 -g on -v analyzer -c sideband1 -y up
+python ./tardir/TWanalyzer.py -s data -j 5 -n 3 -g on -v analyzer -c sideband1 -y up
+python ./tardir/TWanalyzer.py -s data -j 5 -n 4 -g on -v analyzer -c sideband1 -y up
+python ./tardir/TWanalyzer.py -s data -j 5 -n 5 -g on -v analyzer -c sideband1 -y up
+
+python ./tardir/TWanalyzer.py -s data -j 5 -n 1 -g on -v analyzer -c sideband1 -y down
+python ./tardir/TWanalyzer.py -s data -j 5 -n 2 -g on -v analyzer -c sideband1 -y down
+python ./tardir/TWanalyzer.py -s data -j 5 -n 3 -g on -v analyzer -c sideband1 -y down
+python ./tardir/TWanalyzer.py -s data -j 5 -n 4 -g on -v analyzer -c sideband1 -y down
+python ./tardir/TWanalyzer.py -s data -j 5 -n 5 -g on -v analyzer -c sideband1 -y down
+
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 
+
+python ./tardir/TWanalyzer.py -s signalright1200 -g on -v analyzer  -c sideband1 
+python ./tardir/TWanalyzer.py -s signalright1600 -g on -v analyzer  -c sideband1 
+python ./tardir/TWanalyzer.py -s signalright2000 -g on -v analyzer  -c sideband1 
+
+python ./tardir/TWanalyzer.py -s BprimeBToTW1200 -g on -v analyzer  -c sideband1
+python ./tardir/TWanalyzer.py -s BprimeBToTW1400 -g on -v analyzer  -c sideband1
+python ./tardir/TWanalyzer.py -s BprimeBToTW1600 -g on -v analyzer  -c sideband1
+python ./tardir/TWanalyzer.py -s BprimeBToTW1800 -g on -v analyzer  -c sideband1
+
+python ./tardir/TWanalyzer.py -s BprimeTToTW1200 -g on -v analyzer  -c sideband1
+python ./tardir/TWanalyzer.py -s BprimeTToTW1400 -g on -v analyzer  -c sideband1
+python ./tardir/TWanalyzer.py -s BprimeTToTW1600 -g on -v analyzer  -c sideband1
+python ./tardir/TWanalyzer.py -s BprimeTToTW1800 -g on -v analyzer  -c sideband1
+
+python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 1 -g on -v analyzer  -c sideband1 
+python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 1 -g on -v analyzer  -c sideband1 
+python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 1 -g on -v analyzer  -c sideband1 
+python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 1 -g on -v analyzer  -c sideband1 
+python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 1 -g on -v analyzer  -c sideband1 
+
+python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 2 -g on -v analyzer  -c sideband1 
+python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 2 -g on -v analyzer  -c sideband1 
+python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 2 -g on -v analyzer  -c sideband1 
+python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 2 -g on -v analyzer  -c sideband1 
+python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 2 -g on -v analyzer  -c sideband1 
+
+python ./tardir/TWanalyzer.py -s singletop_tW -g on -v analyzer  -c sideband1 
+python ./tardir/TWanalyzer.py -s singletop_tWB -g on -v analyzer  -c sideband1 
+
+#python ./tardir/TWanalyzer.py -s ttbarscaleup -g on -v analyzer -c sideband1 
+#python ./tardir/TWanalyzer.py -s ttbarscaledown -g on -v analyzer -c sideband1
+
+#JES Up
+#python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -J up 
+
+#python ./tardir/TWanalyzer.py -s signalright1200 -g on -v analyzer  -c sideband1 -J up 
+#python ./tardir/TWanalyzer.py -s signalright1600 -g on -v analyzer  -c sideband1 -J up 
+#python ./tardir/TWanalyzer.py -s signalright2000 -g on -v analyzer  -c sideband1 -J up 
+
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1200 -g on -v analyzer  -c sideband1 -J up
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1400 -g on -v analyzer  -c sideband1 -J up
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1600 -g on -v analyzer  -c sideband1 -J up
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1800 -g on -v analyzer  -c sideband1 -J up
+
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1200 -g on -v analyzer  -c sideband1 -J up
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1400 -g on -v analyzer  -c sideband1 -J up
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1600 -g on -v analyzer  -c sideband1 -J up
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1800 -g on -v analyzer  -c sideband1 -J up
+
+
+#JES Down
+#python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -J down 
+
+#python ./tardir/TWanalyzer.py -s signalright1200 -g on -v analyzer  -c sideband1 -J down 
+#python ./tardir/TWanalyzer.py -s signalright1600 -g on -v analyzer  -c sideband1 -J down 
+#python ./tardir/TWanalyzer.py -s signalright2000 -g on -v analyzer  -c sideband1 -J down 
+
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1200 -g on -v analyzer  -c sideband1 -J down
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1400 -g on -v analyzer  -c sideband1 -J down
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1600 -g on -v analyzer  -c sideband1 -J down
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1800 -g on -v analyzer  -c sideband1 -J down
+
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1200 -g on -v analyzer  -c sideband1 -J down
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1400 -g on -v analyzer  -c sideband1 -J down
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1600 -g on -v analyzer  -c sideband1 -J down
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1800 -g on -v analyzer  -c sideband1 -J down
+
+
+
+#JER Up
+#python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -R up 
+
+#python ./tardir/TWanalyzer.py -s signalright1200 -g on -v analyzer  -c sideband1 -R up 
+#python ./tardir/TWanalyzer.py -s signalright1600 -g on -v analyzer  -c sideband1 -R up 
+#python ./tardir/TWanalyzer.py -s signalright2000 -g on -v analyzer  -c sideband1 -R up 
+
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1200 -g on -v analyzer  -c sideband1 -R up
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1400 -g on -v analyzer  -c sideband1 -R up
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1600 -g on -v analyzer  -c sideband1 -R up
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1800 -g on -v analyzer  -c sideband1 -R up
+
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1200 -g on -v analyzer  -c sideband1 -R up
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1400 -g on -v analyzer  -c sideband1 -R up
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1600 -g on -v analyzer  -c sideband1 -R up
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1800 -g on -v analyzer  -c sideband1 -R up
+
+
+#JER Down
+#python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -R down 
+
+#python ./tardir/TWanalyzer.py -s signalright1200 -g on -v analyzer  -c sideband1 -R down 
+#python ./tardir/TWanalyzer.py -s signalright1600 -g on -v analyzer  -c sideband1 -R down 
+#python ./tardir/TWanalyzer.py -s signalright2000 -g on -v analyzer  -c sideband1 -R down 
+
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1200 -g on -v analyzer  -c sideband1 -R down
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1400 -g on -v analyzer  -c sideband1 -R down
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1600 -g on -v analyzer  -c sideband1 -R down
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1800 -g on -v analyzer  -c sideband1 -R down
+
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1200 -g on -v analyzer  -c sideband1 -R down
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1400 -g on -v analyzer  -c sideband1 -R down
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1600 -g on -v analyzer  -c sideband1 -R down
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1800 -g on -v analyzer  -c sideband1 -R down
+
+
+#Pileup Up
+#python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -x up 
+
+#python ./tardir/TWanalyzer.py -s signalright1200 -g on -v analyzer  -c sideband1 -x up 
+#python ./tardir/TWanalyzer.py -s signalright1600 -g on -v analyzer  -c sideband1 -x up 
+#python ./tardir/TWanalyzer.py -s signalright2000 -g on -v analyzer  -c sideband1 -x up 
+
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1200 -g on -v analyzer  -c sideband1 -x up
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1400 -g on -v analyzer  -c sideband1 -x up
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1600 -g on -v analyzer  -c sideband1 -x up
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1800 -g on -v analyzer  -c sideband1 -x up
+
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1200 -g on -v analyzer  -c sideband1 -x up
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1400 -g on -v analyzer  -c sideband1 -x up
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1600 -g on -v analyzer  -c sideband1 -x up
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1800 -g on -v analyzer  -c sideband1 -x up
+
+
+#Pileup Down
+#python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -x down 
+
+#python ./tardir/TWanalyzer.py -s signalright1200 -g on -v analyzer  -c sideband1 -x down 
+#python ./tardir/TWanalyzer.py -s signalright1600 -g on -v analyzer  -c sideband1 -x down 
+#python ./tardir/TWanalyzer.py -s signalright2000 -g on -v analyzer  -c sideband1 -x down 
+
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1200 -g on -v analyzer  -c sideband1 -x down
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1400 -g on -v analyzer  -c sideband1 -x down
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1600 -g on -v analyzer  -c sideband1 -x down
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1800 -g on -v analyzer  -c sideband1 -x down
+
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1200 -g on -v analyzer  -c sideband1 -x down
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1400 -g on -v analyzer  -c sideband1 -x down
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1600 -g on -v analyzer  -c sideband1 -x down
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1800 -g on -v analyzer  -c sideband1 -x down
+
+
+#-----------------------------------sideband1--------------------------------------------
+#python ./tardir/TWanalyzer.py -s data -j 5 -n 1 -g on -v analyzer -c sideband1 
+#python ./tardir/TWanalyzer.py -s data -j 5 -n 2 -g on -v analyzer -c sideband1 
+#python ./tardir/TWanalyzer.py -s data -j 5 -n 3 -g on -v analyzer -c sideband1 
+#python ./tardir/TWanalyzer.py -s data -j 5 -n 4 -g on -v analyzer -c sideband1 
+#python ./tardir/TWanalyzer.py -s data -j 5 -n 5 -g on -v analyzer -c sideband1 
+
+#python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 
+
+#python ./tardir/TWanalyzer.py -s signalright1200 -g on -v analyzer  -c sideband1 
+#python ./tardir/TWanalyzer.py -s signalright1600 -g on -v analyzer  -c sideband1 
+#python ./tardir/TWanalyzer.py -s signalright2000 -g on -v analyzer  -c sideband1 
+
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1200 -g on -v analyzer  -c sideband1
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1400 -g on -v analyzer  -c sideband1
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1600 -g on -v analyzer  -c sideband1
+#python ./tardir/TWanalyzer.py -s BprimeBToTW1800 -g on -v analyzer  -c sideband1
+
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1200 -g on -v analyzer  -c sideband1
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1400 -g on -v analyzer  -c sideband1
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1600 -g on -v analyzer  -c sideband1
+#python ./tardir/TWanalyzer.py -s BprimeTToTW1800 -g on -v analyzer  -c sideband1
+
+#python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 1 -g on -v analyzer  -c sideband1 
+#python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 1 -g on -v analyzer  -c sideband1 
+#python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 1 -g on -v analyzer  -c sideband1 
+#python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 1 -g on -v analyzer  -c sideband1 
+#python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 1 -g on -v analyzer  -c sideband1 
+
+#python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 2 -g on -v analyzer  -c sideband1 
+#python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 2 -g on -v analyzer  -c sideband1 
+#python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 2 -g on -v analyzer  -c sideband1 
+#python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 2 -g on -v analyzer  -c sideband1 
+#python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 2 -g on -v analyzer  -c sideband1 
+
+#python ./tardir/TWanalyzer.py -s singletop_tW -g on -v analyzer  -c sideband1 
+#python ./tardir/TWanalyzer.py -s singletop_tWB -g on -v analyzer  -c sideband1 
+
+
+
+

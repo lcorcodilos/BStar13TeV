@@ -1,0 +1,51 @@
+cmswn1897.fnal.gov
+/storage/local/data1/condor/execute/dir_8261
+source ./tardir/thetaGridbs.sh 5
+BStarCombinationHistos_Left_Allhadronic.root BStarCombinationHistos_Left_Dileptonic.root BStarCombinationHistos_Left_Semileptonic.root BStarCombinationHistos_Right_Allhadronic.root BStarCombinationHistos_Right_Dileptonic.root BStarCombinationHistos_Right_Semileptonic.root BStarCombinationHistos_Vector_Dileptonic.root BStarCombinationHistos_Vector_Semileptonic.root analysis thetaGridbs.py thetaGridbs.sh
+tar (child): analysis.tgz: Cannot open: No such file or directory
+tar (child): Error is not recoverable: exiting now
+tar: Child returned status 2
+tar: Error is not recoverable: exiting now
+tar (child): gridpack_bsTemplate.tgz: Cannot open: No such file or directory
+tar (child): Error is not recoverable: exiting now
+tar: Child returned status 2
+tar: Error is not recoverable: exiting now
+/bin/sh: bin/theta: No such file or directory
+total 2.5M
+-rw-r--r-- 1 lcorcodi us_cms   61 Aug 30 20:52 thetaGridbs.sh
+-rw-r--r-- 1 lcorcodi us_cms 1.9K Aug 30 20:52 thetaGridbs.py
+drwxr-xr-x 4 lcorcodi us_cms 4.0K Aug 30 20:52 analysis
+-rw-r--r-- 1 lcorcodi us_cms 704K Aug 30 20:52 BStarCombinationHistos_Vector_Semileptonic.root
+-rw-r--r-- 1 lcorcodi us_cms  82K Aug 30 20:52 BStarCombinationHistos_Vector_Dileptonic.root
+-rw-r--r-- 1 lcorcodi us_cms 702K Aug 30 20:52 BStarCombinationHistos_Right_Semileptonic.root
+-rw-r--r-- 1 lcorcodi us_cms  81K Aug 30 20:52 BStarCombinationHistos_Right_Dileptonic.root
+-rw-r--r-- 1 lcorcodi us_cms 104K Aug 30 20:52 BStarCombinationHistos_Right_Allhadronic.root
+-rw-r--r-- 1 lcorcodi us_cms 696K Aug 30 20:52 BStarCombinationHistos_Left_Semileptonic.root
+-rw-r--r-- 1 lcorcodi us_cms  81K Aug 30 20:52 BStarCombinationHistos_Left_Dileptonic.root
+-rw-r--r-- 1 lcorcodi us_cms  454 Aug 30 20:52 BStarCombinationHistos_Left_Allhadronic.root
+tar: debuglogbs1600-c30820dd9.txt: Cannot stat: No such file or directory
+tar: quant-toys\:0-bs1600-c30820dd90.db: Cannot stat: No such file or directory
+tar: Exiting with failure status due to previous errors
+arguments on the command line are
+['thetaGridbs.py', '5']
+Processing index = 4
+executing tar -zxvf analysis.tgz
+All analysis files are : 
+['analysis/quant-data-bs1200-b243fdbfb6.cfg', 'analysis/quant-data-bs1600-e883c7ea4e.cfg', 'analysis/quant-data-bs2000-f6c764ff51.cfg', 'analysis/quant-toys:0-bs1200-7203ee0e2a.cfg', 'analysis/quant-toys:0-bs1600-c30820dd90.cfg', 'analysis/quant-toys:0-bs2000-368e6fa0d3.cfg']
+Will be processing analysis/quant-toys:0-bs1600-c30820dd90.cfg
+Unpacking the theta gridpack
+executing tar -zxvf gridpack_bsTemplate.tgz
+stripped name is quant-toys:0-bs1600-c30820dd90
+log name is debuglogbs1600-c30820dd9.txt
+output name is quant-toys:0-bs1600-c30820dd90.db
+executing bin/theta analysis/quant-toys:0-bs1600-c30820dd90.cfg > /dev/null
+executing ls -trlh
+Tarring up the results to results.tgz
+[]
+[]
+[]
+executing tar -cz debuglogbs1600-c30820dd9.txt quant-toys:0-bs1600-c30820dd90.db > ../results4.tgz
+
+real	0m0.130s
+user	0m0.027s
+sys	0m0.045s

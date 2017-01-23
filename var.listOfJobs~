@@ -1,0 +1,46 @@
+python ./tardir/TWvariables.py -s data -j 5 -n 1 -g on -c default   
+python ./tardir/TWvariables.py -s data -j 5 -n 2 -g on -c default   
+python ./tardir/TWvariables.py -s data -j 5 -n 3 -g on -c default   
+python ./tardir/TWvariables.py -s data -j 5 -n 4 -g on -c default   
+python ./tardir/TWvariables.py -s data -j 5 -n 5 -g on -c default   
+ 
+
+python ./tardir/TWvariables.py -s ttbar  -g on -c default   
+  
+python ./tardir/TWvariables.py -s singletop_tW -g on -c default   
+python ./tardir/TWvariables.py -s singletop_tWB -g on -c default   
+
+python ./tardir/TWvariables.py -s signalRH1200 -g on  -c default
+python ./tardir/TWvariables.py -s signalRH1400 -g on  -c default
+python ./tardir/TWvariables.py -s signalRH1600 -g on  -c default
+python ./tardir/TWvariables.py -s signalRH1800 -g on  -c default
+python ./tardir/TWvariables.py -s signalRH2000 -g on  -c default
+python ./tardir/TWvariables.py -s signalRH2200 -g on  -c default
+python ./tardir/TWvariables.py -s signalRH2400 -g on  -c default
+python ./tardir/TWvariables.py -s signalRH2600 -g on  -c default
+python ./tardir/TWvariables.py -s signalRH2800 -g on  -c default
+python ./tardir/TWvariables.py -s signalRH3000 -g on  -c default
+
+python ./tardir/TWvariables.py -s QCDHT500 -j 3 -n 1   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT700 -j 3 -n 1   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT1000 -j 3 -n 1   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT1500 -j 3 -n 1   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT2000 -j 3 -n 1   -g on -c default   
+
+
+
+python ./tardir/TWvariables.py -s QCDHT500 -j 3 -n 2   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT700 -j 3 -n 2   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT1000 -j 3 -n 2   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT1500 -j 3 -n 2   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT2000 -j 3 -n 2   -g on -c default   
+
+
+
+python ./tardir/TWvariables.py -s QCDHT500 -j 3 -n 3   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT700 -j 3 -n 3   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT1000 -j 3 -n 3   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT1500 -j 3 -n 3   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT2000 -j 3 -n 3   -g on -c default   
+
+

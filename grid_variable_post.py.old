@@ -1,0 +1,152 @@
+#! /usr/bin/env python
+#BUILT FOR MULTIPLE LUMIS
+import re
+import os
+import subprocess
+from os import listdir
+from os.path import isfile, join
+import glob
+import math
+import ROOT
+from ROOT import *
+import sys
+from DataFormats.FWLite import Events, Handle
+from optparse import OptionParser
+parser = OptionParser()
+parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
+                  default	=	'default',
+                  dest		=	'cuts',
+                  help		=	'Cuts type (ie default, rate, etc)')
+parser.add_option('-y', '--modmass', metavar='F', type='string', action='store',
+                  default	=	'nominal',
+                  dest		=	'modmass',
+                  help		=	'nominal up or down')
+
+(options, args) = parser.parse_args()
+
+cuts = options.cuts
+var = ''
+mmstr = ""
+if options.modmass!="nominal":
+	print "using modm uncertainty"
+	mmstr = "_modm_"+options.modmass
+
+
+import Bstar_Functions	
+from Bstar_Functions import *
+
+#Load up cut values based on what selection we want to run 
+Cons = LoadConstants()
+#Uncomment for the single lumi from BstarFunctions
+cLumi = Cons['lumi']
+sLumi = str(int(cLumi)) + 'pb' 
+lumiList = [cLumi]
+Lumi = [str(int(cLumi))+'pb']
+
+
+ttagsf = Cons['ttagsf']
+wtagsf = Cons['wtagsf']
+wtagsfsig = Cons['wtagsfsig']
+xsec_bsr = Cons['xsec_bsr']
+xsec_ttbar = Cons['xsec_ttbar']
+xsec_qcd = Cons['xsec_qcd']
+xsec_st = Cons['xsec_st']
+nev_bsr = Cons['nev_bsr']
+nev_bsl = Cons['nev_bsl']
+nev_ttbar = Cons['nev_ttbar']
+nev_qcd = Cons['nev_qcd']
+nev_st = Cons['nev_st']
+
+#Process multiple lumis at once with this code otherwise use the above constant pull from BstarFunctions
+#lumiList = [1000, 5000, 10000]
+#Lumi = ['1fb', '5fb', '10fb']
+
+files = sorted(glob.glob("*job*of*.root"))
+
+j = []
+for f in files:
+	j.append(f.replace('_jo'+re.search('_jo(.+?)_PSET', f).group(1),""))
+
+files_to_sum = list(set(j))
+
+commands = []
+commands.append('rm *.log') 
+commands.append('rm temprootfiles/*.root')
+commands.append('rm -rf notneeded')
+for f in files_to_sum:
+	commands.append('rm '+f) 
+	commands.append('hadd ' + f + " " + f.replace('_PSET','_job*_PSET') )
+	commands.append('mv ' +  f.replace('_PSET','_job*_PSET') + ' temprootfiles/')
+	#commands.append('mv ' +  f + ' rootfiles/')
+
+
+for l in range(len(lumiList)):
+	lumi = lumiList[l]
+	commands.append('rm rootfiles/'+Lumi[l]+'/TWvariablesQCD_Trigger_nominal_none'+mmstr+'_PSET_rate_default.root')
+	commands.append('python HistoWeight.py -i TWvariablesQCDHT500_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWvariablesQCDHT500_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['HT500']/nev_qcd['HT500']))
+	commands.append('python HistoWeight.py -i TWvariablesQCDHT700_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWvariablesQCDHT700_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['HT700']/nev_qcd['HT700']))
+	commands.append('python HistoWeight.py -i TWvariablesQCDHT1000_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWvariablesQCDHT1000_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['HT1000']/nev_qcd['HT1000']))
+	commands.append('python HistoWeight.py -i TWvariablesQCDHT1500_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWvariablesQCDHT1500_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['HT1500']/nev_qcd['HT1500']))
+	commands.append('python HistoWeight.py -i TWvariablesQCDHT2000_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWvariablesQCDHT2000_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['HT2000']/nev_qcd['HT2000']))
+
+	commands.append('hadd TWvariablesQCD_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+'.root temprootfiles/TWvariablesQCDHT*_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+'weighted.root')
+	commands.append('mv TWvariablesQCD_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+'.root rootfiles/'+Lumi[l]+'/')
+
+commands.append('mv TWvariablesQCDHT*_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+'.root temprootfiles/')
+
+commands.append('rm rootfiles/'+sLumi+'/TWvariablesttbar_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+'.root')
+commands.append('mv TWvariablesttbar_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+'.root rootfiles/'+sLumi+'/')
+
+#commands.append('rm TWvariablesdata_Trigger_nominal_none_PSET_')
+#commands.append('mv ... )
+
+
+for coup in ['right','left']:
+	sigfiles = sorted(glob.glob('TWvariablessignal'+coup+'*none'+mmstr+'_PSET_'+cuts+var+'.root'))
+	for f in sigfiles:
+		mass = f.replace('TWvariablessignal'+coup,'')[:4].replace("_","")
+		xsec_sig = xsec_bsr[mass]
+		if coup =='right':
+			nev_sig = nev_bsr[mass]
+		if coup =='left':
+			nev_sig = nev_bsl[mass]
+		commands.append('rm ' + f.replace('TWvariablessignal'+coup,'TWvariablesweightedsignal'+coup))
+		for l in range(len(lumiList)):
+			lumi = lumiList[l]	 
+			commands.append('python HistoWeight.py -i '+f+' -o '+f.replace('TWvariablessignal'+coup,'TWvariablesweightedsignal'+coup)+' -w ' + str(lumi*ttagsf*wtagsfsig*xsec_sig/nev_sig))
+			commands.append('mv '+f.replace('TWvariablessignal'+coup,'TWvariablesweightedsignal'+coup)+' rootfiles/'+Lumi[l]+'/')
+		commands.append('mv '+f+' temprootfiles/')
+		
+
+		
+
+
+stfiles = [	'TWvariablessingletop_tW_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+'.root',
+		'TWvariablessingletop_tWB_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+'.root']
+
+for f in stfiles:
+	print f
+	channel = f.replace('TWvariablessingletop_','').replace('_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+var+'.root','')
+	print channel.upper()
+	xsec_ST = xsec_st[channel.upper()]
+	nev_ST = nev_st[channel.upper()]
+	commands.append('rm ' + f.replace('TWvariablessingletop_','TWvariablesweightedsingletop_'))
+	for l in range(len(lumiList)):	
+		lumi = lumiList[l] 
+		commands.append('python HistoWeight.py -i '+f+' -o '+f.replace('TWvariablessingletop_','TWvariablesweightedsingletop_')+' -w ' + str(lumi*xsec_ST*ttagsf*wtagsf/nev_ST))
+		commands.append('mv '+f.replace('TWvariablessingletop_','TWvariablesweightedsingletop_')+' rootfiles/'+Lumi[l]+'/')
+	commands.append('mv '+f+' temprootfiles/')
+for l in Lumi:
+	commands.append('rm rootfiles/'+l+'/TWvariablesweightedsingletop_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+var+'.root')
+	commands.append('hadd rootfiles/'+l+'/TWvariablesweightedsingletop_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+var+'.root rootfiles/'+l+'/TWvariablesweightedsingletop*_Trigger_nominal_none'+mmstr+'_PSET_'+cuts+var+'.root')
+
+for s in commands :
+    print 'executing ' + s
+    subprocess.call( [s], shell=True )
+
+
+
+
+
+
+

@@ -1,0 +1,19 @@
+<p>Rates for all observables and processes as given by the 'nominal' templates. If errors are given, they are MC stat. uncertainties.</p>
+<table cellpadding="2" border="1">
+<tr><th>process / observable</th><th>mtw_allhad</th></tr>
+<tr><td>qcd</td><td>6176.2 +/- 8.9493</td></tr>
+<tr><td>ttbar</td><td>3418.4 +/- 47.655</td></tr>
+<tr><td><b>total background</b></td><td>9594.6 +/- 48.488</td></tr>
+<tr><td>bs1200</td><td>1809.2 +/- 72.785</td></tr>
+<tr><td>bs1400</td><td>923.69 +/- 34.036</td></tr>
+<tr><td>bs1600</td><td>383.78 +/- 14.751</td></tr>
+<tr><td>bs1800</td><td>179.82 +/- 6.7407</td></tr>
+<tr><td>bs2000</td><td>81.15 +/- 3.1931</td></tr>
+<tr><td>bs2200</td><td>38.637 +/- 1.5878</td></tr>
+<tr><td>bs2400</td><td>18.028 +/- 0.75862</td></tr>
+<tr><td>bs2600</td><td>9.6933 +/- 0.40468</td></tr>
+<tr><td>bs2800</td><td>4.6571 +/- 0.21405</td></tr>
+<tr><td>bs3000</td><td>2.8456 +/- 0.12288</td></tr>
+<tr><td><b>DATA</b></td><td>9181</td></tr>
+</table>
+

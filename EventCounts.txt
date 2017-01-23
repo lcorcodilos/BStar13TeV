@@ -1,0 +1,9 @@
+1912529 Events total for QCDHT2000
+19664159 Events total for QCDHT500
+
+15356448 Events total for QCDHT700
+
+4963895 Events total for QCDHT1000
+
+3868886 Events total for QCDHT1500
+
