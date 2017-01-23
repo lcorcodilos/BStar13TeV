@@ -81,7 +81,7 @@ tagrates = ROOT.TFile("plots/TWrate_Maker_"+setstr+"_"+Lumi+"_PSET_"+options.cut
 ratedata = TFile(rootdir+Lumi+"/TWratefile"+options.set+"_PSET_"+options.cuts+".root")
 
 ratettbar = TFile(rootdir+Lumi+"/TWratefileweightedttbar_PSET_"+options.cuts+".root")
-#ratest = TFile(rootdir+Lumi+"/TWratefilesingletop_PSET_"+options.cuts+".root")
+ratest = TFile(rootdir+Lumi+"/TWratefilesingletop_PSET_"+options.cuts+".root")
 #tagrateswsig = ROOT.TFile("plots/B_tagging_sigcont.root")
 
 probeeta1data=ratedata.Get("pteta1pretag")
@@ -101,12 +101,12 @@ tageta2mc=ratettbar.Get("pteta2")
 #tageta3mc=ratettbar.Get("pteta3")
 
 
-#probeeta1st=ratest.Get("pteta1pretag")
-#probeeta2st=ratest.Get("pteta2pretag")
+probeeta1st=ratest.Get("pteta1pretag")
+probeeta2st=ratest.Get("pteta2pretag")
 #probeeta3st=ratest.Get("pteta3pretag")
 
-#tageta1st=ratest.Get("pteta1")
-#tageta2st=ratest.Get("pteta2")
+tageta1st=ratest.Get("pteta1")
+tageta2st=ratest.Get("pteta2")
 #tageta3st=ratest.Get("pteta3")
 
 ptrebin = 10
@@ -129,12 +129,12 @@ tageta2mc.Rebin(ptrebin)
 
 
 
-#probeeta1st.Rebin(ptrebin)
-#probeeta2st.Rebin(ptrebin)
+probeeta1st.Rebin(ptrebin)
+probeeta2st.Rebin(ptrebin)
 #probeeta3st.Rebin(ptrebin)
 
-#tageta1st.Rebin(ptrebin)
-#tageta2st.Rebin(ptrebin)
+tageta1st.Rebin(ptrebin)
+tageta2st.Rebin(ptrebin)
 #tageta3st.Rebin(ptrebin)
 
 
@@ -155,12 +155,12 @@ tageta1mc.SetFillColor( kRed )
 tageta2mc.SetFillColor( kRed )
 #tageta3mc.SetFillColor( kRed )
 
-#probeeta1st.SetFillColor( 4 )
-#probeeta2st.SetFillColor( 4 )
+probeeta1st.SetFillColor( 4 )
+probeeta2st.SetFillColor( 4 )
 #probeeta3st.SetFillColor( 4 )
 
-#tageta1st.SetFillColor( 4 )
-#tageta2st.SetFillColor( 4 )
+tageta1st.SetFillColor( 4 )
+tageta2st.SetFillColor( 4 )
 #tageta3st.SetFillColor( 4 )
 
 #treta1= tagrates.Get("tagrateeta1")
@@ -275,17 +275,17 @@ if options.set=='data':
 	#tageta3data.Add(tageta3mc,-1)
 
 	#probeeta3data.Add(probeeta3st,-1)
-	#probeeta1data.Add(probeeta1st,-1)
-	#probeeta2data.Add(probeeta2st,-1)
-	#tageta1data.Add(tageta1st,-1)
-	#tageta2data.Add(tageta2st,-1)
+	probeeta1data.Add(probeeta1st,-1)
+	probeeta2data.Add(probeeta2st,-1)
+	tageta1data.Add(tageta1st,-1)
+	tageta2data.Add(tageta2st,-1)
 	#tageta3data.Add(tageta3st,-1)
 
 
 gPad.SetLeftMargin(0.16)
 
 
-#stack1.Add( probeeta1st, "Hist" )
+stack1.Add( probeeta1st, "Hist" )
 stack1.Add( probeeta1mc, "Hist" )
 stack1.Add( probeeta1data, "Hist" )
 stack1.SetMaximum(stack1.GetMaximum() * 1.2 )
@@ -297,7 +297,7 @@ c1.cd(3)
 gPad.SetLeftMargin(0.16)
 
 
-#stack2.Add( probeeta2st, "Hist" )
+stack2.Add( probeeta2st, "Hist" )
 stack2.Add( probeeta2mc, "Hist" )
 stack2.Add( probeeta2data, "Hist" )
 stack2.SetMaximum(stack2.GetMaximum() * 1.2 )
@@ -320,7 +320,7 @@ gPad.SetLeftMargin(0.16)
 #c1.cd(2)
 #gPad.SetLeftMargin(0.16)
 
-#stack4.Add( tageta1st, "Hist" )
+stack4.Add( tageta1st, "Hist" )
 stack4.Add( tageta1mc, "Hist" )
 stack4.Add( tageta1data, "Hist" )
 stack4.SetMaximum(stack4.GetMaximum() * 1.2 )
@@ -331,7 +331,7 @@ prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (
 c1.cd(4)
 gPad.SetLeftMargin(0.16)
 
-#stack5.Add( tageta2st, "Hist" )
+stack5.Add( tageta2st, "Hist" )
 stack5.Add( tageta2mc, "Hist" )
 stack5.Add( tageta2data, "Hist" )
 stack5.SetMaximum(stack5.GetMaximum() * 1.2 )
@@ -377,7 +377,7 @@ stack5.GetYaxis().SetTitleOffset(0.8)
 
 leg2.AddEntry(probeeta1data,"QCD","f")
 leg2.AddEntry(probeeta1mc,"ttbar","f")
-#leg2.AddEntry(probeeta1mc,"singletop","f")
+leg2.AddEntry(probeeta1mc,"singletop","f")
 
 
 mass = [1200,1400,1600,1800,2000,2200,2400,2600,2800,3000]

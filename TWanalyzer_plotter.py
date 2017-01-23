@@ -649,34 +649,34 @@ for i in range(0, iterations):
 	schanst = schanst.Rebin(rebin[i])
 
 
-	#for ifile in range(0,len(stop)):
-	#	sfiles.append(ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzerweighted"+stop[ifile]+"_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root"))
-	#	shists.append(sfiles[ifile].Get(kinVar[i]))
-	#	ssubs.append(sfiles[ifile].Get("QCDbkg"+kinBkg[i]))
-	#	ssubsh.append(sfiles[ifile].Get("QCDbkg"+kinBkg[i]+"h"))
-	#	ssubsl.append(sfiles[ifile].Get("QCDbkg"+kinBkg[i]+"l"))
-	#	ssubs2d.append(sfiles[ifile].Get("QCDbkg"+kinBkg[i]+"2D"))
-	#	shists[ifile] = shists[ifile].Rebin(rebin[i])
-	#	ssubs[ifile] = ssubs[ifile].Rebin(rebin[i])
-	#	ssubsh[ifile] = ssubsh[ifile].Rebin(rebin[i])
-	#	ssubsl[ifile] = ssubsl[ifile].Rebin(rebin[i])
-	#	ssubs2d[ifile] = ssubs2d[ifile].Rebin(rebin[i])
+	for ifile in range(0,len(stop)):
+		sfiles.append(ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzerweighted"+stop[ifile]+"_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root"))
+		shists.append(sfiles[ifile].Get(kinVar[i]))
+		ssubs.append(sfiles[ifile].Get("QCDbkg"+kinBkg[i]))
+		ssubsh.append(sfiles[ifile].Get("QCDbkg"+kinBkg[i]+"h"))
+		ssubsl.append(sfiles[ifile].Get("QCDbkg"+kinBkg[i]+"l"))
+		ssubs2d.append(sfiles[ifile].Get("QCDbkg"+kinBkg[i]+"2D"))
+		shists[ifile] = shists[ifile].Rebin(rebin[i])
+		ssubs[ifile] = ssubs[ifile].Rebin(rebin[i])
+		ssubsh[ifile] = ssubsh[ifile].Rebin(rebin[i])
+		ssubsl[ifile] = ssubsl[ifile].Rebin(rebin[i])
+		ssubs2d[ifile] = ssubs2d[ifile].Rebin(rebin[i])
 		#shists[ifile] = shists[ifile].Rebin(len(bins2)-1,"",bins2)
 		#ssubs[ifile] = ssubs[ifile].Rebin(len(bins2)-1,"",bins2)
 		#ssubsh[ifile] = ssubsh[ifile].Rebin(len(bins2)-1,"",bins2)
 		#ssubsl[ifile] = ssubsl[ifile].Rebin(len(bins2)-1,"",bins2)
 	#print str((Luminosity*stopxsecs[ifile]*TeffScale)/stopnevents[ifile]) 
-	#	if options.set == 'data':
-	#		DataBE.Add(ssubs[ifile],-1)
-	#		DataBEl.Add(ssubsl[ifile],-1)
-	#		DataBEh.Add(ssubsh[ifile],-1)  
-	#		DataBE2d.Add(ssubs2d[ifile],-1)
-	#		DataBEMmup.Add(ssubs[ifile],-1)
-	#		DataBEMmdown.Add(ssubs[ifile],-1)
+		if options.set == 'data':
+			DataBE.Add(ssubs[ifile],-1)
+			DataBEl.Add(ssubsl[ifile],-1)
+			DataBEh.Add(ssubsh[ifile],-1)  
+			DataBE2d.Add(ssubs2d[ifile],-1)
+			DataBEMmup.Add(ssubs[ifile],-1)
+			DataBEMmdown.Add(ssubs[ifile],-1)
 		
-	#	singletop.Add(shists[ifile])
-	#	if ifile<=1:
-	#		schanst.Add(shists[ifile])
+		singletop.Add(shists[ifile])
+		if ifile<=1:
+			schanst.Add(shists[ifile])
 
 	st1.Add(singletop)
 
@@ -1108,7 +1108,7 @@ for i in range(0, iterations):
 		leg.AddEntry( DataFS, 'Data', 'P')
 	leg.AddEntry( DataBE, 'QCD background prediction', 'F')	
 	leg.AddEntry( TTmcFS[0], 't#bar{t} MC prediction', 'F')
-	#leg.AddEntry( singletop, 'Single top quark MC prediction', 'F')
+	leg.AddEntry( singletop, 'Single top quark MC prediction', 'F')
 	leg.AddEntry( sigma, '1 #sigma background uncertainty', 'F')
 
 #------------------Plot to show this is a 'bump hunt'---------------------------------------------------------

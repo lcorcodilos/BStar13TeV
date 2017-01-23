@@ -1108,7 +1108,7 @@ for i in range(0, iterations):
 		leg.AddEntry( DataFS, 'Data', 'P')
 	leg.AddEntry( DataBE, 'QCD background prediction', 'F')	
 	leg.AddEntry( TTmcFS[0], 't#bar{t} MC prediction', 'F')
-	leg.AddEntry( singletop, 'Single top quark MC prediction', 'F')
+	#leg.AddEntry( singletop, 'Single top quark MC prediction', 'F')
 	leg.AddEntry( sigma, '1 #sigma background uncertainty', 'F')
 
 #------------------Plot to show this is a 'bump hunt'---------------------------------------------------------

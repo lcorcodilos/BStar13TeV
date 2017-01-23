@@ -58,7 +58,7 @@ for hand in ["LH"]: #,"left","vector"]:
 
 
 	TTmc 	= ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_none_PSET_"+options.cuts+".root")
-	#STmc = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsingletop_Trigger_nominal_none_PSET_"+options.cuts+".root")
+	STmc = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsingletop_Trigger_nominal_none_PSET_"+options.cuts+".root")
 
 	TTmcPtScaleUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_JES_up_PSET_"+options.cuts+".root")
 	TTmcPtScaleDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_JES_down_PSET_"+options.cuts+".root")
@@ -78,13 +78,13 @@ for hand in ["LH"]: #,"left","vector"]:
 	#TTmcPDFDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerttbar_none_pdf__down_PSET_"+options.cuts+".root")
 
 	TTmcFS = TTmc.Get("Mtw")
-	#STmcFS = STmc.Get("Mtw")
+	STmcFS = STmc.Get("Mtw")
 
 	TTmcQCD = TTmc.Get("QCDbkg")
 	TTmcQCD2d = TTmc.Get("QCDbkg2D")
 
-	#STmcQCD = STmc.Get("QCDbkg")
-	#STmcQCD2d = STmc.Get("QCDbkg2D")
+	STmcQCD = STmc.Get("QCDbkg")
+	STmcQCD2d = STmc.Get("QCDbkg2D")
 
 
 	TTmcFSPtScaleUp = TTmcPtScaleUp.Get("Mtw")
@@ -126,12 +126,12 @@ for hand in ["LH"]: #,"left","vector"]:
 	DataQCDmodmdown.Add(TTmcQCD,-1)
 
 
-	#DataQCD.Add(STmcQCD,-1)
-	#DataQCDUp.Add(STmcQCD,-1)
-	#DataQCDDown.Add(STmcQCD,-1)
-	#DataQCD2d.Add(STmcQCD2d,-1)
-	#DataQCDmodmup.Add(STmcQCD,-1)
-	#DataQCDmodmdown.Add(STmcQCD,-1)
+	DataQCD.Add(STmcQCD,-1)
+	DataQCDUp.Add(STmcQCD,-1)
+	DataQCDDown.Add(STmcQCD,-1)
+	DataQCD2d.Add(STmcQCD2d,-1)
+	DataQCDmodmup.Add(STmcQCD,-1)
+	DataQCDmodmdown.Add(STmcQCD,-1)
 
 	Zero(DataQCD)
 	Zero(DataQCDUp)
@@ -160,7 +160,7 @@ for hand in ["LH"]: #,"left","vector"]:
 	#DataBEtptl.Rebin(rebin)
 	#DataBEtpth.Rebin(rebin)
 	TTmcFS.Rebin(rebin)
-	#STmcFS.Rebin(rebin)
+	STmcFS.Rebin(rebin)
 
 
 
@@ -217,7 +217,7 @@ for hand in ["LH"]: #,"left","vector"]:
 	DataQCDE2Down.SetName("mtw_allhad__qcd__Alt__minus")
 
 	TTmcFS.SetName("mtw_allhad__ttbar")
-	#STmcFS.SetName("mtw_allhad__st")
+	STmcFS.SetName("mtw_allhad__st")
 
 	TTmcFSPtScaleUp.SetName("mtw_allhad__ttbar__jes__plus")
 	TTmcFSPtScaleDown.SetName("mtw_allhad__ttbar__jes__minus")
@@ -262,7 +262,7 @@ for hand in ["LH"]: #,"left","vector"]:
 
 
 	TTmcFS.SetTitle("mtw_allhad__ttbar")
-	#STmcFS.SetTitle("mtw_allhad__st")
+	STmcFS.SetTitle("mtw_allhad__st")
 	TTmcFSPtScaleUp.SetTitle("mtw_allhad__ttbar__jes__plus")
 	TTmcFSPtScaleDown.SetTitle("mtw_allhad__ttbar__jes__minus")
 	
@@ -303,7 +303,7 @@ for hand in ["LH"]: #,"left","vector"]:
 	#DataQCDBEL.Write("mtw_allhad__qcd__bkg__minus")
 
 	TTmcFS.Write("mtw_allhad__ttbar")
-	#STmcFS.Write("mtw_allhad__st")
+	STmcFS.Write("mtw_allhad__st")
 
 	TTmcFSPtScaleUp.Write("mtw_allhad__ttbar__jes__plus")
 	TTmcFSPtScaleDown.Write("mtw_allhad__ttbar__jes__minus")

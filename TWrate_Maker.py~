@@ -124,7 +124,7 @@ print "Running on "+options.set
 #Load up data and ttbar
 fdata = TFile(rootdir+"TWratefile"+options.set+"_PSET_"+options.cuts+".root")
 fttbar = TFile(rootdir+"TWratefileweightedttbar"+"_PSET_"+options.cuts+".root")
-#fsingletop = TFile(rootdir+"TWratefilesingletop"+"_PSET_"+options.cuts+".root")
+fsingletop = TFile(rootdir+"TWratefilesingletop"+"_PSET_"+options.cuts+".root")
 
 
 if options.set == 'QCD':
@@ -177,17 +177,17 @@ ttdeta1 = fttbar.Get("pteta1pretag")
 ttneta2 = fttbar.Get("pteta2")
 ttdeta2 = fttbar.Get("pteta2pretag")
 
-#stneta1 = fsingletop.Get("pteta1")
-#stdeta1 = fsingletop.Get("pteta1pretag")
+stneta1 = fsingletop.Get("pteta1")
+stdeta1 = fsingletop.Get("pteta1pretag")
 
-#stneta2 = fsingletop.Get("pteta2") 
-#stdeta2 = fsingletop.Get("pteta2pretag")
+stneta2 = fsingletop.Get("pteta2") 
+stdeta2 = fsingletop.Get("pteta2pretag")
 
-ntot1 = ttneta1.Integral() + neta1.Integral() #+ stneta1.Integral()
-ntot2 = ttneta2.Integral() + neta2.Integral() #+ stneta2.Integral()
+ntot1 = ttneta1.Integral() + neta1.Integral() + stneta1.Integral()
+ntot2 = ttneta2.Integral() + neta2.Integral() + stneta2.Integral()
 
-dtot1 = ttdeta1.Integral() + deta1.Integral() #+ stdeta1.Integral()
-dtot2 = ttdeta2.Integral() + deta2.Integral() #+ stdeta2.Integral()
+dtot1 = ttdeta1.Integral() + deta1.Integral() + stdeta1.Integral()
+dtot2 = ttdeta2.Integral() + deta2.Integral() + stdeta2.Integral()
 
 bins=[]
 #bins= [350,400,460,570,700,1000,1600]
@@ -195,9 +195,9 @@ bins=[]
 bins=[]
 previousBin = 400
 i = 0
-while (previousBin+30*i) < 2000:
-	bins.append(previousBin+30*i)
-	previousBin+=(30*i)
+while (previousBin+40*i) < 2000:
+	bins.append(previousBin+40*i)
+	previousBin+=(40*i)
 	i+=1
 print bins
 #bins= variableBins(deta1,10)
@@ -215,11 +215,11 @@ ttdeta1r = ttdeta1.Rebin(len(bins2)-1,"ttdeta1r",bins2)
 ttneta2r = ttneta2.Rebin(len(bins2)-1,"ttneta2r",bins2)
 ttdeta2r = ttdeta2.Rebin(len(bins2)-1,"ttdeta2r",bins2)
 
-#stneta1r = stneta1.Rebin(len(bins2)-1,"stneta1r",bins2)
-#stdeta1r = stdeta1.Rebin(len(bins2)-1,"stdeta1r",bins2)
+stneta1r = stneta1.Rebin(len(bins2)-1,"stneta1r",bins2)
+stdeta1r = stdeta1.Rebin(len(bins2)-1,"stdeta1r",bins2)
 
-#stneta2r = stneta2.Rebin(len(bins2)-1,"stneta2r",bins2)
-#stdeta2r = stdeta2.Rebin(len(bins2)-1,"stdeta2r",bins2)
+stneta2r = stneta2.Rebin(len(bins2)-1,"stneta2r",bins2)
+stdeta2r = stdeta2.Rebin(len(bins2)-1,"stdeta2r",bins2)
 
 
 #TTbar subtraction is done here
@@ -229,10 +229,10 @@ if options.set=='data':
 	deta1r.Add(ttdeta1r,-1)
 	neta2r.Add(ttneta2r,-1)
 	deta2r.Add(ttdeta2r,-1)
-	#neta1r.Add(stneta1r,-1)
-	#deta1r.Add(stdeta1r,-1)
-	#neta2r.Add(stneta2r,-1)
-	#deta2r.Add(stdeta2r,-1)
+	neta1r.Add(stneta1r,-1)
+	deta1r.Add(stdeta1r,-1)
+	neta2r.Add(stneta2r,-1)
+	deta2r.Add(stdeta2r,-1)
 
 
 outputa = TFile( "plots/"+options.cuts+"/B_tagging_sigcont"+setstr+".root", "recreate" )

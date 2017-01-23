@@ -68,7 +68,7 @@ Data = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesdata_Trigger_nominal_none"+mmst
 QCDmc = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesQCD_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
 TTmc = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesweightedttbar_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
 
-#ST = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesweightedsingletop_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
+ST = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesweightedsingletop_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
 
 #---------For ttbar closure test, using MtStack-----------------------------------
 
@@ -157,7 +157,7 @@ for i in range(0, iterations-1):
 	SR1200FS = SR1200.Get(kinVar[i])
 	SR2800FS = SR2800.Get(kinVar[i])
 	SR2000FS = SR2000.Get(kinVar[i])
-	#STFS = ST.Get(kinVar[i])
+	STFS = ST.Get(kinVar[i])
 
 	print "Selections grabbed"
 
@@ -177,7 +177,7 @@ for i in range(0, iterations-1):
 	SR1200FS.Scale(1/SR1200FS.Integral())
 	SR2800FS.Scale(1/SR2800FS.Integral())
 	SR2000FS.Scale(1/SR2000FS.Integral())
-	#STFS.Scale(1/STFS.Integral())
+	STFS.Scale(1/STFS.Integral())
 
 #	out.Add(singletop)
 	DataFS.SetStats(0)
@@ -186,7 +186,7 @@ for i in range(0, iterations-1):
 	SR1200FS.SetStats(0)
 	SR2800FS.SetStats(0)
 	SR2000FS.SetStats(0)
-	#STFS.SetStats(0)
+	STFS.SetStats(0)
 
 	DataFS.SetLineColor(kBlack)
 	DataFS.SetLineWidth(0)
@@ -200,12 +200,12 @@ for i in range(0, iterations-1):
 	SR2800FS.SetLineWidth(1)
 	SR2000FS.SetLineColor(kBlue+2)
 	SR2000FS.SetLineWidth(1)
-	#STFS.SetLineColor(kBlue)
-	#STFS.SetLineWidth(1)
+	STFS.SetLineColor(kBlue)
+	STFS.SetLineWidth(1)
 
 
 
-	histList = [DataFS, TTmcFS, QCDmcFS, SR1200FS, SR2800FS, SR2000FS]#, STFS]
+	histList = [DataFS, TTmcFS, QCDmcFS, SR1200FS, SR2800FS, SR2000FS, STFS]
 
 	yMax = histList[0].GetMaximum()
 	maxHist = histList[0]
@@ -224,7 +224,7 @@ for i in range(0, iterations-1):
 	#leg.AddEntry( DataFS, 'Data', 'P')
 	leg.AddEntry( QCDmcFS, 'QCD MC', 'L')	
 	leg.AddEntry( TTmcFS, 't#bar{t} MC prediction', 'L')
-	#leg.AddEntry( STFS, 'Single top quark MC prediction', 'L')
+	leg.AddEntry( STFS, 'Single top quark MC prediction', 'L')
 	leg.AddEntry( SR1200FS, 'b*_{L} at 1200 GeV', 'L')
 	leg.AddEntry( SR2800FS, 'b*_{L} at 2800 GeV', 'L')
 	leg.AddEntry( SR2000FS, 'b*_{L} at 2000 GeV', 'L')
@@ -235,7 +235,7 @@ for i in range(0, iterations-1):
 	SR1200FS.Draw("samehist")
 	SR2800FS.Draw("samehist")
 	SR2000FS.Draw("samehist")
-	#STFS.Draw("samehist")
+	STFS.Draw("samehist")
 
 	#out.SetTitle(st1_label[i])
 	gPad.SetLeftMargin(.16)
