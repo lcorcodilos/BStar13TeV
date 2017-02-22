@@ -267,53 +267,44 @@ puLabel     	= 	( "eventUserData", "puNtrueInt" )
 #nSubjetsHandle 	= 	Handle (  "vector<float> "  )
 #nSubjetsLabel  	= 	( "jetsAK8" , "jetAK8nSubJets")
 
-# not used
-softDropMassHandle 	= 	Handle (  "vector<float> "  )
-softDropMassLabel  	= 	( "jetsAK8" , "jetAK8softDropMass")
-
-# for top mass
-softDropMassuncorrHandle 	= 	Handle (  "vector<float> "  )
-softDropMassuncorrLabel  	= 	( "jetsAK8" , "jetAK8softDropMassuncorr")
-
-# for W mass
-PrunedMassHandle 	= 	Handle (  "vector<float> "  )
-PrunedMassLabel  	= 	( "jetsAK8" , "jetAK8prunedMass")
+softDropPuppiMassHandle		=	Handle (  "vector<float> "  )
+softDropPuppiMassLabel		=	( "jetsAK8" , "jetAK8PuppiCorrectedsoftDropMass")
 
 vsubjets0indexHandle 	= 	Handle (  "vector<float> "  )
-vsubjets0indexLabel  	= 	( "jetsAK8" , "jetAK8vSubjetIndex0")
+vsubjets0indexLabel  	= 	( "jetsAK8" , "jetAK8PuppivSubjetIndex0")
 
 vsubjets1indexHandle 	= 	Handle (  "vector<float> "  )
-vsubjets1indexLabel  	= 	( "jetsAK8" , "jetAK8vSubjetIndex1")
+vsubjets1indexLabel  	= 	( "jetsAK8" , "jetAK8PuppivSubjetIndex1")
 
 subjetsAK8CSVHandle 	= 	Handle (  "vector<float> "  )
-subjetsAK8CSVLabel  	= 	( "subjetsAK8CHS" , "subjetAK8CHSCSVv2")
+subjetsAK8CSVLabel  	= 	( "subjetsAK8Puppi" , "subjetAK8PuppiCSVv2")
 
 tau1Handle 	= 	Handle (  "vector<float> "  )
-tau1Label  	= 	( "jetsAK8" , "jetAK8tau1")
+tau1Label  	= 	( "jetsAK8" , "jetAK8Puppitau1")
 
 tau2Handle 	= 	Handle (  "vector<float> "  )
-tau2Label  	= 	( "jetsAK8" , "jetAK8tau2")
+tau2Label  	= 	( "jetsAK8" , "jetAK8Puppitau2")
 
 tau3Handle 	= 	Handle (  "vector<float> "  )
-tau3Label  	= 	( "jetsAK8" , "jetAK8tau3")
+tau3Label  	= 	( "jetsAK8" , "jetAK8Puppitau3")
 
 topMassHandle 	= 	Handle (  "vector<float> "  )
 topMassLabel  	= 	( "jetsAK8" , "jetAK8topMass")
 
-subjetsCSVHandle 	= 	Handle (  "vector<float> "  )
-subjetsCSVLabel  	= 	( "subjetsCmsTopTag" , "subjetCmsTopTagCSV")
+#subjetsCSVHandle 	= 	Handle (  "vector<float> "  )
+#subjetsCSVLabel  	= 	( "subjetsCmsTopTag" , "subjetCmsTopTagCSV")
 
-subjets0indexHandle 	= 	Handle (  "vector<float> "  )
-subjets0indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex0")
+#subjets0indexHandle 	= 	Handle (  "vector<float> "  )
+#subjets0indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex0")
 
-subjets1indexHandle 	= 	Handle (  "vector<float> "  )
-subjets1indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex1")
+#subjets1indexHandle 	= 	Handle (  "vector<float> "  )
+#subjets1indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex1")
 
-subjets2indexHandle 	= 	Handle (  "vector<float> "  )
-subjets2indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex2")
+#subjets2indexHandle 	= 	Handle (  "vector<float> "  )
+#subjets2indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex2")
 
-subjets3indexHandle 	= 	Handle (  "vector<float> "  )
-subjets3indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex3")
+#subjets3indexHandle 	= 	Handle (  "vector<float> "  )
+#subjets3indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex3")
 
 HT800Handle     =       Handle ( "vector<bool>" )
 HT800Label      =       ( "Filter" , "HT800bit" )
@@ -473,18 +464,18 @@ for event in events:
     	dy_cut = dy[0]<=abs(tjet.Rapidity()-wjet.Rapidity())<dy[1]
 
 	event.getByLabel (softDropMassLabel, softDropMassHandle)
-	topJetMass 	= 	softDropMassHandle.product()
+	puppiJetMass 	= 	softDropMassHandle.product()
 
 	# For W mass
-        event.getByLabel (PrunedMassLabel, PrunedMassHandle)
-        prunedJetMass 	= 	PrunedMassHandle.product()
+        #event.getByLabel (PrunedMassLabel, PrunedMassHandle)
+        #prunedJetMass 	= 	PrunedMassHandle.product()
 
 	# For top mass
-        event.getByLabel (softDropMassuncorrLabel, softDropMassuncorrHandle)
-        topJetMassuncorr 	= 	softDropMassuncorrHandle.product()
+        event.getByLabel (softDropPuppiMassLabel, softDropPuppiMassHandle)
+        puppiJetMass 	= 	softDropPuppiMassHandle.product()
 
-	tmass_cut = tmass[0]<topJetMassuncorr[tindexval]<tmass[1]
-	wmass_cut = wmass[0]<=prunedJetMass[windexval]<wmass[1]
+	tmass_cut = tmass[0]<puppiJetMass[tindexval]<tmass[1]
+	wmass_cut = wmass[0]<=puppiJetMass[windexval]<wmass[1]
 
 	#event.getByLabel ( nSubjetsLabel , nSubjetsHandle )
 	#nSubjets 		= 	nSubjetsHandle.product()
@@ -559,7 +550,7 @@ for event in events:
 
 	ModFile = ROOT.TFile(di+"ModMassFile_rate_"+options.cuts+".root")
 	ModPlot = ModFile.Get("rtmass")
-	modm = topJetMassuncorr[tindexval]
+	modm = puppiJetMass[tindexval]
 	if options.modmass=='nominal':
 		massw = ModPlot.Interpolate(modm)
 	if options.modmass=='up':
@@ -606,9 +597,9 @@ for event in events:
 	if tau32sel:
 		Tau_32.Fill(tau32val,weight)
 	if tmasssel:
-		Mt.Fill(topJetMassuncorr[tindexval],weight)
+		Mt.Fill(puppiJetMass[tindexval],weight)
 	if wmasssel:
-		Mw.Fill(topJetMassuncorr[windexval],weight)
+		Mw.Fill(puppiJetMass[windexval],weight)
 	if sjbtagsel:
 		MaxSJCSV.Fill(SJ_csvmax,weight)
 	if dyfullsel:
@@ -616,9 +607,9 @@ for event in events:
 	if dysemisel:
 		dysemi.Fill(abs(tjet.Rapidity()-wjet.Rapidity()),weight)
 	if tmassBEStackSel:
-		QCDbkgMtStack.Fill(topJetMassuncorr[tindexval],TTRweight*weight*massw)
+		QCDbkgMtStack.Fill(puppiJetMass[tindexval],TTRweight*weight*massw)
 	if tmassStackSel:
-		MtStack.Fill(topJetMassuncorr[tindexval],weight)
+		MtStack.Fill(puppiJetMass[tindexval],weight)
 		
 				
 		
