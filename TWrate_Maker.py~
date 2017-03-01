@@ -736,27 +736,27 @@ deta1ttbar = fttbar.Get("MtwwptcomparepreSB1e1")
 neta2ttbar = fttbar.Get("MtwwptcomparepostSB1e2")
 deta2ttbar = fttbar.Get("MtwwptcomparepreSB1e2")
 
-#neta1stbar = fsingletop.Get("MtwwptcomparepostSB1e1")
-#deta1stbar = fsingletop.Get("MtwwptcomparepreSB1e1")
+neta1stbar = fsingletop.Get("MtwwptcomparepostSB1e1")
+deta1stbar = fsingletop.Get("MtwwptcomparepreSB1e1")
 
-#neta2stbar = fsingletop.Get("MtwwptcomparepostSB1e2")
-#deta2stbar = fsingletop.Get("MtwwptcomparepreSB1e2")
+neta2stbar = fsingletop.Get("MtwwptcomparepostSB1e2")
+deta2stbar = fsingletop.Get("MtwwptcomparepreSB1e2")
 
 neta1 = neta1NOSUB.Clone("neta1")
 neta1.Add(neta1ttbar,-1)
-#neta1.Add(neta1stbar,-1)
+neta1.Add(neta1stbar,-1)
 
 neta2 = neta2NOSUB.Clone("neta2")
 neta2.Add(neta2ttbar,-1)
-#neta2.Add(neta2stbar,-1)
+neta2.Add(neta2stbar,-1)
 
 deta1 = deta1NOSUB.Clone("deta1")
 deta1.Add(deta1ttbar,-1)
-#deta1.Add(deta1stbar,-1)
+deta1.Add(deta1stbar,-1)
 
 deta2 = deta2NOSUB.Clone("deta2")
 deta2.Add(deta2ttbar,-1)
-#deta2.Add(deta2stbar,-1)
+deta2.Add(deta2stbar,-1)
 
 slopeta1 = []
 slopeta2 = []

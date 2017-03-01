@@ -28,7 +28,7 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
                   dest		=	'cuts',
                   help		=	'Cuts type (ie default, rate, etc)')
 parser.add_option('-l', '--lumi', metavar='F', type='string', action='store',
-                  default	=	'27203pb',
+                  default	=	'36420pb',
                   dest		=	'lumi',
                   help		=	'Lumi folder to look in')
 parser.add_option('-x', '--pileup', metavar='F', type='string', action='store',
@@ -119,9 +119,9 @@ SR2000sList = []
 TTmcsList = []
 for m in mod:
 
-	SR1200sList.append("rootfiles/"+Lumi+"/TWanalyzerweightedsignalLH1200_Trigger_nominal_"+m+"_PSET_"+options.cuts+kin+".root")
-	SR2800sList.append("rootfiles/"+Lumi+"/TWanalyzerweightedsignalLH2800_Trigger_nominal_"+m+"_PSET_"+options.cuts+kin+".root")
-	SR2000sList.append("rootfiles/"+Lumi+"/TWanalyzerweightedsignalLH2000_Trigger_nominal_"+m+"_PSET_"+options.cuts+kin+".root")
+	SR1200sList.append("rootfiles/"+Lumi+"/TWanalyzerweightedsignalRH1200_Trigger_nominal_"+m+"_PSET_"+options.cuts+kin+".root")
+	SR2800sList.append("rootfiles/"+Lumi+"/TWanalyzerweightedsignalRH2800_Trigger_nominal_"+m+"_PSET_"+options.cuts+kin+".root")
+	SR2000sList.append("rootfiles/"+Lumi+"/TWanalyzerweightedsignalRH2000_Trigger_nominal_"+m+"_PSET_"+options.cuts+kin+".root")
 	#BPB1200sList.append("rootfiles/"+Lumi+"/TWanalyzerBprimeBToTW1200_Trigger_nominal_"+m+mmstr+"_PSET_"+options.cuts+kin+"weighted.root")
 	#BPB1400sList.append("rootfiles/"+Lumi+"/TWanalyzerBprimeBToTW1400_Trigger_nominal_"+m+mmstr+"_PSET_"+options.cuts+kin+"weighted.root")
 	#BPB1600sList.append("rootfiles/"+Lumi+"/TWanalyzerBprimeBToTW1600_Trigger_nominal_"+m+mmstr+"_PSET_"+options.cuts+kin+"weighted.root")
@@ -182,9 +182,9 @@ for i in range(len(TTmcsList)):
 #	BPT1800fList.append(ROOT.TFile(BPT1800sList[i]))
 
 #Have to also put the two extra ttbar files in TTmcfList
-if options.cuts == 'default' and options.var == 'analyzer':
-	TTmcfList.append(ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+"weightedttbarscaleup_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root"))
-	TTmcfList.append(ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+"weightedttbarscaledown_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root"))
+#if options.cuts == 'default' and options.var == 'analyzer':
+	#TTmcfList.append(ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+"weightedttbarscaleup_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root"))
+	#TTmcfList.append(ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+"weightedttbarscaledown_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root"))
 
 
 Data = ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+options.set+"_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root")
@@ -522,9 +522,10 @@ for i in range(0, iterations):
 
 		#To be consistent with the SRs, switch the 7th and 8th entries with the 11th and 12th entries
 		#This puts scaleup and down at the end of the list
-		if options.cuts == 'default':
-			TTmcFS[7], TTmcFS[11] = TTmcFS[11], TTmcFS[7]
-			TTmcFS[8], TTmcFS[12] = TTmcFS[12], TTmcFS[8]
+#CHANGE BACK (three lines)
+		#if options.cuts == 'default':
+		#	TTmcFS[7], TTmcFS[11] = TTmcFS[11], TTmcFS[7]
+		#	TTmcFS[8], TTmcFS[12] = TTmcFS[12], TTmcFS[8]
 
 	TTmcBE = TTmcfList[0].Get("QCDbkg" + kinBkg[i])
 
@@ -603,7 +604,7 @@ for i in range(0, iterations):
 		x+=1
 		for item in selection:
 			item.Rebin(rebin[i])
-		#	print y
+			#print y
 			y+=1
 
 	DataBEMmup = DataBEMmup.Rebin(rebin[i])
@@ -634,7 +635,7 @@ for i in range(0, iterations):
 	main.cd()
 
 
-	stop = ['singletop_tW','singletop_tWB']
+	stop = ['singletop_s','singletop_t','singletop_tB']
 	sfiles = []
 	shists = []
 	ssubs = []
@@ -802,11 +803,12 @@ for i in range(0, iterations):
 		orderedKeys = ['Pileup','JES','JER','TSF','Trig','Scale']
 		strSetList = ['SR1200', 'SR2800', 'SR2000', 'TTmc']#, 'BPT1200', 'BPT1400', 'BPT1600', 'BPT1800','BPB1200', 'BPB1400', 'BPB1600', 'BPB1800', 'BPT1200', 'BPT1400', 'BPT1600', 'BPT1800']
 		for selection in setList:
-			if selection == TTmcFS:
-				indexRange = (len(myIndexes))
-				print 'Index range changed to ' + str(indexRange)
-			else:
-				indexRange = (len(myIndexes)-1)
+#CHANGE BACK (4 lines)
+			#if selection == TTmcFS:
+			#	indexRange = (len(myIndexes))
+			#	print 'Index range changed to ' + str(indexRange)
+			#else:
+			indexRange = (len(myIndexes)-1)#indent back when changing back
 
 			for x in range(indexRange):
 				sSet =  strSetList[setList.index(selection)]
@@ -1157,9 +1159,9 @@ for i in range(0, iterations):
 		#leg.AddEntry( BPT1600FS[0], "b'_{R} w/ t at 1600 GeV", 'L')
 		#leg.AddEntry( BPT1800FS[0], "b'_{R} w/ t at 1800 GeV", 'L')
 	else:
-		leg.AddEntry( SR1200FS[0], 'b*_{L} at 1200 GeV', 'L')
-		leg.AddEntry( SR2000FS[0], 'b*_{L} at 2000 GeV', 'L')
-		leg.AddEntry( SR2800FS[0], 'b*_{L} at 2800 GeV', 'L')
+		leg.AddEntry( SR1200FS[0], 'b*_{R} at 1200 GeV', 'L')
+		leg.AddEntry( SR2000FS[0], 'b*_{R} at 2000 GeV', 'L')
+		leg.AddEntry( SR2800FS[0], 'b*_{R} at 2800 GeV', 'L')
 
 
 

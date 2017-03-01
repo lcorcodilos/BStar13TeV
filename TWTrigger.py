@@ -128,7 +128,7 @@ else:
 
 
 #Based on what set we want to analyze, we find all Ntuple root files 
-files = Load_Ntuples(options.set,options.bx)
+files = Load_Ntuples(options.set,di)
 jobiter = 0
 # We select all the events: 
 splitfiles = []

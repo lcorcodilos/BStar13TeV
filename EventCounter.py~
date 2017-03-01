@@ -63,7 +63,7 @@ i = options.set
 files = Load_Ntuples(i,options.bx)
 print "File loaded"
     
-events = Events (files)
+events = Events(files)
 
 totevents = events.size()
 

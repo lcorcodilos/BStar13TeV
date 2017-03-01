@@ -34,7 +34,7 @@ var = ''
 if options.var=='kinematics':
 	var = '_kin'
 
-mmstrList = ["","_modm_up","_modm_down"]
+mmstrList = [""]#,"_modm_up","_modm_down"]
 
 pustr = ""
 if options.pileup == "off":
@@ -126,12 +126,12 @@ commands.append('mv TWanalyzerQCDHT*_Trigger_nominal_*_PSET_'+cuts+var+'.root te
 
 #commands.append('mv TWanalyzerQCDPT*_Trigger_nominal_*_PSET_'+cuts+var+'.root temprootfiles/')
 
-for l in range(len(lumiList)):
-	lumi = lumiList[l]
-	for scale in ['scaleup','scaledown']:
-		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root')
-		commands.append('python HistoWeight.py -i TWanalyzerttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root -n auto -w ' + str(lumi*wtagsf*xsec_ttbar['PH'+scale]))
-		commands.append('mv TWanalyzerttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root temprootfiles/')
+#for l in range(len(lumiList)):
+#	lumi = lumiList[l]
+#	for scale in ['scaleup','scaledown']:
+#		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root')
+#		commands.append('python HistoWeight.py -i TWanalyzerttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root -n auto -w ' + str(lumi*wtagsf*xsec_ttbar['PH'+scale]))
+#		commands.append('mv TWanalyzerttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root temprootfiles/')
 
 for l in range(len(lumiList)):
 	lumi = lumiList[l]
@@ -159,7 +159,7 @@ for l in range(len(lumiList)):
 #			commands.append('mv TWanalyzerBprime'+q+'ToTW'+sig+'_Trigger_nominal_'+f+'_PSET_'+cuts+var+'.root temprootfiles/')
 
 
-for coup in ['LH']:#,'RH']:
+for coup in ['LH','RH']:
 	sigfiles = sorted(glob.glob('TWanalyzersignal'+coup+'*_PSET_'+cuts+var+'.root'))
 	for f in sigfiles:
 		mass = f[18:22]#.lstrip('TWanalyzersignal'+coup).rstrip('_Trigger_nominal_'+g+'_PSET_'+cuts+'.root')
@@ -174,13 +174,13 @@ for coup in ['LH']:#,'RH']:
 
 
 
-stfiles = [	'TWanalyzersingletop_tW_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root',
-		'TWanalyzersingletop_tWB_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root']
+stfiles = [	'TWanalyzersingletop_s_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root',
+		'TWanalyzersingletop_t_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root',
+		'TWanalyzersingletop_tB_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root']
 
 for f in stfiles:
 	channel = f.replace('TWanalyzersingletop_','').replace('_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root','')
 	xsec_ST = xsec_st[channel.upper()]
-	nev_ST = nev_st[channel.upper()]
 	commands.append('rm ' + f.replace('TWanalyzersingletop_','TWanalyzerweightedsingletop_'))
 	for l in range(len(lumiList)):	
 		lumi = lumiList[l] 

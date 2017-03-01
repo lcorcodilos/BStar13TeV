@@ -60,7 +60,7 @@ from Bstar_Functions import *
 
 i = options.set 
 
-files = Load_Ntuples(i,options.bx)
+files = Load_Ntuples(i,di)
 print "File loaded"
     
 events = Events(files)

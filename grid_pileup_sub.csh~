@@ -1,4 +1,7 @@
-tar czvf tarball.tgz TBPileup.py Wprime_Functions.py rootlogon.C TBTrigger.py
+#! /bin/sh
+python Flist.py
+tar czvf tarball.tgz TWPileup.py Bstar_Functions.py rootlogon.C TWTrigger.py
+mv Files*.txt txt_temp
 ./development/runManySections.py --createCommandFile --cmssw --addLog --setTarball=tarball.tgz \pile.listOfJobs commands.cmd
 ./runManySections.py --submitCondor commands.cmd
-condor_q knash
+condor_q lcorcodi
