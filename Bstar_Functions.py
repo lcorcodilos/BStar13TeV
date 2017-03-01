@@ -32,15 +32,15 @@ from DataFormats.FWLite import Events, Handle
 #If I wanted to access the left handed W' cross section at 1900 GeV I could do Xsecl1900 = LoadConstants()['xsec_wpl']['1900']
 def LoadConstants():
 	 return  {
-		'lumi':27203.0,#12367.583,
-		'wtagsf':1.06,
-		'wtagsfsig':1.06,
+		'lumi':36420.0,#12367.583,
+		'wtagsf':0.997,
+		'wtagsfsig':1.07,
 		'xsec_bsl':{'1200': 1.944,'1400': 0.7848,'1600': 0.3431,'1800': 0.1588,'2000': 0.07711,'2200': 0.03881,'2400': 0.02015,'2600': 0.01073,'2800': 0.005829,'3000': 0.003234},
 		#'xsec_bsr':{'1200': 1.936,'1400': 0.7816,'1600': 0.3416,'1800': 0.1583,'2000': 0.07675,'2200': 0.03864,'2400': 0.02008,'2600': 0.01068,'2800': 0.005814,'3000': 0.003224},
 		'xsec_bpl':{'B1200': 0.0016852,'B1400': 0.0007134,'B1600': 0.0003220,'B1800': 0.0001523,'T1200': 0.0016852,'T1400': 0.0007134,'T1600': 0.0003220,'T1800': 0.0001523},
 		'xsec_ttbar':{'MG':831.76,'PH':831.76,'PHscaleup':831.76,'PHscaledown':831.76},
 		'xsec_qcd':{'PT300':7823,'PT470':648.2,'PT600':186.9,'PT800':32.293,'PT1000':9.4183,'PT1400':0.84265,'PT1800':0.114943,'PT2400':0.00683,'PT3200':0.000165,'800_BROKEN':32.293,'FLAT7000':2022100000,'HT500':31630,'HT700':6802,'HT1000':1206,'HT1500':120.4,'HT2000':25.25},
-		'xsec_st':{'S':11.36,'T':216.97,'TW':35.85,'TWB':35.85},
+		'xsec_st':{'S':11.36,'T':216.97,'TB':80.95,'TW':35.85,'TWB':35.85},
 		'nev_bsl':{'1200':99600,'1400':100000,'1600':100000,'1800':100000,'2000':100000,'2200':97000,'2400':100000,'2600':100000,'2800':98000,'3000':100000},
 		#'nev_bsr':{'1200':100000,'1400':98200,'1600':100000,'1800':97600,'2000':99200,'2200':100000,'2400':97800,'2600':99200,'2800':99200,'3000':100000},
 		'nev_bpl':{'B1200': 100000,'B1400': 99200,'B1600': 99200,'B1800': 97600, 'T1200': 299200, 'T1400': 300000,'T1600': 293400,'T1800': 299600},
@@ -57,10 +57,10 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,220.0],
+			'tmass':[105.0,210.0],
 			'nsubjets':[1,10],
-			'tau32':[0.0,0.57],
-			'tau21':[0.0,0.6],
+			'tau32':[0.0,0.54],
+			'tau21':[0.0,0.4],
 			'minmass':[-float("inf"),float("inf")],
 			'sjbtag':[0.80,1.0],
 			'wmass':[65.0,95.0],
@@ -72,10 +72,10 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,220.0],
+			'tmass':[105.0,210.0],
 			'nsubjets':[1,10],
-			'tau32':[0.0,0.57],
-			'tau21':[0.0,0.6],
+			'tau32':[0.0,0.54],
+			'tau21':[0.0,0.4],
 			'minmass':[-float("inf"),float("inf")],
 			'sjbtag':[0.80,1.0],
 			'wmass':[[30.0,65.0],[95,float("inf")]],
@@ -88,10 +88,10 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,220.0],
+			'tmass':[105.0,210.0],
 			'nsubjets':[1,10],
-			'tau32':[0.0,0.57],
-			'tau21':[0.6,1.0],
+			'tau32':[0.0,0.54],
+			'tau21':[0.4,1.0],
 			'minmass':[-float("inf"),float("inf")],
 			'sjbtag':[0.80,1.0],
 			'wmass':[130.0,float("inf")],
@@ -103,10 +103,10 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,220.0],
+			'tmass':[105.0,210.0],
 			'nsubjets':[1,10],
-			'tau32':[0.0,0.57],
-			'tau21':[0.0,0.6],
+			'tau32':[0.0,0.54],
+			'tau21':[0.0,0.4],
 			'minmass':[-float("inf"),float("inf")],
 			'sjbtag':[0.80,1.0],
 			'wmass':[[30.0,65.0],[95.0,130.0]],
@@ -119,10 +119,10 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,220.0],
+			'tmass':[105.0,210.0],
 			'nsubjets':[1,10],
-			'tau32':[0.0,0.57],
-			'tau21':[0.6,1.0],
+			'tau32':[0.0,0.54],
+			'tau21':[0.4,1.0],
 			'minmass':[-float("inf"),float("inf")],
 			'sjbtag':[0.80,1.0],
 			'wmass':[[30.0,65.0],[95.0,130.0]],
@@ -134,10 +134,10 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,220.0],
+			'tmass':[105.0,210.0],
 			'nsubjets':[1,10],
-			'tau32':[0.0,0.57],
-			'tau21':[0.0,0.6],
+			'tau32':[0.0,0.54],
+			'tau21':[0.0,0.4],
 			'minmass':[-float("inf"),float("inf")],
 			'sjbtag':[0.80,1.0],
 			'wmass':[[30.0,65.0],[95.0,130.0]],
@@ -147,26 +147,39 @@ def LoadCuts(TYPE):
 
 #This function loads up Ntuples based on what type of set you want to analyze.  
 #This needs to be updated whenever new Ntuples are produced (unless the file locations are the same).
-def Load_Ntuples(string,bx):
+def Load_Ntuples(string,di=''):
 	print 'running on ' + string 
-	if string == 'ttbar':
- 		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/TT_TuneCUETP8M1_13TeV-powheg-pythia8/crab_TT_TuneCUETP8M1_13TeV-powheg-pythia8_B2GAnaFW_V2p1_80x_Slim_V6_v1/161116_201807/0000/*.root")
-	if string == 'ttbarscaleup':
- 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224514/0000/*.root")
-	if string == 'ttbarscaledown':
- 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaledown-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224307/0000/*.root")
 
-	#80X 2.1
+	if di!='':
+		files=open(di+'Files_'+string+'.txt').readlines()
+		for i in range(0,len(files)):
+			files[i] = files[i].replace('/eos/uscms','root://cmsxrootd.fnal.gov//').replace('\n','')
+
+		try:
+			print 'A total of ' + str(len(files)) + ' files'
+		except:
+			print 'Bad files option'
+		return files
+
+
+	if string == 'ttbar':
+ 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+	#if string == 'ttbarscaleup':
+ 	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224514/0000/*.root")
+	#if string == 'ttbarscaledown':
+ 	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaledown-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224307/0000/*.root")
+
+	#80X 2.4
 	if string == 'QCDHT500':
- 		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_ext1_B2GAnaFW_V2p1_80x_Slim_V6_v2/161116_201251/0000/*.root")
+ 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
  	if string == 'QCDHT700':
- 		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_ext1_B2GAnaFW_V2p1_80x_Slim_V6_v2/161116_201332/0000/*.root")
+ 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
  	if string == 'QCDHT1000':
- 		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p1_80x_Slim_V6_v1/161116_200903/0000/*.root")
+ 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
  	if string == 'QCDHT1500':
- 		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_ext1_B2GAnaFW_V2p1_80x_Slim_V6_v2/161116_200940/0000/*.root")
+ 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
 	if string == 'QCDHT2000':
- 		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_ext1_B2GAnaFW_V2p1_80x_Slim_V6_v1/161116_201020/0000/*.root")
+ 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
 
 	#80X 1.1
 	if string == 'QCDPT300':
@@ -188,157 +201,79 @@ def Load_Ntuples(string,bx):
 	if string == 'QCDPT3200':
 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_Pt_3200toInf_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
 
-	#80X V2.1 27203.0 pb-1
+	#80X V2.4 36420 pb-1
 	if string == 'data':
-		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/crab_JetHT_Run2016B-PromptReco-v2_B2GAnaFW_V2p1_80x_Slim_V6_v1/161116_201407/0000/*.root")
-		files += glob.glob("/uscms_data/d3/knash/SlimNtuples/crab_JetHT_Run2016C-PromptReco-v2_B2GAnaFW_V2p1_80x_Slim_V6_v1/161116_201450/0000/*.root")
-		files += glob.glob("/uscms_data/d3/knash/SlimNtuples/crab_JetHT_Run2016D-PromptReco-v2_B2GAnaFW_V2p1_80x_Slim_V6_v1/161116_201520/0000/*.root")
-		files += glob.glob("/uscms_data/d3/knash/SlimNtuples/crab_JetHT_Run2016E-PromptReco-v2_B2GAnaFW_V2p1_80x_Slim_V6_v1/161119_012317/0000/*.root")
-		files += glob.glob("/uscms_data/d3/knash/SlimNtuples/crab_JetHT_Run2016F-PromptReco-v2_B2GAnaFW_V2p1_80x_Slim_V6_v1/161116_201614/0000/*.root")
-		files += glob.glob("/uscms_data/d3/knash/SlimNtuples/crab_JetHT_Run2016G-PromptReco-v2_B2GAnaFW_V2p1_80x_Slim_V6_v1/161116_201707/0000/*.root")
+		files = glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016B-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_200136/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016C-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_200613/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016D-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_201042/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016E-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_202518/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016F-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_202748/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016G-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_203648/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016H-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_204048/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016HV2-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170215_183239/0000/*.root")
 
-	#80X V2.1
+	#80X V2.4
 	if string == 'signalRH1200':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalRH1400':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalRH1600':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalRH1800':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalRH2000':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2000_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2000_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalRH2200':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalRH2400':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalRH2600':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalRH2800':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalRH3000':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-3000_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-3000_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 
-	#80X V2.1
+	#80X V2.4
 	if string == 'signalLH1200':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalLH1400':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalLH1600':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1600_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1600_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalLH1800':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalLH2000':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2000_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2000_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalLH2200':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalLH2400':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalLH2600':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2600_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2600_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalLH2800':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	if string == 'signalLH3000':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-3000_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-3000_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 
 
-	if string == 'BprimeBToTW1200':
-		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/BprimeBToTW_M-1200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BPrime_B_RH_13TeV_B2GAnaFW_M1200_Slim_V7/160201_192733/0000/*.root")
-	if string == 'BprimeBToTW1400':
-		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/BprimeBToTW_M-1400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BPrime_B_RH_13TeV_B2GAnaFW_M1400_Slim_V7/160201_192745/0000/*.root")
-	if string == 'BprimeBToTW1600':
-		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/BprimeBToTW_M-1600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BPrime_B_RH_13TeV_B2GAnaFW_M1600_Slim_V7/160201_192723/0000/*.root")
-	if string == 'BprimeBToTW1800':
-		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/BprimeBToTW_M-1800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BPrime_B_RH_13TeV_B2GAnaFW_M1800_Slim_V7/160201_192757/0000/*.root")
 
-	if string == 'BprimeTToTW1200':
-		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/BprimeTToTW_M-1200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BPrime_T_RH_13TeV_B2GAnaFW_M1200_Slim_V7/160201_192821/0000/*.root")
-	if string == 'BprimeTToTW1400':
-		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/BprimeTToTW_M-1400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BPrime_T_RH_13TeV_B2GAnaFW_M1400_Slim_V7/160201_192834/0000/*.root")
-	if string == 'BprimeTToTW1600':
-		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/BprimeTToTW_M-1600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BPrime_T_RH_13TeV_B2GAnaFW_M1600_Slim_V7/160201_192847/0000/*.root")
-	if string == 'BprimeTToTW1800':
-		files = glob.glob("/uscms_data/d3/knash/SlimNtuples/BprimeTToTW_M-1800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BPrime_T_RH_13TeV_B2GAnaFW_M1800_Slim_V7/160201_192857/0000/*.root")
+	#80X 2.4 (CURRENTLY tW and tWB need to be rerun on slim level)
+	if string == 'singletop_s':
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_B2GAnaFW_V2p4_80x_Slim_V7/170215_084815/0000/*.root")	
+	if string == 'singletop_t':
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_ST_t-channel_top_4f_inclusiveDecays_TuneCUETP8M2T4_13TeV-powhegV2-madspin_B2GAnaFW_V2p4_80x_Slim_V7/170215_084815/0000/*.root")
+	if string == 'singletop_tB':
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_ST_t-channel_antitop_4f_inclusiveDecays_TuneCUETP8M2T4_13TeV-powhegV2-madspin_B2G_V2p4_80x_Slim_V7/170215_085241/0000/*.root")
+	#if string == 'singletop_tW':
+	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples//*/0000/*.root")
+	#if string == 'singletop_tWB':
+	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples//*/0000/*.root")
 
 
-	if string == 'BprimeB2GBToTW1200':
-		files = glob.glob("/eos/uscms/store/user/knash/BprimeBToTW_M-1200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BprimeBToTW_M-1200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V8p4_25ns/160129_184718/0000/*.root")
-	if string == 'BprimeB2GBToTW1400':
-		files = glob.glob("/eos/uscms/store/user/knash/BprimeBToTW_M-1400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BprimeBToTW_M-1400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V8p4_25ns/160129_190629/0000/*.root")
-	if string == 'BprimeB2GBToTW1600':
-		files = glob.glob("/eos/uscms/store/user/knash/BprimeBToTW_M-1600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BprimeBToTW_M-1600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_v2_B2GAnaFW_V8p4_25ns/160129_203107/0000/*.root")
-	if string == 'BprimeB2GBToTW1800':
-		files = glob.glob("/eos/uscms/store/user/knash/BprimeBToTW_M-1800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BprimeBToTW_M-1800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V8p4_25ns/160129_190700/0000/*.root")
 
-	if string == 'BprimeB2GTToTW1200':
-		files = glob.glob("/eos/uscms/store/user/knash/BprimeTToTW_M-1200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BprimeTToTW_M-1200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V8p4_25ns/160129_190716/0000/*.root")
-	if string == 'BprimeB2GTToTW1400':
-		files = glob.glob("/eos/uscms/store/user/knash/BprimeTToTW_M-1400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BprimeTToTW_M-1400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V8p4_25ns/160129_190736/0000/*.root")
-	if string == 'BprimeB2GTToTW1600':
-		files = glob.glob("/eos/uscms/store/user/knash/BprimeTToTW_M-1600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BprimeTToTW_M-1600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V8p4_25ns/160129_190751/0000/*.root")
-	if string == 'BprimeB2GTToTW1800':
-		files = glob.glob("/eos/uscms/store/user/knash/BprimeTToTW_M-1800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BprimeTToTW_M-1800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V8p4_25ns/160129_195310/0000/*.root")
-
-	#80X 2.1 (CURRENTLY B2GNtuples/not slimmed)
-	if string == 'singletop_tW':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring16MiniAODv2_B2GAnaFW_80x_V2p1/161118_074422/0000/*.root")
-	if string == 'singletop_tWB':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring16MiniAODv2_B2GAnaFW_80x_V2p1/161118_074548/0000/*.root")
-
-	# For B2G event counting
-	if string == 'B2Gttbar':
-		files = glob.glob("/eos/uscms/store/user/knash/TT_TuneCUETP8M1_13TeV-powheg-pythia8/crab_TT_TuneCUETP8M1_13TeV-powheg-pythia8_B2GAnaFW_V1p1_80x_Slim_V2/*/0000/*.root")	
-	if string == 'B2Gttbarup':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8/crab_TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8_B2GAnaFW_76X_V2p1/160505_142719/0000/*.root")
-	if string == 'B2Gttbardown':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/TT_TuneCUETP8M1_13TeV-powheg-scaledown-pythia8/crab_TT_TuneCUETP8M1_13TeV-powheg-scaledown-pythia8_B2GAnaFW_76X_V2p1/*/0000/*.root")	
-
-
-	if string == 'B2GsignalLH1200':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv2_B2GAnaFW_80x_V1p0/160624*/0000/*.root")
-	if string == 'B2GsignalLH1400':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv2_B2GAnaFW_80x_V1p0/160624*/0000/*.root")
-	if string == 'B2GsignalLH1600':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1600_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv2_B2GAnaFW_80x_V1p0/160624*/0000/*.root")
-	if string == 'B2GsignalLH1800':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv2_B2GAnaFW_80x_V1p0/160624*/0000/*.root")
-	if string == 'B2GsignalLH2000':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2000_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv2_B2GAnaFW_80x_V1p0/160624*/0000/*.root")
-	if string == 'B2GsignalLH2200':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv2_B2GAnaFW_80x_V1p0/160624*/0000/*.root")
-	if string == 'B2GsignalLH2400':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv2_B2GAnaFW_80x_V1p0/160624*/0000/*.root")
-	if string == 'B2GsignalLH2600':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2600_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv2_B2GAnaFW_80x_V1p0/160624*/0000/*.root")
-	if string == 'B2GsignalLH2800':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv2_B2GAnaFW_80x_V1p0/160624*/0000/*.root")
-	if string == 'B2GsignalLH3000':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-3000_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv2_B2GAnaFW_80x_V1p0/160624*/0000/*.root")
-
-	if string == 'B2GsignalRH1200':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv1_2016_v3-v3_B2GAnaFW_80x_V1p0/160827*/0000/B2GEDMNtuple_2.root")
-	if string == 'B2GsignalRH1400':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv1_2016_v3-v3_B2GAnaFW_80x_V1p0/160827*/0000/*.root")
-	if string == 'B2GsignalRH1600':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv1_2016_v3-v3_B2GAnaFW_80x_V1p0/160827*/0000/*.root")
-	if string == 'B2GsignalRH1800':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv1_2016_v3-v3_B2GAnaFW_80x_V1p0/160827*/0000/*.root")
-	if string == 'B2GsignalRH2000':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2000_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv1_2016_v3-v3_B2GAnaFW_80x_V1p0/160827*/0000/*.root")
-	if string == 'B2GsignalRH2200':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv1_2016_v3-v3_B2GAnaFW_80x_V1p0/160827*/0000/*.root")
-	if string == 'B2GsignalRH2400':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv1_2016_v3-v3_B2GAnaFW_80x_V1p0/160827*/0000/*.root")
-	if string == 'B2GsignalRH2600':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv1_2016_v3-v3_B2GAnaFW_80x_V1p0/160827*/0000/*.root")
-	if string == 'B2GsignalRH2800':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv1_2016_v3-v3_B2GAnaFW_80x_V1p0/160827*/0000/*.root")
-	if string == 'B2GsignalRH3000':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-3000_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISpring16MiniAODv1_2016_v3-v3_B2GAnaFW_80x_V1p0/160827*/0000/*.root")
-
-
-	for i in range(0,len(files)):
-		files[i] = files[i].replace('/eos/uscms/','root://cmsxrootd.fnal.gov//')
+	#for i in range(0,len(files)):
+	#	files[i] = files[i].replace('/eos/uscms/','root://cmsxrootd.fnal.gov//')
 	
 	
 	
@@ -598,16 +533,16 @@ def PTW_Lookup( GP ):
 
 def Initlv(string,post=''):
 	PtHandle 	= 	Handle (  "vector<float> "  )
-	PtLabel  	= 	( string+post , string.replace("jets","jet")+"Pt")
+	PtLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiPt")
 
 	EtaHandle 	= 	Handle (  "vector<float> "  )
-	EtaLabel  	= 	( string+post , string.replace("jets","jet")+"Eta")
+	EtaLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiEta")
 
 	PhiHandle 	= 	Handle (  "vector<float> "  )
-	PhiLabel  	= 	( string+post , string.replace("jets","jet")+"Phi")
+	PhiLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiPhi")
 
 	MassHandle 	= 	Handle (  "vector<float> "  )
-	MassLabel  	= 	( string+post , string.replace("jets","jet")+"Mass")
+	MassLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiMass")
 
 	return [[PtHandle,PtLabel],[EtaHandle,EtaLabel],[PhiHandle,PhiLabel],[MassHandle,MassLabel]]
  

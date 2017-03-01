@@ -56,7 +56,7 @@ ttbar_pileup_reweight_down.Write()
 
 
 files = [
-ROOT.TFile("TWPileupsignalLH1200.root"),
+#ROOT.TFile("TWPileupsignalLH1200.root"),
 ROOT.TFile("TWPileupsignalRH1200.root"),
 ROOT.TFile("TWPileupsignalLH1400.root"),
 ROOT.TFile("TWPileupsignalRH1400.root"),
@@ -88,7 +88,7 @@ ROOT.TFile("TWPileupsignalRH3000.root")
 ]
 
 names = [
-"PileUp_Ratio_signalLH1200.root",
+#"PileUp_Ratio_signalLH1200.root",
 "PileUp_Ratio_signalRH1200.root",
 "PileUp_Ratio_signalLH1400.root",
 "PileUp_Ratio_signalRH1400.root",

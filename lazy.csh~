@@ -1,14 +1,5 @@
-#python TWrate_Maker.py -s QCD -c rate_default
-#python TWrate_Maker.py -s QCD -c rate_sideband
-#python TWrate_Maker.py -s data -c rate_default
-#python TWrate_Maker.py -s data -c rate_sideband
+python grid_tagrate_post.py -c default
+python grid_tagrate_post.py -c sideband
+python grid_tagrate_post.py -c sideband1
 
-#python TWrate_plotter.py -s QCD -c rate_default
-#python TWrate_plotter.py -s QCD -c rate_sideband
-#python TWrate_plotter.py -s data -c rate_default
-#python TWrate_plotter.py -s data -c rate_sideband
-
-python TWanalyzer_plotter.py -s QCD -c default
-python TWanalyzer_plotter.py -s QCD -c sideband
-python TWanalyzer_plotter.py -s data -c default
-
+python grid_analyzer_post.py -c sideband

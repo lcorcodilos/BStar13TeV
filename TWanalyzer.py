@@ -223,7 +223,7 @@ if options.modmass!="nominal":
 
 #Based on what set we want to analyze, we find all Ntuple root files 
 
-files = Load_Ntuples(options.set,options.bx)
+files = Load_Ntuples(options.set,di)
 
 if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
 	settype = 'ttbar'
@@ -374,19 +374,20 @@ else:
 	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pstr+mmstr+"_PSET_"+options.cuts+var+".root", "recreate" )
 
 #Load up the average b-tagging rates -- Takes parameters from text file and makes a function
-TTR = TTR_Init('Bifpoly','rate_'+options.cuts,setstr,di)
-TTR_err = TTR_Init('Bifpoly_err','rate_'+options.cuts,setstr,di)
-fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
-fits = []
-for fittitle in fittitles:
-	fits.append(TTR_Init(fittitle,'rate_'+options.cuts,setstr,di))
 #CHANGE BACK
-#TTR = TTR_Init('Bifpoly',options.cuts,setstr,di)
-#TTR_err = TTR_Init('Bifpoly_err',options.cuts,setstr,di)
+#TTR = TTR_Init('Bifpoly','rate_'+options.cuts,setstr,di)
+#TTR_err = TTR_Init('Bifpoly_err','rate_'+options.cuts,setstr,di)
 #fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
 #fits = []
 #for fittitle in fittitles:
-#	fits.append(TTR_Init(fittitle,options.cuts,setstr,di))
+#	fits.append(TTR_Init(fittitle,'rate_'+options.cuts,setstr,di))
+#CHANGE BACK
+TTR = TTR_Init('Bifpoly',options.cuts,setstr,di)
+TTR_err = TTR_Init('Bifpoly_err',options.cuts,setstr,di)
+fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
+fits = []
+for fittitle in fittitles:
+	fits.append(TTR_Init(fittitle,options.cuts,setstr,di))
 
 print "Creating histograms"
 
@@ -813,8 +814,6 @@ for event in events:
 						weightSFtdown = SFT[1]
 						weightSFtup = SFT[2]
 
-		         	event.getByLabel (softDropMassLabel, softDropMassHandle)
-		         	puppiJetMass 	= 	softDropMassHandle.product()
 	
 				# For W mass
          			#event.getByLabel (PrunedMassLabel, PrunedMassHandle)

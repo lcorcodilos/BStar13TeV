@@ -223,7 +223,7 @@ if options.modmass!="nominal":
 
 #Based on what set we want to analyze, we find all Ntuple root files 
 
-files = Load_Ntuples(options.set,options.bx)
+files = Load_Ntuples(options.set,di)
 
 if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
 	settype = 'ttbar'
@@ -813,21 +813,19 @@ for event in events:
 						weightSFtdown = SFT[1]
 						weightSFtup = SFT[2]
 
-		         	event.getByLabel (softDropMassLabel, softDropMassHandle)
-		         	topJetMass 	= 	softDropMassHandle.product()
 	
 				# For W mass
-         			event.getByLabel (PrunedMassLabel, PrunedMassHandle)
-         			prunedJetMass 	= 	PrunedMassHandle.product()
+         			#event.getByLabel (PrunedMassLabel, PrunedMassHandle)
+         			#prunedJetMass 	= 	PrunedMassHandle.product()
 
 				# For top mass
         			event.getByLabel (softDropPuppiMassLabel, softDropPuppiMassHandle)
-		        	topJetMassuncorr 	= 	softDropPuppiMassHandle.product()
+		        	puppiJetMass 	= 	softDropPuppiMassHandle.product()
 
 
-				tmass_cut = tmass[0]<topJetMassuncorr[tindexval]<tmass[1]
+				tmass_cut = tmass[0]<puppiJetMass[tindexval]<tmass[1]
 				if options.var == "kinematics":
-					TopMass.Fill(topJetMass[tindexval],weight)
+					TopMass.Fill(puppiJetMass[tindexval],weight)
 
 				if tmass_cut :
 					if options.var == "kinematics":
@@ -949,9 +947,9 @@ for event in events:
 								
 								
 							if type(wmass[0])== list:
-								wmass_cut = wmass[0][0]<=prunedJetMass[windexval]<wmass[0][1] or wmass[1][0]<=prunedJetMass[windexval]<wmass[1][1] 
+								wmass_cut = wmass[0][0]<=puppiJetMass[windexval]<wmass[0][1] or wmass[1][0]<=puppiJetMass[windexval]<wmass[1][1] 
 							elif type(wmass[0]) == float:
-								wmass_cut = wmass[0]<=prunedJetMass[windexval]<wmass[1]
+								wmass_cut = wmass[0]<=puppiJetMass[windexval]<wmass[1]
 							else:
 								print "issue with wmass cut"
 
@@ -974,7 +972,7 @@ for event in events:
 									eta1_cut = eta1[0]<=abs(tjet.Eta())<eta1[1]
 									eta2_cut = eta2[0]<=abs(tjet.Eta())<eta2[1]
 
-									modm = topJetMassuncorr[tindexval]
+									modm = puppiJetMass[tindexval]
 									if options.modmass=='nominal':
 		        							massw = ModPlot.Interpolate(modm)
 									if options.modmass=='up':
@@ -1088,7 +1086,7 @@ for event in events:
 									QCDbkgh.Fill((tjet+wjet).M(),TTRweighterrup*weight*massw)
 									QCDbkgl.Fill((tjet+wjet).M(),TTRweighterrdown*weight*massw)
 
-									QCDbkgMtStack.Fill(topJetMass[tindexval],TTRweight*weight*massw)
+									QCDbkgMtStack.Fill(puppiJetMass[tindexval],TTRweight*weight*massw)
 	
 									if options.var == "kinematics":
 										QCDbkgET.Fill(tjet.Eta(),TTRweight*weight*massw)
@@ -1134,7 +1132,7 @@ for event in events:
 													goodEvents.append( [ event.object().id().run(), event.object().id().luminosityBlock(), event.object().id().event(),  ] )
 												Mtw.Fill((tjet+wjet).M(),weight) 
 
-												MtStack.Fill(topJetMass[tindexval],weight)
+												MtStack.Fill(puppiJetMass[tindexval],weight)
 
 												Mtwtrigup.Fill((tjet+wjet).M(),weighttrigup)
 												Mtwtrigdown.Fill((tjet+wjet).M(),weighttrigdown)
@@ -1181,7 +1179,7 @@ for event in events:
 													dPhi.Fill(abs(tjet.Phi()-wjet.Phi()),weight)
 	
 												tag=1
-												temp_variables = {"wpt":wjet.Perp(),"wmass":prunedJetMass[windexval],"tpt":tjet.Perp(),"tmass":topJetMassuncorr[tindexval],"tau32":tau32val,"tau21":tau21val,"sjbtag":SJ_csvmax,"weight":weight}#,"nsubjets":nSubjets[tindexval]
+												temp_variables = {"wpt":wjet.Perp(),"wmass":puppiJetMass[windexval],"tpt":tjet.Perp(),"tmass":puppiJetMass[tindexval],"tau32":tau32val,"tau21":tau21val,"sjbtag":SJ_csvmax,"weight":weight}#,"nsubjets":nSubjets[tindexval]
 	
 												for tv in tree_vars.keys():
 													tree_vars[tv][0] = temp_variables[tv]

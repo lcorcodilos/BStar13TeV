@@ -239,47 +239,47 @@ chis.SetNDC()
 OFF = 1.1
 
 SigFiles = [
-ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH1200_PSET_"+options.cuts+".root"),
-#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH1200_PSET_"+options.cuts+".root"),
-ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH1400_PSET_"+options.cuts+".root"),
-#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH1400_PSET_"+options.cuts+".root"),
-ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH1600_PSET_"+options.cuts+".root"),
-#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH1600_PSET_"+options.cuts+".root"),
-ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH1800_PSET_"+options.cuts+".root"),
-#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH1800_PSET_"+options.cuts+".root"),
-ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH2000_PSET_"+options.cuts+".root"),
-#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH2000_PSET_"+options.cuts+".root"),
-ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH2200_PSET_"+options.cuts+".root"),
-#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH2200_PSET_"+options.cuts+".root"),
-ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH2400_PSET_"+options.cuts+".root"),
-#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH2400_PSET_"+options.cuts+".root"),
-ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH2600_PSET_"+options.cuts+".root"),
-#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH2600_PSET_"+options.cuts+".root"),
-ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH2800_PSET_"+options.cuts+".root"),
-#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH2800_PSET_"+options.cuts+".root"),
-ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH3000_PSET_"+options.cuts+".root"),
-#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH3000_PSET_"+options.cuts+".root")
+#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH1200_PSET_"+options.cuts+".root"),
+ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH1200_PSET_"+options.cuts+".root"),
+#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH1400_PSET_"+options.cuts+".root"),
+ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH1400_PSET_"+options.cuts+".root"),
+#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH1600_PSET_"+options.cuts+".root"),
+ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH1600_PSET_"+options.cuts+".root"),
+#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH1800_PSET_"+options.cuts+".root"),
+ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH1800_PSET_"+options.cuts+".root"),
+#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH2000_PSET_"+options.cuts+".root"),
+ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH2000_PSET_"+options.cuts+".root"),
+#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH2200_PSET_"+options.cuts+".root"),
+ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH2200_PSET_"+options.cuts+".root"),
+#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH2400_PSET_"+options.cuts+".root"),
+ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH2400_PSET_"+options.cuts+".root"),
+#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH2600_PSET_"+options.cuts+".root"),
+ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH2600_PSET_"+options.cuts+".root"),
+#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH2800_PSET_"+options.cuts+".root"),
+ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH2800_PSET_"+options.cuts+".root"),
+#ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalLH3000_PSET_"+options.cuts+".root"),
+ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH3000_PSET_"+options.cuts+".root")
 ]
 
 
 c1.Divide(2,3)
 c1.cd(1)
 
+#CHANGE BACK
+#if options.set=='data':
+#	#probeeta3data.Add(probeeta3mc,-1)
+#	probeeta1data.Add(probeeta1mc,-1)
+#	probeeta2data.Add(probeeta2mc,-1)
+#	tageta1data.Add(tageta1mc,-1)
+#	tageta2data.Add(tageta2mc,-1)
+#	#tageta3data.Add(tageta3mc,-1)
 
-if options.set=='data':
-	#probeeta3data.Add(probeeta3mc,-1)
-	probeeta1data.Add(probeeta1mc,-1)
-	probeeta2data.Add(probeeta2mc,-1)
-	tageta1data.Add(tageta1mc,-1)
-	tageta2data.Add(tageta2mc,-1)
-	#tageta3data.Add(tageta3mc,-1)
-
-	#probeeta3data.Add(probeeta3st,-1)
-	probeeta1data.Add(probeeta1st,-1)
-	probeeta2data.Add(probeeta2st,-1)
-	tageta1data.Add(tageta1st,-1)
-	tageta2data.Add(tageta2st,-1)
-	#tageta3data.Add(tageta3st,-1)
+#	#probeeta3data.Add(probeeta3st,-1)
+#	probeeta1data.Add(probeeta1st,-1)
+#	probeeta2data.Add(probeeta2st,-1)
+#	tageta1data.Add(tageta1st,-1)
+#	tageta2data.Add(tageta2st,-1)
+#	#tageta3data.Add(tageta3st,-1)
 
 
 gPad.SetLeftMargin(0.16)
@@ -377,7 +377,7 @@ stack5.GetYaxis().SetTitleOffset(0.8)
 
 leg2.AddEntry(probeeta1data,"QCD","f")
 leg2.AddEntry(probeeta1mc,"ttbar","f")
-#leg2.AddEntry(probeeta1mc,"singletop","f")
+leg2.AddEntry(probeeta1mc,"singletop","f")
 
 
 mass = [1200,1400,1600,1800,2000,2200,2400,2600,2800,3000]

@@ -112,7 +112,7 @@ print ""
 #If running on the grid we access the script within a tarred directory
 di = ""
 if options.grid == 'on':
-	di = "tardir/"
+	di = "./tardir/"
 	sys.path.insert(0, 'tardir/')
 
 
@@ -128,7 +128,7 @@ else:
 
 
 #Based on what set we want to analyze, we find all Ntuple root files 
-files = Load_Ntuples(options.set,options.bx)
+files = Load_Ntuples(options.set,di)
 jobiter = 0
 # We select all the events: 
 splitfiles = []
@@ -184,6 +184,15 @@ softDropMassuncorrLabel  	= 	( "jetsAK8" , "jetAK8softDropMassuncorr")
 # for W mass
 PrunedMassHandle 	= 	Handle (  "vector<float> "  )
 PrunedMassLabel  	= 	( "jetsAK8" , "jetAK8prunedMass")
+
+vsubjets0indexHandle 	= 	Handle (  "vector<float> "  )
+vsubjets0indexLabel  	= 	( "jetsAK8" , "jetAK8vSubjetIndex0")
+
+vsubjets1indexHandle 	= 	Handle (  "vector<float> "  )
+vsubjets1indexLabel  	= 	( "jetsAK8" , "jetAK8vSubjetIndex1")
+
+subjetsAK8CSVHandle 	= 	Handle (  "vector<float> "  )
+subjetsAK8CSVLabel  	= 	( "subjetsAK8" , "subjetAK8CSV")
 
 tau1Handle 	= 	Handle (  "vector<float> "  )
 tau1Label  	= 	( "jetsAK8" , "jetAK8tau1")

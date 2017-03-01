@@ -151,7 +151,7 @@ else:
 
 #Based on what set we want to analyze, we find all Ntuple root files 
 
-files = Load_Ntuples(options.set,options.bx)
+files = Load_Ntuples(options.set,di)
 
 if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
 	settype = 'ttbar'
@@ -510,8 +510,7 @@ for event in events:
 				weightSFtup = SFT[2]
 
 
-         	event.getByLabel (softDropMassLabel, softDropMassHandle)
-         	puppiJetMass 	= 	softDropMassHandle.product()
+ 
 
 		# For W mass
          	#event.getByLabel (PrunedMassLabel, PrunedMassHandle)
@@ -625,8 +624,13 @@ for event in events:
 
 
 				        sjbtag_cut = sjbtag[0]<SJ_csvmax<=sjbtag[1]
-				        wmass_cut = wmass[0][0]<=puppiJetMass[windexval]<wmass[0][1] or wmass[1][0]<=puppiJetMass[windexval]<wmass[1][1] 
-				        FullTop = sjbtag_cut and tau32_cut
+					if type(wmass[0]) is float:
+						wmass_cut = wmass[0]<=puppiJetMass[windexval]<wmass[1]
+					elif type(wmass[0]) is list:
+				        	wmass_cut = wmass[0][0]<=puppiJetMass[windexval]<wmass[0][1] or wmass[1][0]<=puppiJetMass[windexval]<wmass[1][1] 
+					else:
+						print "wmass type error"				        
+					FullTop = sjbtag_cut and tau32_cut
 				        if wmass_cut:
 					        if tau21_cut:
 						        eta1_cut = eta1[0]<=abs(tjet.Eta())<eta1[1]

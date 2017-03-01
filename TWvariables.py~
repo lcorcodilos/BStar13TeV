@@ -464,7 +464,7 @@ for event in events:
     	dy_cut = dy[0]<=abs(tjet.Rapidity()-wjet.Rapidity())<dy[1]
 
 	event.getByLabel (softDropMassLabel, softDropMassHandle)
-	topJetMass 	= 	softDropMassHandle.product()
+	puppiJetMass 	= 	softDropMassHandle.product()
 
 	# For W mass
         #event.getByLabel (PrunedMassLabel, PrunedMassHandle)

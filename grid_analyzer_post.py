@@ -126,12 +126,12 @@ commands.append('mv TWanalyzerQCDHT*_Trigger_nominal_*_PSET_'+cuts+var+'.root te
 
 #commands.append('mv TWanalyzerQCDPT*_Trigger_nominal_*_PSET_'+cuts+var+'.root temprootfiles/')
 
-for l in range(len(lumiList)):
-	lumi = lumiList[l]
-	for scale in ['scaleup','scaledown']:
-		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root')
-		commands.append('python HistoWeight.py -i TWanalyzerttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root -n auto -w ' + str(lumi*wtagsf*xsec_ttbar['PH'+scale]))
-		commands.append('mv TWanalyzerttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root temprootfiles/')
+#for l in range(len(lumiList)):
+#	lumi = lumiList[l]
+#	for scale in ['scaleup','scaledown']:
+#		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root')
+#		commands.append('python HistoWeight.py -i TWanalyzerttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root -n auto -w ' + str(lumi*wtagsf*xsec_ttbar['PH'+scale]))
+#		commands.append('mv TWanalyzerttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root temprootfiles/')
 
 for l in range(len(lumiList)):
 	lumi = lumiList[l]
@@ -174,13 +174,13 @@ for coup in ['LH','RH']:
 
 
 
-stfiles = [	'TWanalyzersingletop_tW_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root',
-		'TWanalyzersingletop_tWB_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root']
+stfiles = [	'TWanalyzersingletop_s_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root',
+		'TWanalyzersingletop_t_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root',
+		'TWanalyzersingletop_tB_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root']
 
 for f in stfiles:
 	channel = f.replace('TWanalyzersingletop_','').replace('_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root','')
 	xsec_ST = xsec_st[channel.upper()]
-	nev_ST = nev_st[channel.upper()]
 	commands.append('rm ' + f.replace('TWanalyzersingletop_','TWanalyzerweightedsingletop_'))
 	for l in range(len(lumiList)):	
 		lumi = lumiList[l] 

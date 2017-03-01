@@ -112,7 +112,7 @@ else:
 
 
 #Based on what set we want to analyze, we find all Ntuple root files 
-files = Load_Ntuples(options.set,options.bx)
+files = Load_Ntuples(options.set,di)
 jobiter = 0
 splitfiles = []
 # We select all the events:    
@@ -135,7 +135,7 @@ print "Event array created"
 AK8HL = Initlv("jetsAK8")
 	
 BDiscHandle 	= 	Handle (  "vector<float>"  )
-BDiscLabel  	= 	( "jetsAK8" , "jetAK8CSV")
+BDiscLabel  	= 	( "jetsAK8" , "jetAK8PuppiCSV")
 
 TbitHandle 	= 	Handle (  "vector<float>"  )
 TbitLabel  	= 	( "TriggerUserData" , "triggerBitTree")
@@ -153,36 +153,41 @@ TpsLabel  	= 	( "TriggerUserData" , "triggerPrescaleTree")
 #nSubjetsHandle 	= 	Handle (  "vector<float> "  )
 #nSubjetsLabel  	= 	( "jetsAK8" , "jetAK8nSubJets")
 
+softDropPuppiMassHandle		=	Handle (  "vector<float> "  )
+softDropPuppiMassLabel		=	( "jetsAK8" , "jetAK8PuppiCorrectedsoftDropMass")
 
-softDropMassHandle 	= 	Handle (  "vector<float> "  )
-softDropMassLabel  	= 	( "jetsAK8" , "jetAK8softDropMass")
+vsubjets0indexHandle 	= 	Handle (  "vector<float> "  )
+vsubjets0indexLabel  	= 	( "jetsAK8" , "jetAK8PuppivSubjetIndex0")
+
+vsubjets1indexHandle 	= 	Handle (  "vector<float> "  )
+vsubjets1indexLabel  	= 	( "jetsAK8" , "jetAK8PuppivSubjetIndex1")
+
+subjetsAK8CSVHandle 	= 	Handle (  "vector<float> "  )
+subjetsAK8CSVLabel  	= 	( "subjetsAK8Puppi" , "subjetAK8PuppiCSVv2")
 
 tau1Handle 	= 	Handle (  "vector<float> "  )
-tau1Label  	= 	( "jetsAK8" , "jetAK8tau1")
+tau1Label  	= 	( "jetsAK8" , "jetAK8Puppitau1")
 
 tau2Handle 	= 	Handle (  "vector<float> "  )
-tau2Label  	= 	( "jetsAK8" , "jetAK8tau2")
+tau2Label  	= 	( "jetsAK8" , "jetAK8Puppitau2")
 
 tau3Handle 	= 	Handle (  "vector<float> "  )
-tau3Label  	= 	( "jetsAK8" , "jetAK8tau3")
+tau3Label  	= 	( "jetsAK8" , "jetAK8Puppitau3")
 
-topMassHandle 	= 	Handle (  "vector<float> "  )
-topMassLabel  	= 	( "jetsAK8" , "jetAK8topMass")
+#subjetsCSVHandle 	= 	Handle (  "vector<float> "  )
+#subjetsCSVLabel  	= 	( "subjetsCmsTopTag" , "subjetCmsTopTagCSV")
 
-subjetsCSVHandle 	= 	Handle (  "vector<float> "  )
-subjetsCSVLabel  	= 	( "subjetsCmsTopTag" , "subjetCmsTopTagCSV")
+#subjets0indexHandle 	= 	Handle (  "vector<float> "  )
+#subjets0indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex0")
 
-subjets0indexHandle 	= 	Handle (  "vector<float> "  )
-subjets0indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex0")
+#subjets1indexHandle 	= 	Handle (  "vector<float> "  )
+#subjets1indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex1")
 
-subjets1indexHandle 	= 	Handle (  "vector<float> "  )
-subjets1indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex1")
+#subjets2indexHandle 	= 	Handle (  "vector<float> "  )
+#subjets2indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex2")
 
-subjets2indexHandle 	= 	Handle (  "vector<float> "  )
-subjets2indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex2")
-
-subjets3indexHandle 	= 	Handle (  "vector<float> "  )
-subjets3indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex3")
+#subjets3indexHandle 	= 	Handle (  "vector<float> "  )
+#subjets3indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex3")
 
 
 puHandle    	= 	Handle("int")
@@ -264,8 +269,8 @@ for event in events:
 
 
 
-    event.getByLabel (softDropMassLabel, softDropMassHandle)
-    topmass = softDropMassHandle.product()
+    event.getByLabel (softDropPuppiMassLabel, softDropPuppiMassHandle)
+    topmass = softDropPuppiMassHandle.product()
 
     event.getByLabel (BDiscLabel, BDiscHandle)
     b = BDiscHandle.product()
