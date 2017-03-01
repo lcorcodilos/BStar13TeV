@@ -1,4 +1,0 @@
-script, /uscms_data/d3/lcorcodi/BStar13TeV/CMSSW_7_4_1/src/BStar13TeV/limitsetting/theta/analysis_bstar_left_had/../../../runManySections.py
-Tarball :analysis.tgz:
-Environment command: cd /uscms_data/d3/lcorcodi/BStar13TeV/CMSSW_7_4_1/src/BStar13TeV/limitsetting/theta/analysis_bstar_left_had; eval `scramv1 runtime -sh`; cd -
-/storage/local/data1/condor/execute/dir_2764652
