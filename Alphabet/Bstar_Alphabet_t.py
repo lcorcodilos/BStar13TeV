@@ -98,16 +98,16 @@ C1.cd()
 Bstar.TwoDPlot.Draw("box") # Show that plot:
 
 ################Temp code###################################
-C12 = TCanvas("C12", "", 800, 600)
-C12.cd()
-Bstar.Pplots.Draw("box")
+# C12 = TCanvas("C12", "", 800, 600)
+# C12.cd()
+# Bstar.Pplots.Draw("box")
 
-C13 = TCanvas("C13", "", 800, 600)
-C13.cd()
-Bstar.Mplots.Draw("box")
+# C13 = TCanvas("C13", "", 800, 600)
+# C13.cd()
+# Bstar.Mplots.Draw("box")
 
 
-raw_input("Press enter to continue...")
+# raw_input("Press enter to continue...")
 ############################################################
 
 # NOW DO THE ACTUAL ALPHABETIZATION: (Creating the regions)
@@ -172,8 +172,8 @@ Not sure about ttbar.
 -LC (3/9/17)
 
 '''
-antitag = "(((wmass>30&wmass<65)||(wmass>95))&tau21<0.4)"
-tag 	= "((wmass>65&wmass<95)&tau21<0.4)"
+antitag = "(((tmass>30&tmass<105)||(tmass>220))&tau32<0.54)"
+tag 	= "((tmass>105&tmass<220)&tau32<0.54)"
 
 
 # var we want to look at:
@@ -185,6 +185,14 @@ FILE.cd()
 
 Bstar.MakeEst(var_array2, antitag, tag)
 
+ptDistributions = TFile("ptDistributions.root","RECREATE")
+ptDistributions.cd()
+
+for i in Bstar.hists_MSR+Bstar.hists_EST+Bstar.hists_EST+Bstar.hists_MSR_SUB+Bstar.hists_EST_SUB+Bstar.hists_ATAG:
+	i.Write()
+
+
+ptDistributions.Close()
 
 # now we can plot (maybe I should add some auto-plotting Bstar.Fit.fittions?)
 hbins = [20,400,1200]
@@ -196,13 +204,25 @@ for i in Bstar.hists_MSR:
 N = TH1F("QCD", "", hbins[0], hbins[1], hbins[2])
 for i in Bstar.hists_EST:
 	N.Add(i,1.)
+for i in Bstar.hists_MSR_SUB:
+	N.Add(i,1.)
+for i in Bstar.hists_EST_SUB:
+	N.Add(i,-1.)
 # We can do the same thing for the Up and Down shapes:
 NU = TH1F("QCD_CMS_scale_13TeVUp", "", hbins[0],hbins[1], hbins[2])
 for i in Bstar.hists_EST_UP:
 	NU.Add(i,1.)
+for i in Bstar.hists_MSR_SUB:
+	NU.Add(i,1.)
+for i in Bstar.hists_EST_SUB_UP:
+	NU.Add(i,-1.)
 ND = TH1F("QCD_CMS_scale_13TeVDown", "", hbins[0],hbins[1], hbins[2])
 for i in Bstar.hists_EST_DN:
 	ND.Add(i,1.)
+for i in Bstar.hists_MSR_SUB:
+	ND.Add(i,1.)
+for i in Bstar.hists_EST_SUB_DN:
+	ND.Add(i,-1.)
 
 vartitle = "p_{T}_{top} (GeV)"
 
@@ -228,7 +248,7 @@ leg2 = TLegend(0.6,0.6,0.89,0.89)
 #leg2.SetHeader("cut @ #tau_{2}/#tau_{1} < 0.5")
 leg2.SetLineColor(0)
 leg2.SetFillColor(0)
-leg2.AddEntry(V, "Data in 1 bb-tag fail CR", "PL")
+leg2.AddEntry(V, "Data in tag region", "PL")
 leg2.AddEntry(N, "Data prediction", "F")
 leg2.AddEntry(NU, "uncertainty", "F")
 
@@ -243,7 +263,7 @@ ND.Draw("same")
 leg2.Draw()
 FILE.Write()
 FILE.Save()
-C3.Print("bkg_data_bbtag%s.pdf"%cut[0])
+C3.Print("bkg_data_tau32%s.pdf"%cut[0])
 
 
 
@@ -258,4 +278,4 @@ f.write("\n\tthirdErr = "+str(Bstar.Fit.fit.GetParErrors()[2])+";")
 f.write("\n}\n")
 
 
-
+raw_input("Press enter to continue...")

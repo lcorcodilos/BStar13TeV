@@ -375,19 +375,19 @@ else:
 
 #Load up the average b-tagging rates -- Takes parameters from text file and makes a function
 #CHANGE BACK
-#TTR = TTR_Init('Bifpoly','rate_'+options.cuts,setstr,di)
-#TTR_err = TTR_Init('Bifpoly_err','rate_'+options.cuts,setstr,di)
-#fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
-#fits = []
-#for fittitle in fittitles:
-#	fits.append(TTR_Init(fittitle,'rate_'+options.cuts,setstr,di))
-#CHANGE BACK
-TTR = TTR_Init('Bifpoly',options.cuts,setstr,di)
-TTR_err = TTR_Init('Bifpoly_err',options.cuts,setstr,di)
+TTR = TTR_Init('Bifpoly','rate_'+options.cuts,setstr,di)
+TTR_err = TTR_Init('Bifpoly_err','rate_'+options.cuts,setstr,di)
 fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
 fits = []
 for fittitle in fittitles:
-	fits.append(TTR_Init(fittitle,options.cuts,setstr,di))
+	fits.append(TTR_Init(fittitle,'rate_'+options.cuts,setstr,di))
+#CHANGE BACK
+#TTR = TTR_Init('Bifpoly',options.cuts,setstr,di)
+#TTR_err = TTR_Init('Bifpoly_err',options.cuts,setstr,di)
+#fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
+#fits = []
+#for fittitle in fittitles:
+#	fits.append(TTR_Init(fittitle,options.cuts,setstr,di))
 
 print "Creating histograms"
 

@@ -163,8 +163,10 @@ for coup in ['LH','RH']:
 	sigfiles = sorted(glob.glob('TWanalyzersignal'+coup+'*_PSET_'+cuts+var+'.root'))
 	for f in sigfiles:
 		mass = f[18:22]#.lstrip('TWanalyzersignal'+coup).rstrip('_Trigger_nominal_'+g+'_PSET_'+cuts+'.root')
-		xsec_sig = xsec_bsl[mass]
-		nev_sig = nev_bsl[mass]
+		if coup == 'RH':
+			xsec_sig = xsec_bsr[mass]
+		elif coup == 'LH':
+			xsec_sig = xsec_bsl[mass]
 		commands.append('rm ' + f.replace('TWanalyzersignal'+coup,'TWanalyzerweightedsignal'+coup))
 		for l in range(len(lumiList)):
 			lumi = lumiList[l]	 

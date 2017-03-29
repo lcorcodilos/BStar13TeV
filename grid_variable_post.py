@@ -124,12 +124,14 @@ for l in range(len(lumiList)):
 #		commands.append('mv TWvariablesBprime'+q+'ToTW'+sig+'_Trigger_nominalface_PSET_'+cuts+var+'.root temprootfiles/')
 
 
-for coup in ['LH']:#,'LH']:
+for coup in ['RH','LH']:
 	sigfiles = sorted(glob.glob('TWvariablessignal'+coup+'*_PSET_'+cuts+var+'.root'))
 	for f in sigfiles:
 		mass = f[19:23]#.lstrip('TWvariablessignal'+coup).rstrip('_Trigger_nominal_'+g+'_PSET_'+cuts+'.root')
-		xsec_sig = xsec_bsl[mass]
-		nev_sig = nev_bsl[mass]
+		if coup == 'RH':
+			xsec_sig = xsec_bsr[mass]
+		elif coup == 'LH':
+			xsec_sig = xsec_bsl[mass]
 		commands.append('rm ' + f.replace('TWvariablessignal'+coup,'TWvariablesweightedsignal'+coup))
 		for l in range(len(lumiList)):
 			lumi = lumiList[l]	 

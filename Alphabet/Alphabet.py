@@ -64,7 +64,6 @@ class Alphabetizer:
 			temphistA = TH1F("Hist_ATAG"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
 			quickplot(i.File, i.Tree, temphist, var_array[0], tag, i.weight)
 			quickplot(i.File, i.Tree, temphistN, var_array[0], antitag, "("+i.weight+"*"+self.Fit.ConvFact+")")
-			print "Nominal weight for " + i.name + ": " + "("+i.weight+"*"+self.Fit.ConvFact+")"
 			quickplot(i.File, i.Tree, temphistU, var_array[0], antitag, "("+i.weight+"*"+self.Fit.ConvFactUp+")")
 			quickplot(i.File, i.Tree, temphistD, var_array[0], antitag, "("+i.weight+"*"+self.Fit.ConvFactDn+")")
 			quickplot(i.File, i.Tree, temphistA, var_array[0], antitag, i.weight)
@@ -78,14 +77,17 @@ class Alphabetizer:
 			temphistN = TH1F("Hist_SUB_NOMINAL"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
 			temphistU = TH1F("Hist_SUB_UP"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
 			temphistD = TH1F("Hist_SUB_DOWN"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
+			temphistA = TH1F("Hist_SUB_ATAG"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
 			quickplot(i.File, i.Tree, temphist, var_array[0], tag, i.weight)
 			quickplot(i.File, i.Tree, temphistN, var_array[0], antitag, "("+i.weight+"*"+self.Fit.ConvFact+")")
 			quickplot(i.File, i.Tree, temphistU, var_array[0], antitag, "("+i.weight+"*"+self.Fit.ConvFactUp+")")
 			quickplot(i.File, i.Tree, temphistD, var_array[0], antitag, "("+i.weight+"*"+self.Fit.ConvFactDn+")")
+			quickplot(i.File, i.Tree, temphistA, var_array[0], antitag, i.weight)
 			self.hists_MSR_SUB.append(temphist)
 			self.hists_EST_SUB.append(temphistN)
 			self.hists_EST_SUB_UP.append(temphistU)
 			self.hists_EST_SUB_DN.append(temphistD)
+			self.hists_ATAG.append(temphistA) 
 	def MakeEstVariable(self, variable, binBoundaries, antitag, tag):
 		# makes an estimate in a region, based on an anti-tag region, of that variable in all dists
 		self.Fit.MakeConvFactor(self.X, self.center)

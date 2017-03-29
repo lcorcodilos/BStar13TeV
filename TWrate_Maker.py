@@ -225,14 +225,14 @@ stdeta2r = stdeta2.Rebin(len(bins2)-1,"stdeta2r",bins2)
 #TTbar subtraction is done here
 if options.set=='data':
 	print 'subtracting ttbar and single top'
-	#neta1r.Add(ttneta1r,-1)
-	#deta1r.Add(ttdeta1r,-1)
-	#neta2r.Add(ttneta2r,-1)
-	#deta2r.Add(ttdeta2r,-1)
-	#neta1r.Add(stneta1r,-1)
-	#deta1r.Add(stdeta1r,-1)
-	#neta2r.Add(stneta2r,-1)
-	#deta2r.Add(stdeta2r,-1)
+	neta1r.Add(ttneta1r,-1)
+	deta1r.Add(ttdeta1r,-1)
+	neta2r.Add(ttneta2r,-1)
+	deta2r.Add(ttdeta2r,-1)
+	neta1r.Add(stneta1r,-1)
+	deta1r.Add(stdeta1r,-1)
+	neta2r.Add(stneta2r,-1)
+	deta2r.Add(stdeta2r,-1)
 
 
 outputa = TFile( "plots/"+options.cuts+"/B_tagging_sigcont"+setstr+".root", "recreate" )
@@ -723,24 +723,24 @@ dpre1=[]
 dpre2=[]	
 
 
-neta1NOSUB = fdata.Get("MtwwptcomparepostSB1e1")
-deta1NOSUB = fdata.Get("MtwwptcomparepreSB1e1")
+neta1NOSUB = fdata.Get("MtwtptcomparepostSB1e1")
+deta1NOSUB = fdata.Get("MtwtptcomparepreSB1e1")
 
-neta2NOSUB = fdata.Get("MtwwptcomparepostSB1e2")
-deta2NOSUB = fdata.Get("MtwwptcomparepreSB1e2")
+neta2NOSUB = fdata.Get("MtwtptcomparepostSB1e2")
+deta2NOSUB = fdata.Get("MtwtptcomparepreSB1e2")
 
 
-neta1ttbar = fttbar.Get("MtwwptcomparepostSB1e1")
-deta1ttbar = fttbar.Get("MtwwptcomparepreSB1e1")
+neta1ttbar = fttbar.Get("MtwtptcomparepostSB1e1")
+deta1ttbar = fttbar.Get("MtwtptcomparepreSB1e1")
 
-neta2ttbar = fttbar.Get("MtwwptcomparepostSB1e2")
-deta2ttbar = fttbar.Get("MtwwptcomparepreSB1e2")
+neta2ttbar = fttbar.Get("MtwtptcomparepostSB1e2")
+deta2ttbar = fttbar.Get("MtwtptcomparepreSB1e2")
 
-neta1stbar = fsingletop.Get("MtwwptcomparepostSB1e1")
-deta1stbar = fsingletop.Get("MtwwptcomparepreSB1e1")
+neta1stbar = fsingletop.Get("MtwtptcomparepostSB1e1")
+deta1stbar = fsingletop.Get("MtwtptcomparepreSB1e1")
 
-neta2stbar = fsingletop.Get("MtwwptcomparepostSB1e2")
-deta2stbar = fsingletop.Get("MtwwptcomparepreSB1e2")
+neta2stbar = fsingletop.Get("MtwtptcomparepostSB1e2")
+deta2stbar = fsingletop.Get("MtwtptcomparepreSB1e2")
 
 neta1 = neta1NOSUB.Clone("neta1")
 neta1.Add(neta1ttbar,-1)
@@ -766,11 +766,11 @@ vavg1 = []
 vavg2 = []
 
 
-neta1r = ROOT.TH2F("neta1r",  "Comparison wpt and Mtw",   		len(bins2)-1, bins2,  140,  500,  4000 )
-deta1r = ROOT.TH2F("deta1r",  "Comparison wpt and Mtw",   		len(bins2)-1, bins2,  140,  500,  4000 )
+neta1r = ROOT.TH2F("neta1r",  "Comparison tpt and Mtw",   		len(bins2)-1, bins2,  140,  500,  4000 )
+deta1r = ROOT.TH2F("deta1r",  "Comparison tpt and Mtw",   		len(bins2)-1, bins2,  140,  500,  4000 )
 
-neta2r = ROOT.TH2F("neta2r",  "Comparison wpt and Mtw",   		len(bins2)-1, bins2,  140,  500,  4000 )
-deta2r  = ROOT.TH2F("deta2r",  "Comparison wpt and Mtw",   		len(bins2)-1, bins2,  140,  500,  4000 )
+neta2r = ROOT.TH2F("neta2r",  "Comparison tpt and Mtw",   		len(bins2)-1, bins2,  140,  500,  4000 )
+deta2r  = ROOT.TH2F("deta2r",  "Comparison tpt and Mtw",   		len(bins2)-1, bins2,  140,  500,  4000 )
 
 #test = TCanvas("test","test",1300,600)
 #test.cd()
