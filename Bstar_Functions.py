@@ -156,8 +156,7 @@ def LoadCuts(TYPE):
 			'minmass':[-float("inf"),float("inf")],
 			'sjbtag':[0.80,1.0],
 			'wmass':[65.0,95.0],
-			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4]
+			'eta':[0.0,2.4]
 			}			
 
 
@@ -445,25 +444,46 @@ def TTR_Init(ST,CUT,SET,di):
 		eta1fit = TF1("eta1fit",'expo(0) + pol0(2)',0,2000)
 		eta2fit = TF1("eta2fit",'expo(0) + pol0(2)',0,2000)
 		Params = 3
-
-	TBP1 = TRBPE1.read()
-	TBP2 = TRBPE2.read()
+	if ST == 'QUAD':
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+".txt")
+		TRBP.seek(0)
+		fit = TF1("fit",'QUAD',0,2000)
+		Params = 3
+	if ST == 'QUAD_err':
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_err_"+SET+".txt")
+		TRBP.seek(0)
+		fit = TF1("fit",'QUAD',0,2000)
+		Params = 3
+	try:
+		TBP1 = TRBPE1.read()
+		TBP2 = TRBPE2.read()
+	except:
+		TBP = TRBP.read()
 	
 	for i in range(0,Params):
+		try:
+			eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
+			eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
+		except:
+			fit.SetParameter(i,float(TBP.split('\n')[i]) )
 
-		eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
-		eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
-
-
-	return [eta1fit.Clone(),eta2fit.Clone()] 
+	try:
+		return [eta1fit.Clone(),eta2fit.Clone()] 
+	except:
+		return [fit.Clone()]
 
 #This takes the average t tagging rates that are initialized in the above function and produces 
 #A QCD background estimate based on them 
-def bkg_weight(tlv, funcs, etabins):
+def bkg_weight_pt(tlv, funcs, etabins):
 	for ibin in range(0,len(etabins)):
 		if (etabins[ibin][0] <= abs(tlv.Eta()) < etabins[ibin][1]) :
 			tagratept = funcs[ibin].Eval(tlv.Perp())		
 	return tagratept
+
+def bkg_weight_mass(tmass, tlv, funcs, etabins):
+	if (etabins[0] <= abs(tlv.Eta()) < etabins[1]) :
+		tagratetmass = funcs[ibin].Eval(tmass)		
+	return tagratetmass
 
 #This is the bifurcated polynomial function and its associated uncertainty 
 def BifPoly( x, p ):

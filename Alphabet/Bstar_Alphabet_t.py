@@ -277,5 +277,14 @@ f.write("\n\tthird = "+str(Bstar.Fit.fit.GetParameter(2))+";")
 f.write("\n\tthirdErr = "+str(Bstar.Fit.fit.GetParErrors()[2])+";")
 f.write("\n}\n")
 
+g = open("fn_bstar_QUAD_"+options.set+".txt",'a')
+g.write(str(Bstar.Fit.fit.GetParameter(0)))
+g.write("\n"+str(Bstar.Fit.fit.GetParameter(1)))
+g.write("\n"+str(Bstar.Fit.fit.GetParameter(2)))
+
+g_err = open("fn_bstar_QUAD_err_"+options.set+".txt",'a')
+g_err.write(str(Bstar.Fit.fit.GetParErrors(0)))
+g_err.write("\n"+str(Bstar.Fit.fit.GetParErrors(1)))
+g_err.write("\n"+str(Bstar.Fit.fit.GetParErrors(2)))
 
 raw_input("Press enter to continue...")
