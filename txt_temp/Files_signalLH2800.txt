@@ -1,0 +1,2 @@
+/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/170215_193622/0000/B2GEDMNtuple_slim_3.root
+/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/170215_193622/0000/B2GEDMNtuple_slim_5.root

@@ -36,7 +36,7 @@ def LoadConstants():
 		'wtagsf':0.997,
 		'wtagsfsig':1.07,
 		'xsec_bsl':{'1200': 1.944,'1400': 0.7848,'1600': 0.3431,'1800': 0.1588,'2000': 0.07711,'2200': 0.03881,'2400': 0.02015,'2600': 0.01073,'2800': 0.005829,'3000': 0.003234},
-		#'xsec_bsr':{'1200': 1.936,'1400': 0.7816,'1600': 0.3416,'1800': 0.1583,'2000': 0.07675,'2200': 0.03864,'2400': 0.02008,'2600': 0.01068,'2800': 0.005814,'3000': 0.003224},
+		'xsec_bsr':{'1200': 1.936,'1400': 0.7816,'1600': 0.3416,'1800': 0.1583,'2000': 0.07675,'2200': 0.03864,'2400': 0.02008,'2600': 0.01068,'2800': 0.005814,'3000': 0.003224},
 		'xsec_bpl':{'B1200': 0.0016852,'B1400': 0.0007134,'B1600': 0.0003220,'B1800': 0.0001523,'T1200': 0.0016852,'T1400': 0.0007134,'T1600': 0.0003220,'T1800': 0.0001523},
 		'xsec_ttbar':{'MG':831.76,'PH':831.76,'PHscaleup':831.76,'PHscaledown':831.76},
 		'xsec_qcd':{'PT300':7823,'PT470':648.2,'PT600':186.9,'PT800':32.293,'PT1000':9.4183,'PT1400':0.84265,'PT1800':0.114943,'PT2400':0.00683,'PT3200':0.000165,'800_BROKEN':32.293,'FLAT7000':2022100000,'HT500':31630,'HT700':6802,'HT1000':1206,'HT1500':120.4,'HT2000':25.25},
@@ -57,7 +57,7 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,210.0],
+			'tmass':[105.0,220.0],
 			'nsubjets':[1,10],
 			'tau32':[0.0,0.54],
 			'tau21':[0.0,0.4],
@@ -65,14 +65,15 @@ def LoadCuts(TYPE):
 			'sjbtag':[0.80,1.0],
 			'wmass':[65.0,95.0],
 			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4]
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
 			}
 	if TYPE=='rate_default':
  		return  {
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,210.0],
+			'tmass':[105.0,220.0],
 			'nsubjets':[1,10],
 			'tau32':[0.0,0.54],
 			'tau21':[0.0,0.4],
@@ -88,7 +89,7 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,210.0],
+			'tmass':[105.0,220.0],
 			'nsubjets':[1,10],
 			'tau32':[0.0,0.54],
 			'tau21':[0.4,1.0],
@@ -96,14 +97,15 @@ def LoadCuts(TYPE):
 			'sjbtag':[0.80,1.0],
 			'wmass':[130.0,float("inf")],
 			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4]
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
 			}
 	if TYPE=='rate_sideband1':
  		return  {
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,210.0],
+			'tmass':[105.0,220.0],
 			'nsubjets':[1,10],
 			'tau32':[0.0,0.54],
 			'tau21':[0.0,0.4],
@@ -119,7 +121,7 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,210.0],
+			'tmass':[105.0,220.0],
 			'nsubjets':[1,10],
 			'tau32':[0.0,0.54],
 			'tau21':[0.4,1.0],
@@ -127,14 +129,15 @@ def LoadCuts(TYPE):
 			'sjbtag':[0.80,1.0],
 			'wmass':[[30.0,65.0],[95.0,130.0]],
 			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4]
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
 			}
 	if TYPE=='rate_sideband':
  		return  {
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,210.0],
+			'tmass':[105.0,220.0],
 			'nsubjets':[1,10],
 			'tau32':[0.0,0.54],
 			'tau21':[0.0,0.4],
@@ -144,6 +147,22 @@ def LoadCuts(TYPE):
 			'eta1':[0.0,0.8],
 			'eta2':[0.8,2.4]
 			}
+	if TYPE=='alphabet':
+ 		return  {
+			'wpt':[400.0,float("inf")],
+			'tpt':[400.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[105.0,220.0],
+			'nsubjets':[1,10],
+			'tau32':[0.0,0.54],
+			'tau21':[0.6,1.0],
+			'minmass':[-float("inf"),float("inf")],
+			'sjbtag':[0.80,1.0],
+			'wmass':[65.0,95.0],
+			'eta':[0.0,2.4]
+			}			
+
+
 
 #This function loads up Ntuples based on what type of set you want to analyze.  
 #This needs to be updated whenever new Ntuples are produced (unless the file locations are the same).
@@ -428,25 +447,51 @@ def TTR_Init(ST,CUT,SET,di):
 		eta1fit = TF1("eta1fit",'expo(0) + pol0(2)',0,2000)
 		eta2fit = TF1("eta2fit",'expo(0) + pol0(2)',0,2000)
 		Params = 3
-
-	TBP1 = TRBPE1.read()
-	TBP2 = TRBPE2.read()
+	if ST == 'QUAD':
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+		TRBP.seek(0)
+		fit = TF1("fit",'pol2',0,300)
+		Params = 3
+	if ST == 'QUAD_errUp':
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+		TRBP.seek(0)
+		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
+	if ST == 'QUAD_errDown':
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+		TRBP.seek(0)
+		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
+	try:
+		TBP1 = TRBPE1.read()
+		TBP2 = TRBPE2.read()
+	except:
+		TBP = TRBP.read()
 	
 	for i in range(0,Params):
+		try:
+			eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
+			eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
+		except:
+			fit.SetParameter(i,float(TBP.split('\n')[i]) )
 
-		eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
-		eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
+	try:
+		return [eta1fit.Clone(),eta2fit.Clone()] 
+	except:
+		return [fit.Clone()]
 
-
-	return [eta1fit.Clone(),eta2fit.Clone()] 
-
-#This takes the average b tagging rates that are initialized in the above function and produces 
+#This takes the average t tagging rates that are initialized in the above function and produces 
 #A QCD background estimate based on them 
-def bkg_weight(blv, funcs, etabins):
+def bkg_weight_pt(tlv, funcs, etabins):
 	for ibin in range(0,len(etabins)):
-		if (etabins[ibin][0] <= abs(blv.Eta()) < etabins[ibin][1]) :
-			tagratept = funcs[ibin].Eval(blv.Perp())		
+		if (etabins[ibin][0] <= abs(tlv.Eta()) < etabins[ibin][1]) :
+			tagratept = funcs[ibin].Eval(tlv.Perp())		
 	return tagratept
+
+def bkg_weight_mass(tmass, tlv, funcs, etabins):
+	if (etabins[0] <= abs(tlv.Eta()) < etabins[1]) :
+		tagratetmass = funcs[0].Eval(tmass)		
+	return tagratetmass
 
 #This is the bifurcated polynomial function and its associated uncertainty 
 def BifPoly( x, p ):
@@ -621,7 +666,7 @@ def kinFit_Uncertainty(List,kinVar):
 	sigmah	    = List[0]
 	fits=len(List)-1
 	for ihist in range(0,len(List)):
-		if List[ihist].GetName() == 'QCDbkg'+kinVar+'Bifpoly':
+		if List[ihist].GetName() == 'QCDbkg'+kinVar+'QUAD':
 			nominalhist = List[ihist]
 	for ibin in range(0,nominalhist.GetXaxis().GetNbins()+1):
 
@@ -629,7 +674,7 @@ def kinFit_Uncertainty(List,kinVar):
 		sigma=0.0
 		sumsqdiff = 0.0
 		for ihist in range(0,len(List)):
-			if List[ihist].GetName() != 'QCDbkg'+kinVar+'Bifpoly':
+			if List[ihist].GetName() != 'QCDbkg'+kinVar+'QUAD':
 				sumsqdiff+=(List[ihist].GetBinContent(ibin)-nominalhist.GetBinContent(ibin))*(List[ihist].GetBinContent(ibin)-nominalhist.GetBinContent(ibin))
 		mse = sumsqdiff/fits
 		sigma = sqrt(mse)

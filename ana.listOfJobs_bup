@@ -21,47 +21,6 @@ python ./tardir/TWanalyzer.py -s data -j 20 -n 18 -g on -v analyzer -c default
 python ./tardir/TWanalyzer.py -s data -j 20 -n 19 -g on -v analyzer -c default 
 python ./tardir/TWanalyzer.py -s data -j 20 -n 20 -g on -v analyzer -c default
 
-python ./tardir/TWanalyzer.py -s data -j 20 -n 1  -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 2  -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 3  -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 4  -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 5  -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 6  -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 7  -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 8  -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 9  -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 10 -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 11 -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 12 -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 13 -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 14 -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 15 -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 16 -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 17 -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 18 -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 19 -g on -v analyzer -c default -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 20 -g on -v analyzer -c default -y up
-
-python ./tardir/TWanalyzer.py -s data -j 20 -n 1  -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 2  -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 3  -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 4  -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 5  -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 6  -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 7  -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 8  -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 9  -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 10 -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 11 -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 12 -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 13 -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 14 -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 15 -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 16 -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 17 -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 18 -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 19 -g on -v analyzer -c default -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 20 -g on -v analyzer -c default -y down
 
 #Signal
 #python ./tardir/TWanalyzer.py -s signalLH1200 -g on -v analyzer -c default
@@ -99,29 +58,6 @@ python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 2 -g on -v analyzer  -c defau
 python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 2 -g on -v analyzer  -c default 
 python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 2 -g on -v analyzer  -c default 
 
-python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 1 -g on -v analyzer  -c default -y up 
-python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 1 -g on -v analyzer  -c default -y up 
-python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 1 -g on -v analyzer  -c default -y up 
-python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 1 -g on -v analyzer  -c default -y up 
-python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 1 -g on -v analyzer  -c default -y up 
-
-python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 2 -g on -v analyzer  -c default -y up 
-python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 2 -g on -v analyzer  -c default -y up 
-python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 2 -g on -v analyzer  -c default -y up 
-python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 2 -g on -v analyzer  -c default -y up 
-python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 2 -g on -v analyzer  -c default -y up 
-
-python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 1 -g on -v analyzer  -c default -y down 
-python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 1 -g on -v analyzer  -c default -y down 
-python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 1 -g on -v analyzer  -c default -y down 
-python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 1 -g on -v analyzer  -c default -y down 
-python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 1 -g on -v analyzer  -c default -y down 
-
-python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 2 -g on -v analyzer  -c default -y down 
-python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 2 -g on -v analyzer  -c default -y down 
-python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 2 -g on -v analyzer  -c default -y down 
-python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 2 -g on -v analyzer  -c default -y down 
-python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 2 -g on -v analyzer  -c default -y down 
 
 
 #singltop
@@ -305,47 +241,6 @@ python ./tardir/TWanalyzer.py -s data -j 20 -n 18 -g on -v analyzer -c sideband
 python ./tardir/TWanalyzer.py -s data -j 20 -n 19 -g on -v analyzer -c sideband 
 python ./tardir/TWanalyzer.py -s data -j 20 -n 20 -g on -v analyzer -c sideband
 
-python ./tardir/TWanalyzer.py -s data -j 20 -n 1  -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 2  -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 3  -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 4  -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 5  -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 6  -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 7  -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 8  -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 9  -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 10 -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 11 -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 12 -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 13 -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 14 -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 15 -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 16 -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 17 -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 18 -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 19 -g on -v analyzer -c sideband -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 20 -g on -v analyzer -c sideband -y up
-
-python ./tardir/TWanalyzer.py -s data -j 20 -n 1  -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 2  -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 3  -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 4  -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 5  -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 6  -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 7  -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 8  -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 9  -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 10 -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 11 -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 12 -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 13 -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 14 -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 15 -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 16 -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 17 -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 18 -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 19 -g on -v analyzer -c sideband -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 20 -g on -v analyzer -c sideband -y down
 
 #Signal
 #python ./tardir/TWanalyzer.py -s signalLH1200 -g on -v analyzer -c sideband
@@ -383,29 +278,6 @@ python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 2 -g on -v analyzer  -c sideb
 python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 2 -g on -v analyzer  -c sideband 
 python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 2 -g on -v analyzer  -c sideband 
 
-python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 1 -g on -v analyzer  -c sideband -y up 
-python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 1 -g on -v analyzer  -c sideband -y up 
-python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 1 -g on -v analyzer  -c sideband -y up 
-python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 1 -g on -v analyzer  -c sideband -y up 
-python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 1 -g on -v analyzer  -c sideband -y up 
-
-python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 2 -g on -v analyzer  -c sideband -y up 
-python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 2 -g on -v analyzer  -c sideband -y up 
-python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 2 -g on -v analyzer  -c sideband -y up 
-python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 2 -g on -v analyzer  -c sideband -y up 
-python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 2 -g on -v analyzer  -c sideband -y up 
-
-python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 1 -g on -v analyzer  -c sideband -y down 
-python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 1 -g on -v analyzer  -c sideband -y down 
-python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 1 -g on -v analyzer  -c sideband -y down 
-python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 1 -g on -v analyzer  -c sideband -y down 
-python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 1 -g on -v analyzer  -c sideband -y down 
-
-python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 2 -g on -v analyzer  -c sideband -y down 
-python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 2 -g on -v analyzer  -c sideband -y down 
-python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 2 -g on -v analyzer  -c sideband -y down 
-python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 2 -g on -v analyzer  -c sideband -y down 
-python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 2 -g on -v analyzer  -c sideband -y down 
 
 
 #singltop
@@ -587,47 +459,6 @@ python ./tardir/TWanalyzer.py -s data -j 20 -n 18 -g on -v analyzer -c sideband1
 python ./tardir/TWanalyzer.py -s data -j 20 -n 19 -g on -v analyzer -c sideband1 
 python ./tardir/TWanalyzer.py -s data -j 20 -n 20 -g on -v analyzer -c sideband1
 
-python ./tardir/TWanalyzer.py -s data -j 20 -n 1  -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 2  -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 3  -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 4  -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 5  -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 6  -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 7  -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 8  -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 9  -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 10 -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 11 -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 12 -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 13 -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 14 -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 15 -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 16 -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 17 -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 18 -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 19 -g on -v analyzer -c sideband1 -y up
-python ./tardir/TWanalyzer.py -s data -j 20 -n 20 -g on -v analyzer -c sideband1 -y up
-
-python ./tardir/TWanalyzer.py -s data -j 20 -n 1  -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 2  -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 3  -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 4  -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 5  -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 6  -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 7  -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 8  -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 9  -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 10 -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 11 -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 12 -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 13 -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 14 -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 15 -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 16 -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 17 -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 18 -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 19 -g on -v analyzer -c sideband1 -y down
-python ./tardir/TWanalyzer.py -s data -j 20 -n 20 -g on -v analyzer -c sideband1 -y down
 
 #Signal
 #python ./tardir/TWanalyzer.py -s signalLH1200 -g on -v analyzer -c sideband1
@@ -665,29 +496,6 @@ python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 2 -g on -v analyzer  -c sideb
 python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 2 -g on -v analyzer  -c sideband1 
 python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 2 -g on -v analyzer  -c sideband1 
 
-python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 1 -g on -v analyzer  -c sideband1 -y up 
-python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 1 -g on -v analyzer  -c sideband1 -y up 
-python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 1 -g on -v analyzer  -c sideband1 -y up 
-python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 1 -g on -v analyzer  -c sideband1 -y up 
-python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 1 -g on -v analyzer  -c sideband1 -y up 
-
-python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 2 -g on -v analyzer  -c sideband1 -y up 
-python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 2 -g on -v analyzer  -c sideband1 -y up 
-python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 2 -g on -v analyzer  -c sideband1 -y up 
-python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 2 -g on -v analyzer  -c sideband1 -y up 
-python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 2 -g on -v analyzer  -c sideband1 -y up 
-
-python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 1 -g on -v analyzer  -c sideband1 -y down 
-python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 1 -g on -v analyzer  -c sideband1 -y down 
-python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 1 -g on -v analyzer  -c sideband1 -y down 
-python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 1 -g on -v analyzer  -c sideband1 -y down 
-python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 1 -g on -v analyzer  -c sideband1 -y down 
-
-python ./tardir/TWanalyzer.py -s QCDHT500 -j 2 -n 2 -g on -v analyzer  -c sideband1 -y down 
-python ./tardir/TWanalyzer.py -s QCDHT700 -j 2 -n 2 -g on -v analyzer  -c sideband1 -y down 
-python ./tardir/TWanalyzer.py -s QCDHT1000 -j 2 -n 2 -g on -v analyzer  -c sideband1 -y down 
-python ./tardir/TWanalyzer.py -s QCDHT1500 -j 2 -n 2 -g on -v analyzer  -c sideband1 -y down 
-python ./tardir/TWanalyzer.py -s QCDHT2000 -j 2 -n 2 -g on -v analyzer  -c sideband1 -y down 
 
 
 #singltop

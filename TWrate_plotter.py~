@@ -266,20 +266,20 @@ c1.Divide(2,3)
 c1.cd(1)
 
 #CHANGE BACK
-#if options.set=='data':
-#	#probeeta3data.Add(probeeta3mc,-1)
-#	probeeta1data.Add(probeeta1mc,-1)
-#	probeeta2data.Add(probeeta2mc,-1)
-#	tageta1data.Add(tageta1mc,-1)
-#	tageta2data.Add(tageta2mc,-1)
-#	#tageta3data.Add(tageta3mc,-1)
+if options.set=='data':
+	#probeeta3data.Add(probeeta3mc,-1)
+	probeeta1data.Add(probeeta1mc,-1)
+	probeeta2data.Add(probeeta2mc,-1)
+	tageta1data.Add(tageta1mc,-1)
+	tageta2data.Add(tageta2mc,-1)
+	#tageta3data.Add(tageta3mc,-1)
 
-#	#probeeta3data.Add(probeeta3st,-1)
-#	probeeta1data.Add(probeeta1st,-1)
-#	probeeta2data.Add(probeeta2st,-1)
-#	tageta1data.Add(tageta1st,-1)
-#	tageta2data.Add(tageta2st,-1)
-#	#tageta3data.Add(tageta3st,-1)
+	#probeeta3data.Add(probeeta3st,-1)
+	probeeta1data.Add(probeeta1st,-1)
+	probeeta2data.Add(probeeta2st,-1)
+	tageta1data.Add(tageta1st,-1)
+	tageta2data.Add(tageta2st,-1)
+	#tageta3data.Add(tageta3st,-1)
 
 
 gPad.SetLeftMargin(0.16)

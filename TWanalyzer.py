@@ -41,7 +41,7 @@ parser.add_option('-n', '--num', metavar='F', type='string', action='store',
                   dest		=	'num',
                   help		=	'job number')
 parser.add_option('-y', '--modmass', metavar='F', type='string', action='store',
-                  default	=	'nominal',
+                  default	=	'none',
                   dest		=	'modmass',
                   help		=	'nominal up or down')
 parser.add_option('-j', '--jobs', metavar='F', type='string', action='store',
@@ -114,7 +114,7 @@ parser.add_option('-S', '--split', metavar='F', type='string', action='store',
 if (options.set.find('QCD') != -1):
 	setstr = 'QCD'
 else:
-	setstr = 'Data'
+	setstr = 'data'
 
 print "Options summary"
 print "=================="
@@ -167,8 +167,9 @@ tau21 = Cuts['tau21']
 minmass = Cuts['minmass']
 sjbtag = Cuts['sjbtag']
 wmass = Cuts['wmass']
-eta1 = Cuts['eta1']
-eta2 = Cuts['eta2']
+#eta1 = Cuts['eta1']
+#eta2 = Cuts['eta2']
+eta = Cuts['eta']
 
 Cons = LoadConstants()
 lumi = Cons['lumi']
@@ -237,8 +238,8 @@ else :
 print 'The type of set is ' + settype
 
 #CHANGE BACK
-ModFile = ROOT.TFile(di+"ModMassFile_rate_"+options.cuts+".root")
-ModPlot = ModFile.Get("rtmass")
+#ModFile = ROOT.TFile(di+"ModMassFile_rate_"+options.cuts+".root")
+#ModPlot = ModFile.Get("rtmass")
 
 #ModFile = ROOT.TFile(di+"ModMassFile_"+options.cuts+".root")
 #ModPlot = ModFile.Get("rtmass")
@@ -375,28 +376,30 @@ else:
 
 #Load up the average b-tagging rates -- Takes parameters from text file and makes a function
 #CHANGE BACK
-#TTR = TTR_Init('Bifpoly','rate_'+options.cuts,setstr,di)
-#TTR_err = TTR_Init('Bifpoly_err','rate_'+options.cuts,setstr,di)
+TTR = TTR_Init('QUAD',options.cuts,setstr,di)
+TTR_errUp = TTR_Init('QUAD_errUp',options.cuts,setstr,di)
+TTR_errDown = TTR_Init('QUAD_errDown',options.cuts,setstr,di)
 #fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
-#fits = []
-#for fittitle in fittitles:
-#	fits.append(TTR_Init(fittitle,'rate_'+options.cuts,setstr,di))
-#CHANGE BACK
-TTR = TTR_Init('Bifpoly',options.cuts,setstr,di)
-TTR_err = TTR_Init('Bifpoly_err',options.cuts,setstr,di)
-fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
+fittitles = ["QUAD"]
 fits = []
 for fittitle in fittitles:
 	fits.append(TTR_Init(fittitle,options.cuts,setstr,di))
+#CHANGE BACK
+#TTR = TTR_Init('Bifpoly',options.cuts,setstr,di)
+#TTR_err = TTR_Init('Bifpoly_err',options.cuts,setstr,di)
+#fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
+#fits = []
+#for fittitle in fittitles:
+#	fits.append(TTR_Init(fittitle,options.cuts,setstr,di))
 
 print "Creating histograms"
 
 #Define Histograms
 #CHANGE BACK
-TagFile1 = TFile(di+"Tagrate"+setstr+"2D_rate_"+options.cuts+".root")
+#TagFile1 = TFile(di+"Tagrate"+setstr+"2D_rate_"+options.cuts+".root")
 #TagFile1 = TFile(di+"Tagrate"+setstr+"2D_"+options.cuts+".root")
-TagPlot2de1= TagFile1.Get("tagrateeta1")
-TagPlot2de2= TagFile1.Get("tagrateeta2")
+#TagPlot2de1= TagFile1.Get("tagrateeta1")
+#TagPlot2de2= TagFile1.Get("tagrateeta2")
 
 
 f.cd()
@@ -415,9 +418,9 @@ Nevents	    = TH1F("Nevents",     	  "mass of tb",     	  	         5, 0., 5. )
 QCDbkg= TH1F("QCDbkg",     "QCD background estimate",     	  	      140, 500, 4000 )
 QCDbkgh= TH1F("QCDbkgh",     "QCD background estimate up error",     	  	      140, 500, 4000 )
 QCDbkgl= TH1F("QCDbkgl",     "QCD background estimate down error",     	  	      140, 500, 4000 )
-QCDbkg2D= TH1F("QCDbkg2D",     "QCD background estimate 2d error",     	  	      140, 500, 4000 )
-QCDbkg2Dup= TH1F("QCDbkg2Dup",     "QCD background estimate 2d error",     	  	      140, 500, 4000 )
-QCDbkg2Ddown= TH1F("QCDbkg2Ddown",     "QCD background estimate 2d error",     	  	      140, 500, 4000 )
+# QCDbkg2D= TH1F("QCDbkg2D",     "QCD background estimate 2d error",     	  	      140, 500, 4000 )
+# QCDbkg2Dup= TH1F("QCDbkg2Dup",     "QCD background estimate 2d error",     	  	      140, 500, 4000 )
+# QCDbkg2Ddown= TH1F("QCDbkg2Ddown",     "QCD background estimate 2d error",     	  	      140, 500, 4000 )
 
 MtStack		= TH1F("MtStack",	"top candidate mass for stack",		100,   0, 500 )
 QCDbkgMtStack	= TH1F("QCDbkgMtStack", "QCD background for top mass",		100, 0, 500 )
@@ -481,58 +484,58 @@ if options.var == "kinematics":
 	QCDbkgET	= TH1F("QCDbkgET",       "QCD background estimate eta top",     	     12, -2.4, 2.4 )
 	QCDbkgETh= TH1F("QCDbkgETh",     "QCD background estimate up error",     	  	      12, -2.4, 2.4 )
 	QCDbkgETl= TH1F("QCDbkgETl",     "QCD background estimate down error",     	  	      12, -2.4, 2.4 )
-	QCDbkgET2D= TH1F("QCDbkgET2D",     "QCD background estimate 2d error",     	  	      12, -2.4, 2.4 )
-	QCDbkgET2Dup= TH1F("QCDbkgET2Dup",     "QCD background estimate 2d error",     	  	      12, -2.4, 2.4 )
-	QCDbkgET2Ddown= TH1F("QCDbkgET2Ddown",     "QCD background estimate 2d error",     	  	      12, -2.4, 2.4 )
+	# QCDbkgET2D= TH1F("QCDbkgET2D",     "QCD background estimate 2d error",     	  	      12, -2.4, 2.4 )
+	# QCDbkgET2Dup= TH1F("QCDbkgET2Dup",     "QCD background estimate 2d error",     	  	      12, -2.4, 2.4 )
+	# QCDbkgET2Ddown= TH1F("QCDbkgET2Ddown",     "QCD background estimate 2d error",     	  	      12, -2.4, 2.4 )
 	
 	QCDbkgEW	= TH1F("QCDbkgEW",       "QCD background estimate eta w",       	     12, -2.4, 2.4 )
 	QCDbkgEWh= TH1F("QCDbkgEWh",     "QCD background estimate up error",     	  	      12, -2.4, 2.4 )
 	QCDbkgEWl= TH1F("QCDbkgEWl",     "QCD background estimate down error",     	  	      12, -2.4, 2.4 )
-	QCDbkgEW2D= TH1F("QCDbkgEW2D",     "QCD background estimate 2d error",     	  	      12, -2.4, 2.4 )
-	QCDbkgEW2Dup= TH1F("QCDbkgEW2Dup",     "QCD background estimate 2d error",     	  	      12, -2.4, 2.4 )
-	QCDbkgEW2Ddown= TH1F("QCDbkgEW2Ddown",     "QCD background estimate 2d error",     	  	      12, -2.4, 2.4 )
+	# QCDbkgEW2D= TH1F("QCDbkgEW2D",     "QCD background estimate 2d error",     	  	      12, -2.4, 2.4 )
+	# QCDbkgEW2Dup= TH1F("QCDbkgEW2Dup",     "QCD background estimate 2d error",     	  	      12, -2.4, 2.4 )
+	# QCDbkgEW2Ddown= TH1F("QCDbkgEW2Ddown",     "QCD background estimate 2d error",     	  	      12, -2.4, 2.4 )
 	
 	QCDbkgPT	= TH1F("QCDbkgPT",       "QCD background estimate pt top",     	  	     50, 450, 1500 )
 	QCDbkgPTh= TH1F("QCDbkgPTh",     "QCD background estimate up error",     	  	      50, 450, 1500 )
 	QCDbkgPTl= TH1F("QCDbkgPTl",     "QCD background estimate down error",     	  	      50, 450, 1500 )
-	QCDbkgPT2D= TH1F("QCDbkgPT2D",     "QCD background estimate 2d error",     	  	      50, 450, 1500 )
-	QCDbkgPT2Dup= TH1F("QCDbkgPT2Dup",     "QCD background estimate 2d error",     	  	      50, 450, 1500 )
-	QCDbkgPT2Ddown= TH1F("QCDbkgPT2Ddown",     "QCD background estimate 2d error",     	  	      50, 450, 1500 )
+	# QCDbkgPT2D= TH1F("QCDbkgPT2D",     "QCD background estimate 2d error",     	  	      50, 450, 1500 )
+	# QCDbkgPT2Dup= TH1F("QCDbkgPT2Dup",     "QCD background estimate 2d error",     	  	      50, 450, 1500 )
+	# QCDbkgPT2Ddown= TH1F("QCDbkgPT2Ddown",     "QCD background estimate 2d error",     	  	      50, 450, 1500 )
 	
 	QCDbkgPW	= TH1F("QCDbkgPW",       "QCD background estimate pt W",       	 	     50, 370, 1430 )
 	QCDbkgPWh= TH1F("QCDbkgPWh",     "QCD background estimate up error",     	  	      50, 370, 1430 )
 	QCDbkgPWl= TH1F("QCDbkgPWl",     "QCD background estimate down error",     	  	      50, 370, 1430 )
-	QCDbkgPW2D= TH1F("QCDbkgPW2D",     "QCD background estimate 2d error",     	  	      50, 370, 1430 )
-	QCDbkgPW2Dup= TH1F("QCDbkgPW2Dup",     "QCD background estimate 2d error",     	  	      50, 370, 1430 )
-	QCDbkgPW2Ddown= TH1F("QCDbkgPW2Ddown",     "QCD background estimate 2d error",     	  	      50, 370, 1430 )
+	# QCDbkgPW2D= TH1F("QCDbkgPW2D",     "QCD background estimate 2d error",     	  	      50, 370, 1430 )
+	# QCDbkgPW2Dup= TH1F("QCDbkgPW2Dup",     "QCD background estimate 2d error",     	  	      50, 370, 1430 )
+	# QCDbkgPW2Ddown= TH1F("QCDbkgPW2Ddown",     "QCD background estimate 2d error",     	  	      50, 370, 1430 )
 	
 	QCDbkgPTW	= TH1F("QCDbkgPTW",      "QCD background estimate pt top+w",     	     35,   0, 700  )
 	QCDbkgPTWh= TH1F("QCDbkgPTWh",     "QCD background estimate up error",     	  	      35,   0, 700 )
 	QCDbkgPTWl= TH1F("QCDbkgPTWl",     "QCD background estimate down error",     	  	      35,   0, 700 )
-	QCDbkgPTW2D= TH1F("QCDbkgPTW2D",     "QCD background estimate 2d error",     	  	      35,   0, 700 )
-	QCDbkgPTW2Dup= TH1F("QCDbkgPTW2Dup",     "QCD background estimate 2d error",     	  	      35,   0, 700 )
-	QCDbkgPTW2Ddown= TH1F("QCDbkgPTW2Ddown",     "QCD background estimate 2d error",     	  	      35,   0, 700 )
+	# QCDbkgPTW2D= TH1F("QCDbkgPTW2D",     "QCD background estimate 2d error",     	  	      35,   0, 700 )
+	# QCDbkgPTW2Dup= TH1F("QCDbkgPTW2Dup",     "QCD background estimate 2d error",     	  	      35,   0, 700 )
+	# QCDbkgPTW2Ddown= TH1F("QCDbkgPTW2Ddown",     "QCD background estimate 2d error",     	  	      35,   0, 700 )
 	
 	QCDbkgPhT	= TH1F("QCDbkgPhT",      "QCD background estimate phi top",       	     12, -pie, pie )
 	QCDbkgPhTh= TH1F("QCDbkgPhTh",     "QCD background estimate up error",     	  	      12, -pie, pie )
 	QCDbkgPhTl= TH1F("QCDbkgPhTl",     "QCD background estimate down error",     	  	      12, -pie, pie )
-	QCDbkgPhT2D= TH1F("QCDbkgPhT2D",     "QCD background estimate 2d error",     	  	      12, -pie, pie )
-	QCDbkgPhT2Dup= TH1F("QCDbkgPhT2Dup",     "QCD background estimate 2d error",     	  	      12, -pie, pie )
-	QCDbkgPhT2Ddown= TH1F("QCDbkgPhT2Ddown",     "QCD background estimate 2d error",     	  	      12, -pie, pie )
+	# QCDbkgPhT2D= TH1F("QCDbkgPhT2D",     "QCD background estimate 2d error",     	  	      12, -pie, pie )
+	# QCDbkgPhT2Dup= TH1F("QCDbkgPhT2Dup",     "QCD background estimate 2d error",     	  	      12, -pie, pie )
+	# QCDbkgPhT2Ddown= TH1F("QCDbkgPhT2Ddown",     "QCD background estimate 2d error",     	  	      12, -pie, pie )
 	
 	QCDbkgPhW	= TH1F("QCDbkgPhW",      "QCD background estimate phi w",     	  	     12, -pie, pie )
 	QCDbkgPhWh= TH1F("QCDbkgPhWh",     "QCD background estimate up error",     	  	      12, -pie, pie )
 	QCDbkgPhWl= TH1F("QCDbkgPhWl",     "QCD background estimate down error",     	  	      12, -pie, pie )
-	QCDbkgPhW2D= TH1F("QCDbkgPhW2D",     "QCD background estimate 2d error",     	  	      12, -pie, pie )
-	QCDbkgPhW2Dup= TH1F("QCDbkgPhW2Dup",     "QCD background estimate 2d error",     	  	      12, -pie, pie )
-	QCDbkgPhW2Ddown= TH1F("QCDbkgPhW2Ddown",     "QCD background estimate 2d error",     	  	      12, -pie, pie )
+	# QCDbkgPhW2D= TH1F("QCDbkgPhW2D",     "QCD background estimate 2d error",     	  	      12, -pie, pie )
+	# QCDbkgPhW2Dup= TH1F("QCDbkgPhW2Dup",     "QCD background estimate 2d error",     	  	      12, -pie, pie )
+	# QCDbkgPhW2Ddown= TH1F("QCDbkgPhW2Ddown",     "QCD background estimate 2d error",     	  	      12, -pie, pie )
 	
 	QCDbkgdPhi	= TH1F("QCDbkgdPhi",     "QCD background estimate delta phi",       	     12,  2.2, pie )
 	QCDbkgdPhih= TH1F("QCDbkgdPhih",     "QCD background estimate up error",     	  	      12, 2.2, pie )
 	QCDbkgdPhil= TH1F("QCDbkgdPhil",     "QCD background estimate down error",     	  	      12, 2.2, pie )
-	QCDbkgdPhi2D= TH1F("QCDbkgdPhi2D",     "QCD background estimate 2d error",     	  	      12, 2.2, pie )
-	QCDbkgdPhi2Dup= TH1F("QCDbkgdPhi2Dup",     "QCD background estimate 2d error",     	  	      12, 2.2, pie )
-	QCDbkgdPhi2Ddown= TH1F("QCDbkgdPhi2Ddown",     "QCD background estimate 2d error",     	  	      12, 2.2, pie )
+	# QCDbkgdPhi2D= TH1F("QCDbkgdPhi2D",     "QCD background estimate 2d error",     	  	      12, 2.2, pie )
+	# QCDbkgdPhi2Dup= TH1F("QCDbkgdPhi2Dup",     "QCD background estimate 2d error",     	  	      12, 2.2, pie )
+	# QCDbkgdPhi2Ddown= TH1F("QCDbkgdPhi2Ddown",     "QCD background estimate 2d error",     	  	      12, 2.2, pie )
 	
 
 
@@ -962,230 +965,167 @@ for event in events:
 								if tau21_cut:
 									if options.var == "kinematics":
 										Mtw_cut6.Fill((tjet+wjet).M(),weight)
-									eta_regions = [eta1,eta2]
-									TTRweight = bkg_weight(tjet,TTR,eta_regions)
-									TTRweightsigsq = bkg_weight(tjet,TTR_err,eta_regions)
-	
-									TTRweighterrup = TTRweight+sqrt(TTRweightsigsq)
-									TTRweighterrdown = TTRweight-sqrt(TTRweightsigsq)
-	
+									#eta_regions = [eta1,eta2]
 
-									eta1_cut = eta1[0]<=abs(tjet.Eta())<eta1[1]
-									eta2_cut = eta2[0]<=abs(tjet.Eta())<eta2[1]
+									#eta1_cut = eta1[0]<=abs(tjet.Eta())<eta1[1]
+									#eta2_cut = eta2[0]<=abs(tjet.Eta())<eta2[1]
+									eta_cut = eta[0]<=abs(tjet.Eta())<eta[1]
 
 									modm = puppiJetMass[tindexval]
-									if options.modmass=='nominal':
-		        							massw = ModPlot.Interpolate(modm)
-									if options.modmass=='up':
-		        							massw = 1 + 0.5*(ModPlot.Interpolate(modm)-1)
-									if options.modmass=='down':
-		        							massw = max(0.0,1 + 1.5*(ModPlot.Interpolate(modm)-1))
-		        						if options.modmass=='none':
+									# if options.modmass=='nominal':
+		       #  							massw = ModPlot.Interpolate(modm)
+									# if options.modmass=='up':
+		       #  							massw = 1 + 0.5*(ModPlot.Interpolate(modm)-1)
+									# if options.modmass=='down':
+		       #  							massw = max(0.0,1 + 1.5*(ModPlot.Interpolate(modm)-1))
+									if options.modmass=='none':
 		        							massw = 1
 	
-									masswHist.Fill(massw)
-
-									if (eta1_cut) :
-										xbin = TagPlot2de1.GetXaxis().FindBin(tjet.Perp())
-										ybin = TagPlot2de1.GetYaxis().FindBin((tjet+wjet).M())
-										tagrate2d = TagPlot2de1.GetBinContent(xbin,ybin)
-										tagrate2derr = TagPlot2de1.GetBinError(xbin,ybin)
-										QCDbkg2D.Fill((tjet+wjet).M(),tagrate2d*weight*massw)
-										QCDbkg2Dup.Fill((tjet+wjet).M(),(tagrate2d+tagrate2derr)*weight*massw)
-										QCDbkg2Ddown.Fill((tjet+wjet).M(),(tagrate2d-tagrate2derr)*weight*massw)
-	
-										if options.var == "kinematics":
-											Mtw_cut7.Fill((tjet+wjet).M(),weight)
-											QCDbkgET2D.Fill(tjet.Eta(),tagrate2d*weight*massw)
-											QCDbkgET2Dup.Fill(tjet.Eta(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgET2Ddown.Fill(tjet.Eta(),(tagrate2d-tagrate2derr)*weight*massw)
-	
-											QCDbkgEW2D.Fill(wjet.Eta(),tagrate2d*weight*massw)
-											QCDbkgEW2Dup.Fill(wjet.Eta(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgEW2Ddown.Fill(wjet.Eta(),(tagrate2d-tagrate2derr)*weight*massw)
-	
-											QCDbkgPT2D.Fill(tjet.Perp(),tagrate2d*weight*massw)
-											QCDbkgPT2Dup.Fill(tjet.Perp(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgPT2Ddown.Fill(tjet.Perp(),(tagrate2d-tagrate2derr)*weight*massw)
-	
-											QCDbkgPW2D.Fill(wjet.Perp(),tagrate2d*weight*massw)
-											QCDbkgPW2Dup.Fill(wjet.Perp(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgPW2Ddown.Fill(wjet.Perp(),(tagrate2d-tagrate2derr)*weight*massw)
-	
-											QCDbkgPTW2D.Fill((tjet+wjet).Perp(),tagrate2d*weight*massw)
-											QCDbkgPTW2Dup.Fill((tjet+wjet).Perp(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgPTW2Ddown.Fill((tjet+wjet).Perp(),(tagrate2d-tagrate2derr)*weight*massw)
-	
-											QCDbkgPhT2D.Fill(tjet.Phi(),tagrate2d*weight*massw)
-											QCDbkgPhT2Dup.Fill(tjet.Phi(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgPT2Ddown.Fill(tjet.Phi(),(tagrate2d-tagrate2derr)*weight*massw)	
-	
-											QCDbkgPhW2D.Fill(wjet.Phi(),tagrate2d*weight*massw)
-											QCDbkgPhW2Dup.Fill(wjet.Phi(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgPhW2Ddown.Fill(wjet.Phi(),(tagrate2d-tagrate2derr)*weight*massw)
-	
-											QCDbkgdPhi2D.Fill(abs(tjet.Phi()-wjet.Phi()),tagrate2d*weight*massw)
-											QCDbkgdPhi2Dup.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgdPhi2Ddown.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d-tagrate2derr)*weight*massw)
+									#masswHist.Fill(massw)
 				
-									if (eta2_cut):
-										xbin = TagPlot2de2.GetXaxis().FindBin(tjet.Perp())
-										ybin = TagPlot2de2.GetYaxis().FindBin((tjet+wjet).M())
-										tagrate2d = TagPlot2de2.GetBinContent(xbin,ybin)
-										tagrate2derr = TagPlot2de2.GetBinError(xbin,ybin)
-										QCDbkg2D.Fill((tjet+wjet).M(),tagrate2d*weight*massw)
-										QCDbkg2Dup.Fill((tjet+wjet).M(),(tagrate2d+tagrate2derr)*weight*massw)
-										QCDbkg2Ddown.Fill((tjet+wjet).M(),(tagrate2d-tagrate2derr)*weight*massw)	
+									if (eta_cut):
+										#xbin = TagPlot2de2.GetXaxis().FindBin(tjet.Perp())
+										#ybin = TagPlot2de2.GetYaxis().FindBin((tjet+wjet).M())
+										#tagrate2d = TagPlot2de2.GetBinContent(xbin,ybin)
+										#tagrate2derr = TagPlot2de2.GetBinError(xbin,ybin)
+										#QCDbkg2D.Fill((tjet+wjet).M(),tagrate2d*weight*massw)
+										#QCDbkg2Dup.Fill((tjet+wjet).M(),(tagrate2d+tagrate2derr)*weight*massw)
+										#QCDbkg2Ddown.Fill((tjet+wjet).M(),(tagrate2d-tagrate2derr)*weight*massw)	
 				
-										if options.var == "kinematics":
-											Mtw_cut8.Fill((tjet+wjet).M(),weight)
-											QCDbkgET2D.Fill(tjet.Eta(),tagrate2d*weight*massw)
-											QCDbkgET2Dup.Fill(tjet.Eta(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgET2Ddown.Fill(tjet.Eta(),(tagrate2d-tagrate2derr)*weight*massw)
+										# if options.var == "kinematics":
+										# 	Mtw_cut8.Fill((tjet+wjet).M(),weight)
+											# QCDbkgET2D.Fill(tjet.Eta(),tagrate2d*weight*massw)
+											# QCDbkgET2Dup.Fill(tjet.Eta(),(tagrate2d+tagrate2derr)*weight*massw)
+											# QCDbkgET2Ddown.Fill(tjet.Eta(),(tagrate2d-tagrate2derr)*weight*massw)
 	
-											QCDbkgEW2D.Fill(wjet.Eta(),tagrate2d*weight*massw)
-											QCDbkgEW2Dup.Fill(wjet.Eta(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgEW2Ddown.Fill(wjet.Eta(),(tagrate2d-tagrate2derr)*weight*massw)
+											# QCDbkgEW2D.Fill(wjet.Eta(),tagrate2d*weight*massw)
+											# QCDbkgEW2Dup.Fill(wjet.Eta(),(tagrate2d+tagrate2derr)*weight*massw)
+											# QCDbkgEW2Ddown.Fill(wjet.Eta(),(tagrate2d-tagrate2derr)*weight*massw)
 	
-											QCDbkgPT2D.Fill(tjet.Perp(),tagrate2d*weight*massw)
-											QCDbkgPT2Dup.Fill(tjet.Perp(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgPT2Ddown.Fill(tjet.Perp(),(tagrate2d-tagrate2derr)*weight*massw)
+											# QCDbkgPT2D.Fill(tjet.Perp(),tagrate2d*weight*massw)
+											# QCDbkgPT2Dup.Fill(tjet.Perp(),(tagrate2d+tagrate2derr)*weight*massw)
+											# QCDbkgPT2Ddown.Fill(tjet.Perp(),(tagrate2d-tagrate2derr)*weight*massw)
 	
-											QCDbkgPW2D.Fill(wjet.Perp(),tagrate2d*weight*massw)
-											QCDbkgPW2Dup.Fill(wjet.Perp(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgPW2Ddown.Fill(wjet.Perp(),(tagrate2d-tagrate2derr)*weight*massw)
+											# QCDbkgPW2D.Fill(wjet.Perp(),tagrate2d*weight*massw)
+											# QCDbkgPW2Dup.Fill(wjet.Perp(),(tagrate2d+tagrate2derr)*weight*massw)
+											# QCDbkgPW2Ddown.Fill(wjet.Perp(),(tagrate2d-tagrate2derr)*weight*massw)
 	
-											QCDbkgPTW2D.Fill((tjet+wjet).Perp(),tagrate2d*weight*massw)
-											QCDbkgPTW2Dup.Fill((tjet+wjet).Perp(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgPTW2Ddown.Fill((tjet+wjet).Perp(),(tagrate2d-tagrate2derr)*weight*massw)
+											# QCDbkgPTW2D.Fill((tjet+wjet).Perp(),tagrate2d*weight*massw)
+											# QCDbkgPTW2Dup.Fill((tjet+wjet).Perp(),(tagrate2d+tagrate2derr)*weight*massw)
+											# QCDbkgPTW2Ddown.Fill((tjet+wjet).Perp(),(tagrate2d-tagrate2derr)*weight*massw)
 		
-											QCDbkgPhT2D.Fill(tjet.Phi(),tagrate2d*weight*massw)
-											QCDbkgPhT2Dup.Fill(tjet.Phi(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgPT2Ddown.Fill(tjet.Phi(),(tagrate2d-tagrate2derr)*weight*massw)	
+											# QCDbkgPhT2D.Fill(tjet.Phi(),tagrate2d*weight*massw)
+											# QCDbkgPhT2Dup.Fill(tjet.Phi(),(tagrate2d+tagrate2derr)*weight*massw)
+											# QCDbkgPT2Ddown.Fill(tjet.Phi(),(tagrate2d-tagrate2derr)*weight*massw)	
 	
-											QCDbkgPhW2D.Fill(wjet.Phi(),tagrate2d*weight*massw)
-											QCDbkgPhW2Dup.Fill(wjet.Phi(),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgPhW2Ddown.Fill(wjet.Phi(),(tagrate2d-tagrate2derr)*weight*massw)
+											# QCDbkgPhW2D.Fill(wjet.Phi(),tagrate2d*weight*massw)
+											# QCDbkgPhW2Dup.Fill(wjet.Phi(),(tagrate2d+tagrate2derr)*weight*massw)
+											# QCDbkgPhW2Ddown.Fill(wjet.Phi(),(tagrate2d-tagrate2derr)*weight*massw)
 	
-											QCDbkgdPhi2D.Fill(abs(tjet.Phi()-wjet.Phi()),tagrate2d*weight*massw)
-											QCDbkgdPhi2Dup.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d+tagrate2derr)*weight*massw)
-											QCDbkgdPhi2Ddown.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d-tagrate2derr)*weight*massw)
-								
-									if options.var == 'analyzer':
-										fillSpec = [(tjet+wjet).M()]
-									elif options.var == 'kinematics':
-										fillSpec = [(tjet+wjet).M(), tjet.Eta(), wjet.Eta(), tjet.Perp(), wjet.Perp(), (tjet+wjet).Perp(), tjet.Phi(), wjet.Phi(), abs(tjet.Phi()-wjet.Phi())]
-	
-									arr_count = 0
-									for spec in fillSpec:
-										for ifit in range(0,len(fittitles)):
-											tempweight = bkg_weight(tjet,fits[ifit],eta_regions)
-											QCDbkg_ARR[arr_count].Fill(spec,tempweight*weight*massw) 
-											arr_count+=1
-	
-									QCDbkg.Fill((tjet+wjet).M(),TTRweight*weight*massw)
-									QCDbkgh.Fill((tjet+wjet).M(),TTRweighterrup*weight*massw)
-									QCDbkgl.Fill((tjet+wjet).M(),TTRweighterrdown*weight*massw)
+											# QCDbkgdPhi2D.Fill(abs(tjet.Phi()-wjet.Phi()),tagrate2d*weight*massw)
+											# QCDbkgdPhi2Dup.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d+tagrate2derr)*weight*massw)
+											# QCDbkgdPhi2Ddown.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d-tagrate2derr)*weight*massw)
 
-									QCDbkgMtStack.Fill(puppiJetMass[tindexval],TTRweight*weight*massw)
-	
-									if options.var == "kinematics":
-										QCDbkgET.Fill(tjet.Eta(),TTRweight*weight*massw)
-										QCDbkgETh.Fill(tjet.Eta(),TTRweighterrup*weight*massw)
-										QCDbkgETl.Fill(tjet.Eta(),TTRweighterrdown*weight*massw)
-	
-										QCDbkgEW.Fill(wjet.Eta(),TTRweight*weight*massw)
-										QCDbkgEWh.Fill(wjet.Eta(),TTRweighterrup*weight*massw)
-										QCDbkgEWl.Fill(wjet.Eta(),TTRweighterrdown*weight*massw)
-		
-										QCDbkgPT.Fill(tjet.Perp(),TTRweight*weight*massw)
-										QCDbkgPTh.Fill(tjet.Perp(),TTRweighterrup*weight*massw)
-										QCDbkgPTl.Fill(tjet.Perp(),TTRweighterrdown*weight*massw)
-		
-										QCDbkgPW.Fill(wjet.Perp(),TTRweight*weight*massw)
-										QCDbkgPWh.Fill(wjet.Perp(),TTRweighterrup*weight*massw)
-										QCDbkgPWl.Fill(wjet.Perp(),TTRweighterrdown*weight*massw)
-		
-										QCDbkgPTW.Fill((tjet+wjet).Perp(),TTRweight*weight*massw)
-										QCDbkgPTWh.Fill((tjet+wjet).Perp(),TTRweighterrup*weight*massw)
-										QCDbkgPTWl.Fill((tjet+wjet).Perp(),TTRweighterrdown*weight*massw)
-	
-										QCDbkgPhT.Fill(tjet.Phi(),TTRweight*weight*massw)
-										QCDbkgPhTh.Fill(tjet.Phi(),TTRweighterrup*weight*massw)
-										QCDbkgPhTl.Fill(tjet.Phi(),TTRweighterrdown*weight*massw)
-	
-										QCDbkgPhW.Fill(wjet.Phi(),TTRweight*weight*massw)
-										QCDbkgPhWh.Fill(wjet.Phi(),TTRweighterrup*weight*massw)
-										QCDbkgPhWl.Fill(wjet.Phi(),TTRweighterrdown*weight*massw)
-	
-										QCDbkgdPhi.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweight*weight*massw)  
-										QCDbkgdPhih.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweighterrup*weight*massw)
-										QCDbkgdPhil.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweighterrdown*weight*massw)
-									if sjbtag_cut:
-										if options.var == "kinematics":
-											Mtw_cut9.Fill((tjet+wjet).M(),weight)
-										if tau32_cut:
+										if sjbtag_cut:
 											if options.var == "kinematics":
-												Mtw_cut10.Fill((tjet+wjet).M(),weight)
-								  				        	
-											if tag==0:
-												if ((tjet+wjet).M()>2400):
-													goodEvents.append( [ event.object().id().run(), event.object().id().luminosityBlock(), event.object().id().event(),  ] )
-												Mtw.Fill((tjet+wjet).M(),weight) 
+												Mtw_cut9.Fill((tjet+wjet).M(),weight)
+											# Grab the pass/fail ratio at the last second for efficiency
+											TTRweight = bkg_weight_mass(puppiJetMass[tindexval],tjet,TTR,eta)
+											#TTRweightsigsq = bkg_weight_mass(puppiJetMass[tindexval],tjet,TTR_err,eta)
+			
+											TTRweighterrup = bkg_weight_mass(puppiJetMass[tindexval],tjet,TTR_errUp,eta)
+											TTRweighterrdown = bkg_weight_mass(puppiJetMass[tindexval],tjet,TTR_errDown,eta)
 
-												MtStack.Fill(puppiJetMass[tindexval],weight)
-
-												Mtwtrigup.Fill((tjet+wjet).M(),weighttrigup)
-												Mtwtrigdown.Fill((tjet+wjet).M(),weighttrigdown)
-												MtwTup.Fill((tjet+wjet).M(),weightSFtup) 
-												MtwTdown.Fill((tjet+wjet).M(),weightSFtdown) 
-	
-												if options.var == "kinematics":
-													b_count = 0
-													bTruthCount = 0
-														
-							#							if len(AK4LV) != 0:
-							#							btags = []
-							#							for ijet in range(0,len(AK4LV)):													
-							#								event.getByLabel (BDiscAK4Label, BDiscAK4Handle)
-							#								event.getByLabel (FlavourLabel, FlavourHandle)
-	    						#								bJetBDiscs 	= 	BDiscAK4Handle.product()
-							#								flav = FlavourHandle.product()
-														
-							#								bJetBDisc = bJetBDiscs[ijet]
-
-							#								if abs(tjet.Rapidity() - AK4LV[ijet].Rapidity()) > 1.5:
-							#									btags.append(bJetBDiscs[ijet])											
-	 						#									if bJetBDisc > 0.7:
-							#										b_count+=1
-							#								if abs(flav[ijet])==5:
-							#									bTruthCount+=1
-							#							Btag.Fill(b_count,weight)
-							#							if btags != []:
-							#								Btagmax.Fill(max(btags),weight)
-							#							Btruth.Fill(bTruthCount,weight)
-							#							JetsVsBtag.Fill(b_count,len(AK4LV),weight)
-							#							infoArray.append(str(count)+'\t'+str(b_count) + '\t' + str(len(AK4LV)))
-	
-													EtaTop.Fill(tjet.Eta(),weight)
-													EtaW.Fill(wjet.Eta(),weight)
-												
-													PtTop.Fill(tjet.Perp(),weight)
-													PtW.Fill(wjet.Perp(),weight)
-													PtTopW.Fill((tjet+wjet).Perp(),weight)
+											if not tau32_cut:
+											# Start generating the QCD estimate using the pass/fail ratio 
+											# on events that fail the tau32 cut
+												if options.var == 'analyzer':
+													fillSpec = [(tjet+wjet).M()]
+												elif options.var == 'kinematics':
+													fillSpec = [(tjet+wjet).M(), tjet.Eta(), wjet.Eta(), tjet.Perp(), wjet.Perp(), (tjet+wjet).Perp(), tjet.Phi(), wjet.Phi(), abs(tjet.Phi()-wjet.Phi())]
 				
-												
-													PhiTop.Fill(tjet.Phi(),weight)
-													PhiW.Fill(wjet.Phi(),weight)
-													dPhi.Fill(abs(tjet.Phi()-wjet.Phi()),weight)
-	
-												tag=1
-												temp_variables = {"wpt":wjet.Perp(),"wmass":puppiJetMass[windexval],"tpt":tjet.Perp(),"tmass":puppiJetMass[tindexval],"tau32":tau32val,"tau21":tau21val,"sjbtag":SJ_csvmax,"weight":weight}#,"nsubjets":nSubjets[tindexval]
-	
-												for tv in tree_vars.keys():
-													tree_vars[tv][0] = temp_variables[tv]
-												Tree.Fill()
-												doneAlready = True
+												arr_count = 0
+												for spec in fillSpec:
+													for ifit in range(0,len(fittitles)):
+														tempweight = bkg_weight_mass(puppiJetMass[tindexval],tjet,fits[ifit],eta)
+														QCDbkg_ARR[arr_count].Fill(spec,tempweight*weight*massw) 
+														arr_count+=1
+				
+												QCDbkg.Fill((tjet+wjet).M(),TTRweight*weight*massw)
+												QCDbkgh.Fill((tjet+wjet).M(),TTRweighterrup*weight*massw)
+												QCDbkgl.Fill((tjet+wjet).M(),TTRweighterrdown*weight*massw)
+
+												QCDbkgMtStack.Fill(puppiJetMass[tindexval],TTRweight*weight*massw)
+				
+												if options.var == "kinematics":
+													QCDbkgET.Fill(tjet.Eta(),TTRweight*weight*massw)
+													QCDbkgETh.Fill(tjet.Eta(),TTRweighterrup*weight*massw)
+													QCDbkgETl.Fill(tjet.Eta(),TTRweighterrdown*weight*massw)
+				
+													QCDbkgEW.Fill(wjet.Eta(),TTRweight*weight*massw)
+													QCDbkgEWh.Fill(wjet.Eta(),TTRweighterrup*weight*massw)
+													QCDbkgEWl.Fill(wjet.Eta(),TTRweighterrdown*weight*massw)
+					
+													QCDbkgPT.Fill(tjet.Perp(),TTRweight*weight*massw)
+													QCDbkgPTh.Fill(tjet.Perp(),TTRweighterrup*weight*massw)
+													QCDbkgPTl.Fill(tjet.Perp(),TTRweighterrdown*weight*massw)
+					
+													QCDbkgPW.Fill(wjet.Perp(),TTRweight*weight*massw)
+													QCDbkgPWh.Fill(wjet.Perp(),TTRweighterrup*weight*massw)
+													QCDbkgPWl.Fill(wjet.Perp(),TTRweighterrdown*weight*massw)
+					
+													QCDbkgPTW.Fill((tjet+wjet).Perp(),TTRweight*weight*massw)
+													QCDbkgPTWh.Fill((tjet+wjet).Perp(),TTRweighterrup*weight*massw)
+													QCDbkgPTWl.Fill((tjet+wjet).Perp(),TTRweighterrdown*weight*massw)
+				
+													QCDbkgPhT.Fill(tjet.Phi(),TTRweight*weight*massw)
+													QCDbkgPhTh.Fill(tjet.Phi(),TTRweighterrup*weight*massw)
+													QCDbkgPhTl.Fill(tjet.Phi(),TTRweighterrdown*weight*massw)
+				
+													QCDbkgPhW.Fill(wjet.Phi(),TTRweight*weight*massw)
+													QCDbkgPhWh.Fill(wjet.Phi(),TTRweighterrup*weight*massw)
+													QCDbkgPhWl.Fill(wjet.Phi(),TTRweighterrdown*weight*massw)
+				
+													QCDbkgdPhi.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweight*weight*massw)  
+													QCDbkgdPhih.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweighterrup*weight*massw)
+													QCDbkgdPhil.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweighterrdown*weight*massw)
+											if tau32_cut:
+												if options.var == "kinematics":
+													Mtw_cut10.Fill((tjet+wjet).M(),weight)
+									  				        	
+												if tag==0:
+													if ((tjet+wjet).M()>2400):
+														goodEvents.append( [ event.object().id().run(), event.object().id().luminosityBlock(), event.object().id().event(),  ] )
+													Mtw.Fill((tjet+wjet).M(),weight) 
+
+													MtStack.Fill(puppiJetMass[tindexval],weight)
+
+													Mtwtrigup.Fill((tjet+wjet).M(),weighttrigup)
+													Mtwtrigdown.Fill((tjet+wjet).M(),weighttrigdown)
+													MtwTup.Fill((tjet+wjet).M(),weightSFtup) 
+													MtwTdown.Fill((tjet+wjet).M(),weightSFtdown) 
+		
+													if options.var == "kinematics":
+															
+														EtaTop.Fill(tjet.Eta(),weight)
+														EtaW.Fill(wjet.Eta(),weight)
+													
+														PtTop.Fill(tjet.Perp(),weight)
+														PtW.Fill(wjet.Perp(),weight)
+														PtTopW.Fill((tjet+wjet).Perp(),weight)
+					
+													
+														PhiTop.Fill(tjet.Phi(),weight)
+														PhiW.Fill(wjet.Phi(),weight)
+														dPhi.Fill(abs(tjet.Phi()-wjet.Phi()),weight)
+		
+													tag=1
+													temp_variables = {"wpt":wjet.Perp(),"wmass":puppiJetMass[windexval],"tpt":tjet.Perp(),"tmass":puppiJetMass[tindexval],"tau32":tau32val,"tau21":tau21val,"sjbtag":SJ_csvmax,"weight":weight}#,"nsubjets":nSubjets[tindexval]
+		
+													for tv in tree_vars.keys():
+														tree_vars[tv][0] = temp_variables[tv]
+													Tree.Fill()
+													doneAlready = True
 
 		
 	

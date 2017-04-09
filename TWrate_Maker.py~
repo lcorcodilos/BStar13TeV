@@ -225,14 +225,14 @@ stdeta2r = stdeta2.Rebin(len(bins2)-1,"stdeta2r",bins2)
 #TTbar subtraction is done here
 if options.set=='data':
 	print 'subtracting ttbar and single top'
-	neta1r.Add(ttneta1r,-1)
-	deta1r.Add(ttdeta1r,-1)
-	neta2r.Add(ttneta2r,-1)
-	deta2r.Add(ttdeta2r,-1)
-	neta1r.Add(stneta1r,-1)
-	deta1r.Add(stdeta1r,-1)
-	neta2r.Add(stneta2r,-1)
-	deta2r.Add(stdeta2r,-1)
+	#neta1r.Add(ttneta1r,-1)
+	#deta1r.Add(ttdeta1r,-1)
+	#neta2r.Add(ttneta2r,-1)
+	#deta2r.Add(ttdeta2r,-1)
+	#neta1r.Add(stneta1r,-1)
+	#deta1r.Add(stdeta1r,-1)
+	#neta2r.Add(stneta2r,-1)
+	#deta2r.Add(stdeta2r,-1)
 
 
 outputa = TFile( "plots/"+options.cuts+"/B_tagging_sigcont"+setstr+".root", "recreate" )

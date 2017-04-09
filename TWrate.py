@@ -304,20 +304,20 @@ print "Creating histograms"
 #Define Histograms
 f.cd()
 #---------------------------------------------------------------------------------------------------------------------#
-pteta1pretag          = TH1D("pteta1pretag",           "b Probe pt in 0<Eta<1.0",             400,  0,  2000 )
-pteta2pretag          = TH1D("pteta2pretag",           "b Probe pt in 0.6<Eta<2.4",             400,  0,  2000 )
+pteta1pretag          = TH1D("pteta1pretag",           "t Probe pt in 0<Eta<0.8",             400,  0,  2000 )
+pteta2pretag          = TH1D("pteta2pretag",           "t Probe pt in 0.8<Eta<2.4",             400,  0,  2000 )
 
-pteta1          = TH1D("pteta1",           "b pt in 0<Eta<1.0",             400,  0,  2000 )
-pteta2          = TH1D("pteta2",           "b pt in 1.0<Eta<2.4",             400,  0,  2000 )
+pteta1          = TH1D("pteta1",           "t pt in 0<Eta<0.8",             400,  0,  2000 )
+pteta2          = TH1D("pteta2",           "t pt in 0.8<Eta<2.4",             400,  0,  2000 )
 
-Mpre          = TH1D("Mpre",           "b pt in 0<Eta<1.0",             400,  110,  210 )
+Mpre          = TH1D("Mpre",           "top mass",             400,  110,  210 )
 Mpre.Sumw2()
 
-MpostFull          = TH1D("MpostFull",           "b pt in 0<Eta<1.0",             400,  110,  210 )
+MpostFull          = TH1D("MpostFull",           "t pt in 0<Eta<0.8",             400,  110,  210 )
 MpostFull.Sumw2()
 
 
-MpostPartial          = TH1D("MpostPartial",           "b pt in 0<Eta<1.0",             400,  110,  210 )
+MpostPartial          = TH1D("MpostPartial",           "t pt in 0<Eta<0.8",             400,  110,  210 )
 MpostPartial.Sumw2()
 
 
@@ -329,17 +329,17 @@ pteta1.Sumw2()
 pteta2.Sumw2()
 
 
-MtwwptcomparepreSB1e1    = TH2F("MtwwptcomparepreSB1e1",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
-MtwwptcomparepostSB1e1    = TH2F("MtwwptcomparepostSB1e1",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
+MtwtptcomparepreSB1e1    = TH2F("MtwtptcomparepreSB1e1",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
+MtwtptcomparepostSB1e1    = TH2F("MtwtptcomparepostSB1e1",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
 
-MtwwptcomparepreSB1e1.Sumw2()
-MtwwptcomparepostSB1e1.Sumw2()
+MtwtptcomparepreSB1e1.Sumw2()
+MtwtptcomparepostSB1e1.Sumw2()
 
-MtwwptcomparepreSB1e2    = TH2F("MtwwptcomparepreSB1e2",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
-MtwwptcomparepostSB1e2    = TH2F("MtwwptcomparepostSB1e2",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
+MtwtptcomparepreSB1e2    = TH2F("MtwtptcomparepreSB1e2",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
+MtwtptcomparepostSB1e2    = TH2F("MtwtptcomparepostSB1e2",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
 
-MtwwptcomparepreSB1e2.Sumw2()
-MtwwptcomparepostSB1e2.Sumw2()
+MtwtptcomparepreSB1e2.Sumw2()
+MtwtptcomparepostSB1e2.Sumw2()
 
 nev = TH1F("nev",	"nev",		1, 0, 1 )
 
@@ -638,21 +638,21 @@ for event in events:
 						        #Extract tags and probes for the average b tagging rate here 
 						        #We use two eta regions 
 						        if eta1_cut:
-							        MtwwptcomparepreSB1e1.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
+							        MtwtptcomparepreSB1e1.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
                         					pteta1pretag.Fill( tjet.Perp(),weight)
 							        Mpre.Fill(puppiJetMass[tindexval],weight)
                         					if FullTop :
 								        MpostFull.Fill(puppiJetMass[tindexval],weight)
-								        MtwwptcomparepostSB1e1.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
+								        MtwtptcomparepostSB1e1.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
                         						pteta1.Fill( tjet.Perp(),weight)
                  
 						        if eta2_cut:
-							        MtwwptcomparepreSB1e2.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
+							        MtwtptcomparepreSB1e2.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
                         					pteta2pretag.Fill( tjet.Perp(),weight)
 							        Mpre.Fill(puppiJetMass[tindexval],weight)
                         					if FullTop :
 								        MpostFull.Fill(puppiJetMass[tindexval],weight)
-								        MtwwptcomparepostSB1e2.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
+								        MtwtptcomparepostSB1e2.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
                         						pteta2.Fill( tjet.Perp(),weight) 
 					            
 						        temp_variables = {"wpt":wjet.Perp(),"wmass":puppiJetMass[windexval],"tpt":tjet.Perp(),"tmass":puppiJetMass[tindexval],"tau32":tau32val,"tau21":tau21val,"sjbtag":SJ_csvmax,"weight":weight,}#"nsubjets":nSubjets[tindexval]}

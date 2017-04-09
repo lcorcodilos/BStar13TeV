@@ -1,0 +1,5 @@
+MSR = ?
+
+is tag region where signal is?
+
+What needs to be added and subtracted to what?

@@ -131,8 +131,10 @@ for coup in ['LH','RH']:
 	for f in sigfiles:
 #		print f
 		mass = f.lstrip('TWratefilesignal'+coup).rstrip('_PSET_'+cuts+'.root')
-		xsec_sig = xsec_bsl[mass]
-		nev_sig = nev_bsl[mass]
+		if coup == 'RH':
+			xsec_sig = xsec_bsr[mass]
+		elif coup == 'LH':
+			xsec_sig = xsec_bsl[mass]
 		commands.append('rm ' + f.replace('TWratefilesignal'+coup,'TWratefileweightedsignal'+coup))	 
 		commands.append('python HistoWeight.py -i '+f+' -o '+f.replace('TWratefilesignal'+coup,'TWratefileweightedsignal'+coup)+' -n auto -w ' + str(cLumi*xsec_sig))
 		commands.append('mv '+f+' temprootfiles/')
