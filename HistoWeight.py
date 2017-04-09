@@ -83,7 +83,7 @@ for i in range(0,len(D)):
 		# Scale the object by weight/reweight
 		a.Scale(weight/reweight[0])
 		a.Write()
-		print "scaled " + str(a.GetName())
+		#print "scaled " + str(a.GetName())
 	except:
 		if  a.GetName() != 'Weight':
 			# if the object is not the weight tree 

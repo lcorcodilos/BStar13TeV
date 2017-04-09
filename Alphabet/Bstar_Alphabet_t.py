@@ -114,11 +114,11 @@ Bstar.TwoDPlot.Draw("box") # Show that plot:
 # The command is: .GetRates(cut, bins, truthbins, center, fit)
 cut = [0.54, "<"]
 # so we need to give it bins:
-bins = [[70,90],[90,105],[220,240],[240,260],[260,280],[280,300]]
+bins = [[30,50],[50,70],[70,90],[90,105],[220,240],[240,260],[260,280],[280,300]]
 # truth bins (we don't want any because we are looking at real data::)
 if options.set == "QCD":
 	#Assuming here that the truth bins need to be around the region where we are looking for the tagrate -LC
-	truthbins = [[105,220]]
+	truthbins = [[105,145],[140,180],[180,220]]
 elif options.set == "data":
 	truthbins = []
 
@@ -128,7 +128,7 @@ center = 0.
 
 #Assuming the first array is okay, the second value should be min of wmass range, and third should be max -LC
 #Last two strings are just name and opt
-F = QuadraticFit([0.1,0.1,0.1], 70, 300, "quadfit", "EMRFNEX0")
+F = QuadraticFit([0.0], 30, 300, "quadfit", "EMRFNEX0")
 #F = LinearFit([0.2,-0.2], -75, 75, "linFit1", "EMRNS")
 
 # All the error stuff is handled by the LinearFit class. We shouldn't have to do anything else!
@@ -149,7 +149,7 @@ Bstar.Fit.ErrUp.Draw("same")
 Bstar.Fit.ErrDn.SetLineStyle(2)
 Bstar.Fit.ErrDn.Draw("same")
 if Bstar.truthG != None:
-	Bstar.truthG.Draw("opt")
+	Bstar.truthG.Draw("same")
 leg = TLegend(0.2,0.6,0.5,0.89)
 leg.SetLineColor(0)
 leg.SetFillColor(0)
@@ -158,7 +158,7 @@ leg.AddEntry(Bstar.G, "events used in fit", "PL")
 leg.AddEntry(Bstar.Fit.fit, "fit", "L")
 leg.AddEntry(Bstar.Fit.ErrUp, "fit errors", "L")
 leg.Draw()
-C2.Print("fit_data_tau32%s.pdf"%cut[0])
+C2.Print("fit_data_tau32%s_"%cut[0]+options.set+".pdf")
 # Now we actually run the estiamte!
 
 # cuts:
@@ -263,7 +263,7 @@ ND.Draw("same")
 leg2.Draw()
 FILE.Write()
 FILE.Save()
-C3.Print("bkg_data_tau32%s.pdf"%cut[0])
+C3.Print("bkg_data_tau32%s"%cut[0]+options.set+".pdf")
 
 
 
@@ -277,14 +277,20 @@ f.write("\n\tthird = "+str(Bstar.Fit.fit.GetParameter(2))+";")
 f.write("\n\tthirdErr = "+str(Bstar.Fit.fit.GetParErrors()[2])+";")
 f.write("\n}\n")
 
-g = open("fn_bstar_QUAD_"+options.set+".txt",'a')
+g = open("fn_bstar_QUAD_"+options.set+".txt",'w')
 g.write(str(Bstar.Fit.fit.GetParameter(0)))
 g.write("\n"+str(Bstar.Fit.fit.GetParameter(1)))
 g.write("\n"+str(Bstar.Fit.fit.GetParameter(2)))
 
-g_err = open("fn_bstar_QUAD_err_"+options.set+".txt",'a')
-g_err.write(str(Bstar.Fit.fit.GetParErrors(0)))
-g_err.write("\n"+str(Bstar.Fit.fit.GetParErrors(1)))
-g_err.write("\n"+str(Bstar.Fit.fit.GetParErrors(2)))
+g_errUp = open("fn_bstar_QUAD_errUp_"+options.set+".txt",'w')
+g_errUp.write(str(Bstar.Fit.fit.GetParameter(0)+Bstar.Fit.fit.GetParErrors()[0]))
+g_errUp.write("\n"+str(Bstar.Fit.fit.GetParameter(1)+Bstar.Fit.fit.GetParErrors()[1]))
+g_errUp.write("\n"+str(Bstar.Fit.fit.GetParameter(2)+Bstar.Fit.fit.GetParErrors()[2]))
+
+g_errDown = open("fn_bstar_QUAD_errDown_"+options.set+".txt",'w')
+g_errDown.write(str(Bstar.Fit.fit.GetParameter(0)-Bstar.Fit.fit.GetParErrors()[0]))
+g_errDown.write("\n"+str(Bstar.Fit.fit.GetParameter(1)-Bstar.Fit.fit.GetParErrors()[1]))
+g_errDown.write("\n"+str(Bstar.Fit.fit.GetParameter(2)-Bstar.Fit.fit.GetParErrors()[2]))
+
 
 raw_input("Press enter to continue...")

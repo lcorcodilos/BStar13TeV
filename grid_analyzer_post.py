@@ -34,7 +34,7 @@ var = ''
 if options.var=='kinematics':
 	var = '_kin'
 
-mmstrList = ["","_modm_up","_modm_down"]
+mmstrList = ["_modm_none"]#,"_modm_up","_modm_down"]
 
 pustr = ""
 if options.pileup == "off":
@@ -55,15 +55,16 @@ Lumi = [str(int(cLumi))+'pb']
 wtagsf = Cons['wtagsf']
 wtagsfsig = Cons['wtagsfsig']
 xsec_bsl = Cons['xsec_bsl']
+xsec_bsr = Cons['xsec_bsr']
 xsec_ttbar = Cons['xsec_ttbar']
 xsec_qcd = Cons['xsec_qcd']
 xsec_st = Cons['xsec_st']
 xsec_bpl = Cons['xsec_bpl']
-nev_bsl = Cons['nev_bsl']
-nev_ttbar = Cons['nev_ttbar']
-nev_qcd = Cons['nev_qcd']
-nev_st = Cons['nev_st']
-nev_bpl = Cons['nev_bpl']
+#nev_bsl = Cons['nev_bsl']
+#nev_ttbar = Cons['nev_ttbar']
+#nev_qcd = Cons['nev_qcd']
+#nev_st = Cons['nev_st']
+#nev_bpl = Cons['nev_bpl']
 
 #Process multiple lumis at once with this code otherwise use the above constant pull from BstarFunctions
 #lumiList = [1000, 5000, 10000]
@@ -137,16 +138,17 @@ for l in range(len(lumiList)):
 	lumi = lumiList[l]
 	for f in filestr:
 		ttbar_pustr = ''
-		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_'+f+ttbar_pustr+'_PSET_'+cuts+var+'.root') #removes old file with same name in /rootfiles/
-		commands.append('python HistoWeight.py -i TWanalyzerttbar_Trigger_nominal_'+f+ttbar_pustr+'_PSET_'+cuts+var+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_'+f+ttbar_pustr+'_PSET_'+cuts+var+'.root -n auto -w ' + str(lumi*wtagsf*xsec_ttbar['PH']))
-		commands.append('mv TWanalyzerttbar_Trigger_nominal_'+f+ttbar_pustr+'_PSET_'+cuts+var+'.root temprootfiles/')
+		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_'+f+mmstrList[0]+ttbar_pustr+'_PSET_'+cuts+var+'.root') #removes old file with same name in /rootfiles/
+		commands.append('python HistoWeight.py -i TWanalyzerttbar_Trigger_nominal_'+f+mmstrList[0]+ttbar_pustr+'_PSET_'+cuts+var+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_'+f+mmstrList[0]+ttbar_pustr+'_PSET_'+cuts+var+'.root -n auto -w ' + str(lumi*wtagsf*xsec_ttbar['PH']))
+		commands.append('mv TWanalyzerttbar_Trigger_nominal_'+f+mmstrList[0]+ttbar_pustr+'_PSET_'+cuts+var+'.root temprootfiles/')
 
 for l in range(len(lumiList)):
 	lumi = lumiList[l]
-	commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerdata_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root')
-	commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
-	commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_modm_down_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
-	commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_modm_up_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
+	commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerdata_Trigger_nominal_'+pustr+mmstrList[0]+'_PSET_'+cuts+var+'.root')
+	commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_modm_none_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
+	#commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
+	#commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_modm_down_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
+	#commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_modm_up_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
 	
 
 #primeSigs = ['1200','1400','1600','1800']
@@ -176,12 +178,12 @@ for coup in ['LH','RH']:
 
 
 
-stfiles = [	'TWanalyzersingletop_s_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root',
-		'TWanalyzersingletop_t_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root',
-		'TWanalyzersingletop_tB_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root']
+stfiles = [	'TWanalyzersingletop_s_Trigger_nominal_'+pustr+mmstrList[0]+'_PSET_'+cuts+var+'.root',
+		'TWanalyzersingletop_t_Trigger_nominal_'+pustr+mmstrList[0]+'_PSET_'+cuts+var+'.root',
+		'TWanalyzersingletop_tB_Trigger_nominal_'+pustr+mmstrList[0]+'_PSET_'+cuts+var+'.root']
 
 for f in stfiles:
-	channel = f.replace('TWanalyzersingletop_','').replace('_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root','')
+	channel = f.replace('TWanalyzersingletop_','').replace('_Trigger_nominal_'+pustr+mmstrList[0]+'_PSET_'+cuts+var+'.root','')
 	xsec_ST = xsec_st[channel.upper()]
 	commands.append('rm ' + f.replace('TWanalyzersingletop_','TWanalyzerweightedsingletop_'))
 	for l in range(len(lumiList)):	
@@ -190,8 +192,8 @@ for f in stfiles:
 		commands.append('mv '+f.replace('TWanalyzersingletop_','TWanalyzerweightedsingletop_')+' rootfiles/'+Lumi[l]+'/')
 	commands.append('mv '+f+' temprootfiles/')
 for l in Lumi:
-	commands.append('rm rootfiles/'+l+'/TWanalyzerweightedsingletop_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root')
-	commands.append('hadd rootfiles/'+l+'/TWanalyzerweightedsingletop_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root rootfiles/'+l+'/TWanalyzerweightedsingletop*_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root')
+	commands.append('rm rootfiles/'+l+'/TWanalyzerweightedsingletop_Trigger_nominal_'+pustr+mmstrList[0]+'_PSET_'+cuts+var+'.root')
+	commands.append('hadd rootfiles/'+l+'/TWanalyzerweightedsingletop_Trigger_nominal_'+pustr+mmstrList[0]+'_PSET_'+cuts+var+'.root rootfiles/'+l+'/TWanalyzerweightedsingletop*_Trigger_nominal_'+pustr+mmstrList[0]+'_PSET_'+cuts+var+'.root')
 
 
 for s in commands :

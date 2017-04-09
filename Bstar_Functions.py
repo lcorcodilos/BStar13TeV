@@ -65,7 +65,8 @@ def LoadCuts(TYPE):
 			'sjbtag':[0.80,1.0],
 			'wmass':[65.0,95.0],
 			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4]
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
 			}
 	if TYPE=='rate_default':
  		return  {
@@ -96,7 +97,8 @@ def LoadCuts(TYPE):
 			'sjbtag':[0.80,1.0],
 			'wmass':[130.0,float("inf")],
 			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4]
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
 			}
 	if TYPE=='rate_sideband1':
  		return  {
@@ -127,7 +129,8 @@ def LoadCuts(TYPE):
 			'sjbtag':[0.80,1.0],
 			'wmass':[[30.0,65.0],[95.0,130.0]],
 			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4]
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
 			}
 	if TYPE=='rate_sideband':
  		return  {
@@ -445,15 +448,20 @@ def TTR_Init(ST,CUT,SET,di):
 		eta2fit = TF1("eta2fit",'expo(0) + pol0(2)',0,2000)
 		Params = 3
 	if ST == 'QUAD':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+".txt")
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
 		TRBP.seek(0)
-		fit = TF1("fit",'QUAD',0,2000)
+		fit = TF1("fit",'pol2',0,300)
 		Params = 3
-	if ST == 'QUAD_err':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_err_"+SET+".txt")
+	if ST == 'QUAD_errUp':
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
 		TRBP.seek(0)
-		fit = TF1("fit",'QUAD',0,2000)
-		Params = 3
+		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
+	if ST == 'QUAD_errDown':
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+		TRBP.seek(0)
+		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
 	try:
 		TBP1 = TRBPE1.read()
 		TBP2 = TRBPE2.read()
@@ -482,7 +490,7 @@ def bkg_weight_pt(tlv, funcs, etabins):
 
 def bkg_weight_mass(tmass, tlv, funcs, etabins):
 	if (etabins[0] <= abs(tlv.Eta()) < etabins[1]) :
-		tagratetmass = funcs[ibin].Eval(tmass)		
+		tagratetmass = funcs[0].Eval(tmass)		
 	return tagratetmass
 
 #This is the bifurcated polynomial function and its associated uncertainty 
@@ -658,7 +666,7 @@ def kinFit_Uncertainty(List,kinVar):
 	sigmah	    = List[0]
 	fits=len(List)-1
 	for ihist in range(0,len(List)):
-		if List[ihist].GetName() == 'QCDbkg'+kinVar+'Bifpoly':
+		if List[ihist].GetName() == 'QCDbkg'+kinVar+'QUAD':
 			nominalhist = List[ihist]
 	for ibin in range(0,nominalhist.GetXaxis().GetNbins()+1):
 
@@ -666,7 +674,7 @@ def kinFit_Uncertainty(List,kinVar):
 		sigma=0.0
 		sumsqdiff = 0.0
 		for ihist in range(0,len(List)):
-			if List[ihist].GetName() != 'QCDbkg'+kinVar+'Bifpoly':
+			if List[ihist].GetName() != 'QCDbkg'+kinVar+'QUAD':
 				sumsqdiff+=(List[ihist].GetBinContent(ibin)-nominalhist.GetBinContent(ibin))*(List[ihist].GetBinContent(ibin)-nominalhist.GetBinContent(ibin))
 		mse = sumsqdiff/fits
 		sigma = sqrt(mse)

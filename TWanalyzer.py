@@ -114,7 +114,7 @@ parser.add_option('-S', '--split', metavar='F', type='string', action='store',
 if (options.set.find('QCD') != -1):
 	setstr = 'QCD'
 else:
-	setstr = 'Data'
+	setstr = 'data'
 
 print "Options summary"
 print "=================="
@@ -377,12 +377,13 @@ else:
 #Load up the average b-tagging rates -- Takes parameters from text file and makes a function
 #CHANGE BACK
 TTR = TTR_Init('QUAD',options.cuts,setstr,di)
-TTR_err = TTR_Init('QUAD_err',options.cuts,setstr,di)
+TTR_errUp = TTR_Init('QUAD_errUp',options.cuts,setstr,di)
+TTR_errDown = TTR_Init('QUAD_errDown',options.cuts,setstr,di)
 #fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
 fittitles = ["QUAD"]
 fits = []
 for fittitle in fittitles:
-	fits.append(TTR_Init(fittitle,'rate_'+options.cuts,setstr,di))
+	fits.append(TTR_Init(fittitle,options.cuts,setstr,di))
 #CHANGE BACK
 #TTR = TTR_Init('Bifpoly',options.cuts,setstr,di)
 #TTR_err = TTR_Init('Bifpoly_err',options.cuts,setstr,di)
@@ -1030,12 +1031,12 @@ for event in events:
 												Mtw_cut9.Fill((tjet+wjet).M(),weight)
 											# Grab the pass/fail ratio at the last second for efficiency
 											TTRweight = bkg_weight_mass(puppiJetMass[tindexval],tjet,TTR,eta)
-											TTRweightsigsq = bkg_weight_mass(puppiJetMass[tindexval],tjet,TTR_err,eta)
+											#TTRweightsigsq = bkg_weight_mass(puppiJetMass[tindexval],tjet,TTR_err,eta)
 			
-											TTRweighterrup = TTRweight+sqrt(TTRweightsigsq)
-											TTRweighterrdown = TTRweight-sqrt(TTRweightsigsq)
+											TTRweighterrup = bkg_weight_mass(puppiJetMass[tindexval],tjet,TTR_errUp,eta)
+											TTRweighterrdown = bkg_weight_mass(puppiJetMass[tindexval],tjet,TTR_errDown,eta)
 
-											if !tau32_cut:
+											if not tau32_cut:
 											# Start generating the QCD estimate using the pass/fail ratio 
 											# on events that fail the tau32 cut
 												if options.var == 'analyzer':
