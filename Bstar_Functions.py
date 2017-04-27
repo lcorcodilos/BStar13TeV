@@ -482,16 +482,30 @@ def TTR_Init(ST,CUT,SET,di):
 
 #This takes the average t tagging rates that are initialized in the above function and produces 
 #A QCD background estimate based on them 
-def bkg_weight_pt(tlv, funcs, etabins):
+
+# Old ones used with edmntuples
+# def bkg_weight_pt(tlv, funcs, etabins):
+# 	for ibin in range(0,len(etabins)):
+# 		if (etabins[ibin][0] <= abs(tlv.Eta()) < etabins[ibin][1]) :
+# 			tagratept = funcs[ibin].Eval(tlv.Perp())		
+# 	return tagratept
+
+# def bkg_weight_mass(tmass, tlv, funcs, etabins):
+# 	if (etabins[0] <= abs(tlv.Eta()) < etabins[1]) :
+# 		tagratetmass = funcs[0].Eval(tmass)		
+# 	return tagratetmass
+
+def bkg_weight_pt(event, funcs, etabins):
 	for ibin in range(0,len(etabins)):
-		if (etabins[ibin][0] <= abs(tlv.Eta()) < etabins[ibin][1]) :
-			tagratept = funcs[ibin].Eval(tlv.Perp())		
+		if (etabins[ibin][0] <= abs(event.top_eta) < etabins[ibin][1]) :
+			tagratept = funcs[ibin].Eval(event.tpt)		
 	return tagratept
 
-def bkg_weight_mass(tmass, tlv, funcs, etabins):
-	if (etabins[0] <= abs(tlv.Eta()) < etabins[1]) :
-		tagratetmass = funcs[0].Eval(tmass)		
+def bkg_weight_mass(event, funcs, etabins):
+	if (etabins[0] <= abs(event.top_eta) < etabins[1]) :
+		tagratetmass = funcs[0].Eval(event.tmass)		
 	return tagratetmass
+
 
 #This is the bifurcated polynomial function and its associated uncertainty 
 def BifPoly( x, p ):
@@ -587,31 +601,46 @@ def Initlv(string,post=''):
 	PhiLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiPhi")
 
 	MassHandle 	= 	Handle (  "vector<float> "  )
-	MassLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiMass")
+	MassLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiCorrectedsoftDropMass")
 
 	return [[PtHandle,PtLabel],[EtaHandle,EtaLabel],[PhiHandle,PhiLabel],[MassHandle,MassLabel]]
  
+def GrabPtEtaPhiM(vector,event):
+	event.getByLabel (vector[0][1], vector[0][0])
+	Pt 		= 	vector[0][0].product()
+
+	event.getByLabel (vector[1][1], vector[1][0])
+	Eta 		= 	vector[1][0].product()
+
+	event.getByLabel (vector[2][1], vector[2][0])
+	Phi 		= 	vector[2][0].product()
+
+	event.getByLabel (vector[3][1], vector[3][0])
+	Mass 		= 	vector[3][0].product()
+
+	return len(Pt)
+
 def Makelv(vector,event):
  
-     	event.getByLabel (vector[0][1], vector[0][0])
-     	Pt 		= 	vector[0][0].product()
- 
-     	event.getByLabel (vector[1][1], vector[1][0])
-     	Eta 		= 	vector[1][0].product()
- 
-     	event.getByLabel (vector[2][1], vector[2][0])
-     	Phi 		= 	vector[2][0].product()
- 
-     	event.getByLabel (vector[3][1], vector[3][0])
-     	Mass 		= 	vector[3][0].product()
+	event.getByLabel (vector[0][1], vector[0][0])
+	Pt 		= 	vector[0][0].product()
+
+	event.getByLabel (vector[1][1], vector[1][0])
+	Eta 		= 	vector[1][0].product()
+
+	event.getByLabel (vector[2][1], vector[2][0])
+	Phi 		= 	vector[2][0].product()
+
+	event.getByLabel (vector[3][1], vector[3][0])
+	Mass 		= 	vector[3][0].product()
  
  	lvs = []
  	for i in range(0,len(Pt)):
  
  		#lvs.append(ROOT.Math.LorentzVector('ROOT::Math::PtEtaPhiM4D<double>')(Pt[i],Eta[i],Phi[i],Mass[i]))
- 
  		lvs.append(TLorentzVector())
  		lvs[i].SetPtEtaPhiM(Pt[i],Eta[i],Phi[i],Mass[i])
+
  	return lvs
  
  
