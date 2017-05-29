@@ -34,7 +34,7 @@ var = ''
 if options.var=='kinematics':
 	var = '_kin'
 
-mmstrList = ["_modm_none"]#,"_modm_up","_modm_down"]
+mmstrList = ['',"_modm_up","_modm_down"]
 
 pustr = ""
 if options.pileup == "off":
@@ -144,11 +144,10 @@ for l in range(len(lumiList)):
 
 for l in range(len(lumiList)):
 	lumi = lumiList[l]
-	commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerdata_Trigger_nominal_'+pustr+mmstrList[0]+'_PSET_'+cuts+var+'.root')
-	commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_modm_none_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
-	#commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
-	#commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_modm_down_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
-	#commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_modm_up_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
+	commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerdata_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root')
+	commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
+	commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_modm_down_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
+	commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_modm_up_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
 	
 
 #primeSigs = ['1200','1400','1600','1800']

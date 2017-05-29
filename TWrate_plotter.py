@@ -23,8 +23,8 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
 (options, args) = parser.parse_args()
 
 rootdir="rootfiles/"
-import Bstar_Functions	
-from Bstar_Functions import *
+import Bstar_Functions_local	
+from Bstar_Functions_local import *
 
 Cons = LoadConstants()
 
@@ -37,18 +37,18 @@ setstr = ""
 if options.set=='QCD':
 	setstr = 'QCD'
 elif options.set=='data':
-	setstr = 'Data'
+	setstr = 'data'
 
 gROOT.Macro("rootlogon.C")
 #gROOT.LoadMacro("insertlogo.C+")
 
-BTR = BTR_Init('Bifpoly',options.cuts,'',options.set)
-BTR_err = BTR_Init('Bifpoly_err',options.cuts,'',options.set)
+TTR = TTR_Init('Bifpoly',options.cuts,options.set,'')
+TTR_err = TTR_Init('Bifpoly_err',options.cuts,options.set,'')
 
 fittitles = ["pol0","pol2","pol3","FIT","expofit"]
 fits = []
 for fittitle in fittitles:
-	fits.append(BTR_Init(fittitle,options.cuts,'',options.set))
+	fits.append(TTR_Init(fittitle,options.cuts,options.set,''))
 
 leg1 = TLegend(0.45,0.57,.84,.78)
 leg1.SetFillColor(0)
@@ -64,17 +64,14 @@ c1 = TCanvas('c1', 'Tagrate numerator and deominator', 1000, 1300)
 c4 = TCanvas('c4', 'Pt fitted tagrate in 0.0 < Eta <0.8', 800, 500)
 c7 = TCanvas('c7', 'tagged vs signal', 800, 500)
 c8 = TCanvas('c8', 'tagged vs signal', 800, 500)
-#c9 = TCanvas('c9', 'tagged vs signal', 800, 500)
 
 cleg = TCanvas('cleg', 'tagged vs signal', 400, 600)
 
 stack1 = THStack("typeb1probeseta1", "; Probe Jet p_{T} (GeV); Events / 50(GeV)")
 stack2 = THStack("typeb1probeseta2", "; Probe Jet p_{T} (GeV); Events / 50(GeV)")
-#stack3 = THStack("typeb1probeseta3", "; Probe Jet p_{T} (GeV); Events / 50(GeV)")
 
 stack4 = THStack("typeb1tagseta1", "; t-tagged Jet p_{T} (GeV); Events / 50(GeV)")
 stack5 = THStack("typeb1tagseta2", "; t-tagged Jet p_{T} (GeV); Events / 50(GeV)")
-#stack6 = THStack("typeb1tagseta3", "; b-tagged Jet p_{T} (GeV); Events / 50(GeV)")
 
 tagrates = ROOT.TFile("plots/TWrate_Maker_"+setstr+"_"+Lumi+"_PSET_"+options.cuts+".root")
 
@@ -82,86 +79,67 @@ ratedata = TFile(rootdir+Lumi+"/TWratefile"+options.set+"_PSET_"+options.cuts+".
 
 ratettbar = TFile(rootdir+Lumi+"/TWratefileweightedttbar_PSET_"+options.cuts+".root")
 ratest = TFile(rootdir+Lumi+"/TWratefilesingletop_PSET_"+options.cuts+".root")
-#tagrateswsig = ROOT.TFile("plots/B_tagging_sigcont.root")
 
 probeeta1data=ratedata.Get("pteta1pretag")
 probeeta2data=ratedata.Get("pteta2pretag")
-#probeeta3data=ratedata.Get("pteta3pretag")
 
 tageta1data=ratedata.Get("pteta1")
 tageta2data=ratedata.Get("pteta2")
-#tageta3data=ratedata.Get("pteta3")
 
 probeeta1mc=ratettbar.Get("pteta1pretag")
 probeeta2mc=ratettbar.Get("pteta2pretag")
-#probeeta3mc=ratettbar.Get("pteta3pretag")
 
 tageta1mc=ratettbar.Get("pteta1")
 tageta2mc=ratettbar.Get("pteta2")
-#tageta3mc=ratettbar.Get("pteta3")
 
 
 probeeta1st=ratest.Get("pteta1pretag")
 probeeta2st=ratest.Get("pteta2pretag")
-#probeeta3st=ratest.Get("pteta3pretag")
 
 tageta1st=ratest.Get("pteta1")
 tageta2st=ratest.Get("pteta2")
-#tageta3st=ratest.Get("pteta3")
 
 ptrebin = 10
 
 probeeta1data.Rebin(ptrebin)
 probeeta2data.Rebin(ptrebin)
-#probeeta3data.Rebin(ptrebin)
 
 tageta1data.Rebin(ptrebin)
 tageta2data.Rebin(ptrebin)
-#tageta3data.Rebin(ptrebin)
 
 probeeta1mc.Rebin(ptrebin)
 probeeta2mc.Rebin(ptrebin)
-#probeeta3mc.Rebin(ptrebin)
 
 tageta1mc.Rebin(ptrebin)
 tageta2mc.Rebin(ptrebin)
-#tageta3mc.Rebin(ptrebin)
 
 
 
 probeeta1st.Rebin(ptrebin)
 probeeta2st.Rebin(ptrebin)
-#probeeta3st.Rebin(ptrebin)
 
 tageta1st.Rebin(ptrebin)
 tageta2st.Rebin(ptrebin)
-#tageta3st.Rebin(ptrebin)
 
 
 
 probeeta1data.SetFillColor( kYellow )
 probeeta2data.SetFillColor( kYellow )
-#probeeta3data.SetFillColor( kYellow )
 
 tageta1data.SetFillColor( kYellow )
 tageta2data.SetFillColor( kYellow )
-#tageta3data.SetFillColor( kYellow )
 
 probeeta1mc.SetFillColor( kRed )
 probeeta2mc.SetFillColor( kRed )
-#probeeta3mc.SetFillColor( kRed )
 
 tageta1mc.SetFillColor( kRed )
 tageta2mc.SetFillColor( kRed )
-#tageta3mc.SetFillColor( kRed )
 
 probeeta1st.SetFillColor( 4 )
 probeeta2st.SetFillColor( 4 )
-#probeeta3st.SetFillColor( 4 )
 
 tageta1st.SetFillColor( 4 )
 tageta2st.SetFillColor( 4 )
-#tageta3st.SetFillColor( 4 )
 
 #treta1= tagrates.Get("tagrateeta1")
 #treta2= tagrates.Get("tagrateeta2")
@@ -173,7 +151,7 @@ BPy = []
 BPerryh = []
 BPerryl = []
 
-
+# Initilize lists with empty arrays
 for eta in range(0,2):
 	y.append([])
 	for fittitle in fittitles:
@@ -182,15 +160,16 @@ for eta in range(0,2):
 	BPerryh.append(array( 'd' ))
 	BPerryl.append(array( 'd' ))
 
+# For each x (pt) increment store the y values for each non-BP fit and then the BP fit and errors
 for j in range(0,2000):
 
 	x.append(j)
 	for eta in range(0,2):
 		for ifit in range(0,len(fits)):
 			y[eta][ifit].append(fits[ifit][eta].Eval(x[j]))
-		BPy[eta].append(BTR[eta].Eval(x[j]))
-		BPerryh[eta].append(BTR[eta].Eval(x[j])+sqrt(BTR_err[eta].Eval(x[j])))
-		BPerryl[eta].append(BTR[eta].Eval(x[j])-sqrt(BTR_err[eta].Eval(x[j])))
+		BPy[eta].append(TTR[eta].Eval(x[j]))
+		BPerryh[eta].append(TTR[eta].Eval(x[j])+sqrt(TTR_err[eta].Eval(x[j])))
+		BPerryl[eta].append(TTR[eta].Eval(x[j])-sqrt(TTR_err[eta].Eval(x[j])))
 
 # Create graphs of errors and ffor fittitle in fittitles:its
 
@@ -265,26 +244,22 @@ ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH3000_PSET_"+options.cuts+".r
 c1.Divide(2,3)
 c1.cd(1)
 
-
+# ttbar subtraction
 if options.set=='data':
-	#probeeta3data.Add(probeeta3mc,-1)
 	probeeta1data.Add(probeeta1mc,-1)
 	probeeta2data.Add(probeeta2mc,-1)
 	tageta1data.Add(tageta1mc,-1)
 	tageta2data.Add(tageta2mc,-1)
-	#tageta3data.Add(tageta3mc,-1)
 
-	#probeeta3data.Add(probeeta3st,-1)
 	probeeta1data.Add(probeeta1st,-1)
 	probeeta2data.Add(probeeta2st,-1)
 	tageta1data.Add(tageta1st,-1)
 	tageta2data.Add(tageta2st,-1)
-	#tageta3data.Add(tageta3st,-1)
 
 
 gPad.SetLeftMargin(0.16)
 
-
+# Numerator and deneminator plots
 stack1.Add( probeeta1st, "Hist" )
 stack1.Add( probeeta1mc, "Hist" )
 stack1.Add( probeeta1data, "Hist" )
@@ -308,17 +283,6 @@ prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (
 c1.cd(5)
 gPad.SetLeftMargin(0.16)
 
-
-#stack3.Add( probeeta3st, "Hist" )
-#stack3.Add( probeeta3mc, "Hist" )
-#stack3.Add( probeeta3data, "Hist" )
-#stack3.SetMaximum(stack3.GetMaximum() * 1.2 )
-#stack3.Draw()
-#stack3.GetYaxis().SetTitleOffset(OFF)
-#stack3.GetXaxis().SetRangeUser(350,1200)
-#prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (1.15 < |#eta| < 2.40) }" )
-#c1.cd(2)
-#gPad.SetLeftMargin(0.16)
 
 stack4.Add( tageta1st, "Hist" )
 stack4.Add( tageta1mc, "Hist" )
@@ -345,18 +309,6 @@ gPad.SetLeftMargin(0.16)
 c1.Print("tagrates.png",'png')
 c1.Print("tagrates_root.root",'root')
 
-#stack6.Add( tageta3st, "Hist" )
-#stack6.Add( tageta3mc, "Hist" )
-#stack6.Add( tageta3data, "Hist" )
-#stack6.SetMaximum(stack6.GetMaximum() * 1.2 )
-#stack6.Draw()
-#stack6.GetYaxis().SetTitleOffset(OFF)
-#stack6.GetXaxis().SetRangeUser(350,1200)
-#prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (1.15 < |#eta| < 2.40) }" )
-#c1.RedrawAxis()
-#c1.Print('plots/tagsandprobes.root', 'root')
-#c1.Print('plots/tagsandprobes.pdf', 'pdf')
-
 
 
 c7.cd()
@@ -369,11 +321,7 @@ stack5.SetMinimum(0.001)
 prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.80 < |#eta| < 2.40) }" )
 stack5.Draw()
 stack5.GetYaxis().SetTitleOffset(0.8)
-#c9.cd()
-#stack6.SetMinimum(0.001)
-#prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (1.15 < |#eta| < 2.40) }" )
-#stack6.Draw()
-#stack6.GetYaxis().SetTitleOffset(0.8)
+
 
 leg2.AddEntry(probeeta1data,"QCD","f")
 leg2.AddEntry(probeeta1mc,"ttbar","f")
@@ -389,54 +337,43 @@ for ifile in range(0,len(SigFiles)):
 		
 	nseta1 = SigFiles[ifile].Get("pteta1")
 	nseta2 = SigFiles[ifile].Get("pteta2")
-#	nseta3 = SigFiles[ifile].Get("pteta3")
 	nseta1.SetLineColor(colorassn)
 	nseta2.SetLineColor(colorassn)
-#	nseta3.SetLineColor(colorassn)
 	nseta1.Rebin(ptrebin)
 	nseta2.Rebin(ptrebin)
-#	nseta3.Rebin(ptrebin)
 
 	c7.cd()
 	nseta1.Draw("samehist")
 	c8.cd()
 	nseta2.Draw("samehist")
-#	c9.cd()
-#	nseta3.Draw("samehist")
 	leg2.AddEntry(nseta1,"signal at "+str(mass[ifile])+"GeV","l")
 c7.SetLogy()
 c8.SetLogy()
-#c9.SetLogy()
 
 c7.cd()
 prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.00 < |#eta| < 0.80)  }" )
-#leg2.Draw()
+leg2.Draw()
 c8.cd()
 prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.80 < |#eta| < 2.40) }" )
-#leg2.Draw()
-#c9.cd()
-#prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (1.15 < |#eta| < 2.40) }" )
-#leg2.Draw()
+leg2.Draw()
+
 
 cleg.cd()
 leg2.Draw()
 cleg.Print('plots/legend.pdf', 'pdf')
 c7.RedrawAxis()
 c8.RedrawAxis()
-#c9.RedrawAxis()
 
 c7.Print('plots/'+options.cuts+'/sigvsTR'+options.set+'eta1.root', 'root')
 c7.Print('plots/'+options.cuts+'/sigvsTR'+options.set+'eta1.pdf', 'pdf')
 c8.Print('plots/'+options.cuts+'/sigvsTR'+options.set+'eta2.root', 'root')
 c8.Print('plots/'+options.cuts+'/sigvsTR'+options.set+'eta2.pdf', 'pdf')
-#c9.Print('plots/sigvsTReta3.root', 'root')
-#c9.Print('plots/sigvsTReta3.pdf', 'pdf')
+
 
 trs = [None]*3
 
 trs[0]= tagrates.Get("tagrateeta1")
 trs[1]= tagrates.Get("tagrateeta2")
-#trs[2]= tagrates.Get("tagrateeta3")
 
 c4.cd()
 c4.SetLeftMargin(0.16)
@@ -450,7 +387,7 @@ for eta in range(0,2):
 	print eta
 	trs[eta].SetTitle(';p_{T} (GeV);Average t-tagging rate')
 	trs[eta].GetYaxis().SetTitleOffset(0.8)
-	trs[eta].SetMaximum(0.05)
+	trs[eta].SetMaximum(0.20)
 	trs[eta].SetMinimum(0.0)
 	trs[eta].GetXaxis().SetRangeUser(400,1200)
 	trs[eta].SetStats(0)
@@ -479,7 +416,7 @@ for eta in range(0,2):
 	for ifit in range(0,len(fits)):
 		trs[eta].SetTitle(';p_{T} (GeV);Average t-tagging rate')
 		trs[eta].GetYaxis().SetTitleOffset(0.8)
-		trs[eta].SetMaximum(0.05)
+		trs[eta].SetMaximum(0.20)
 		trs[eta].SetMinimum(0.0)
 		trs[eta].GetXaxis().SetRangeUser(400,1200)
 		trs[eta].SetStats(0)

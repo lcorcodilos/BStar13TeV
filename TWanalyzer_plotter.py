@@ -45,7 +45,7 @@ parser.add_option('-m', '--mcsf', metavar='F', type='string', action='store',
                   help		=	'Turns QCD MC scale factor on and off')
 #Not used
 parser.add_option('-y', '--modmass', metavar='F', type='string', action='store',
-                  default	=	'none',
+                  default	=	'nominal',
                   dest		=	'modmass',
                   help		=	'nominal up or down')
 parser.add_option('-p', '--bprime', metavar='F', action='store_true',
@@ -72,7 +72,7 @@ kinBkg = ['', 		'ET', 		'EW', 		'PT', 		'PW', 		'PTW', 		'PhT', 		'PhW', 		'dPhi
 kinBin = [140, 		12, 		12, 		50, 		50,		35,		12,		12,		12    ]
 kinLow = [500, 		-2.4, 		-2.4, 		450, 		370,		0,		-pie,		-pie,		2.2   ]
 kinHigh= [4000, 	2.4, 		2.4, 		1500, 		1430,		700,		pie,		pie,		pie   ]
-rebin =  [5,		 1,		 1, 		 2,		 2,		 1,		 1,		 1,		 1    ]
+rebin =  [4,		 1,		 1, 		 2,		 2,		 1,		 1,		 1,		 1    ]
 st1_label= [";M_{tw} (GeV);Counts", ";Eta_{t} (rad);Counts", ";Eta_{W} (rad);Counts", ";Pt_{t} (GeV);Counts", ";Pt_{W} (GeV);Counts", ";Pt_{tW} (GeV);Counts", ";Phi_{t} (rad)", ";Phi_{W} (rad);Counts", ";Delta Phi (rad);Counts"]
 pull_label= [";M_{tw} (GeV);(Data-Bkg)/#sigma", ";Eta_{t} (rad);(Data-Bkg)/#sigma", ";Eta_{W} (rad);(Data-Bkg)/#sigma", ";Pt_{t} (GeV);(Data-Bkg)/#sigma", ";Pt_{W} (GeV);(Data-Bkg)/#sigma", ";Pt_{tW} (GeV);(Data-Bkg)/#sigma", ";Phi_{t} (rad)", ";Phi_{W} (rad);(Data-Bkg)/#sigma", ";Delta Phi (rad);(Data-Bkg)/#sigma"]
 
@@ -108,14 +108,6 @@ else:
 SR1200sList = []
 SR2800sList = []
 SR2000sList = []
-#BPB1200sList = []
-#BPB1400sList = []
-#BPB1600sList = []
-#BPB1800sList = []
-#BPT1200sList = []
-#BPT1400sList = []
-#BPT1600sList = []
-#BPT1800sList = []
 TTmcsList = []
 for m in mod:
 
@@ -149,38 +141,6 @@ TTmcfList = []
 for i in range(len(TTmcsList)):
 	TTmcfList.append(ROOT.TFile(TTmcsList[i]))
 
-#BPB1200fList = []
-#for i in range(len(BPB1200sList)):
-#	BPB1200fList.append(ROOT.TFile(BPB1200sList[i]))
-
-#BPB1400fList = []
-#for i in range(len(BPB1400sList)):
-#	BPB1400fList.append(ROOT.TFile(BPB1400sList[i]))
-
-#BPB1600fList = []
-#for i in range(len(BPB1600sList)):
-#	BPB1600fList.append(ROOT.TFile(BPB1600sList[i]))
-
-#BPB1800fList = []
-#for i in range(len(BPB1800sList)):
-#	BPB1800fList.append(ROOT.TFile(BPB1800sList[i]))
-
-#BPT1200fList = []
-#for i in range(len(BPT1200sList)):
-#	BPT1200fList.append(ROOT.TFile(BPT1200sList[i]))
-
-#BPT1400fList = []
-#for i in range(len(BPT1400sList)):
-#	BPT1400fList.append(ROOT.TFile(BPT1400sList[i]))
-
-#BPT1600fList = []
-#for i in range(len(BPT1600sList)):
-#	BPT1600fList.append(ROOT.TFile(BPT1600sList[i]))
-
-#BPT1800fList = []
-#for i in range(len(BPT1800sList)):
-#	BPT1800fList.append(ROOT.TFile(BPT1800sList[i]))
-
 #Have to also put the two extra ttbar files in TTmcfList
 #if options.cuts == 'default' and options.var == 'analyzer':
 	#TTmcfList.append(ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+"weightedttbarscaleup_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root"))
@@ -188,12 +148,8 @@ for i in range(len(TTmcsList)):
 
 
 Data = ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+options.set+"_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root")
-# if options.set == 'data':
-# 	DataMmup = ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+options.set+"_Trigger_nominal_"+pustr+"_modm_up_PSET_"+options.cuts+kin+".root")
-# 	DataMmdown = ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+options.set+"_Trigger_nominal_"+pustr+"_modm_down_PSET_"+options.cuts+kin+".root")
-# elif options.set == 'QCD':
-# 	DataMmdown = ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+options.set+"_Trigger_nominal_"+pustr+"_modm_up_PSET_"+options.cuts+kin+".root")
-# 	DataMmup = ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+options.set+"_Trigger_nominal_"+pustr+"_modm_down_PSET_"+options.cuts+kin+".root")
+DataMmup = ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+options.set+"_Trigger_nominal_"+pustr+"_modm_up_PSET_"+options.cuts+kin+".root")
+DataMmdown = ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+options.set+"_Trigger_nominal_"+pustr+"_modm_down_PSET_"+options.cuts+kin+".root")
 
 print "Root file opened"
 
@@ -283,11 +239,11 @@ for i in range(0, iterations):
 	DataFS = Data.Get(kinVar[i])
 	DataBE = Data.Get("QCDbkg" + kinBkg[i])
 
-	# DataBE2d = Data.Get("QCDbkg" + kinBkg[i]+"2D")
-	# DataBEMmup = DataMmup.Get("QCDbkg" + kinBkg[i])
-	# DataBEMmdown = DataMmdown.Get("QCDbkg" + kinBkg[i])
-	# DataBE2dup = Data.Get("QCDbkg" + kinBkg[i]+"2Dup")
-	# DataBE2ddown = Data.Get("QCDbkg" + kinBkg[i]+"2Ddown")
+	DataBE2d = Data.Get("QCDbkg" + kinBkg[i]+"2D")
+	DataBEMmup = DataMmup.Get("QCDbkg" + kinBkg[i])
+	DataBEMmdown = DataMmdown.Get("QCDbkg" + kinBkg[i])
+	DataBE2dup = Data.Get("QCDbkg" + kinBkg[i]+"2Dup")
+	DataBE2ddown = Data.Get("QCDbkg" + kinBkg[i]+"2Ddown")
 
 	#Selections in order (Selection, PUup, PUdown, JESup, JESdown, JERup, JERdown, tup, tdown, trigup, trig down)
 	SR1200FS = []
@@ -481,29 +437,6 @@ for i in range(0, iterations):
 
 
 
-
-
-
-
-#TTmcPtSmearUp = ROOT.TFile("rootfiles/TWkinematicsttbar_Trigger_nominal_PtSmearUp_PSET_"+options.cuts+".root")
-#TTmcPtSmearDown = ROOT.TFile("rootfiles/TWkinematicsttbar_Trigger_nominal_PtSmearDown_PSET_"+options.cuts+".root")
-
-#TTmcQ2ScaleUp = ROOT.TFile("rootfiles/TWkinematicsttbarscaleup_Trigger_nominal_none_PSET_"+options.cuts+".root")
-#TTmcQ2ScaleDown = ROOT.TFile("rootfiles/TWkinematicsttbarscaledown_Trigger_nominal_none_PSET_"+options.cuts+".root")
-
-
-
-
-#TTmcEtaSmearUp = ROOT.TFile("rootfiles/TWkinematicsttbar_Trigger_nominal_EtaSmearUp_PSET_"+options.cuts+".root")
-#TTmcEtaSmearDown = ROOT.TFile("rootfiles/TWkinematicsttbar_Trigger_nominal_EtaSmearDown_PSET_"+options.cuts+".root")
-
-#TTmcTriggerUp = ROOT.TFile("rootfiles/TWkinematicsttbar_Trigger_up_none_PSET_"+options.cuts+".root")
-#TTmcTriggerDown = ROOT.TFile("rootfiles/TWkinematicsttbar_Trigger_down_none_PSET_"+options.cuts+".root")
-
-#output = ROOT.TFile( "TWkinematics_output_PSET_"+options.cuts+".root", "recreate" )
-#output.cd()
-
-
 	#Selections in order (Selection, PUup, PUdown, JESup, JESdown, JERup, JERdown, ScaleUp, ScaleDown, Tup, Tdown, trigup, trig down)
 	TTmcFS = []
 	for j in range(len(TTmcfList)):
@@ -528,7 +461,7 @@ for i in range(0, iterations):
 
 	TTmcBE = TTmcfList[0].Get("QCDbkg" + kinBkg[i])
 
-	#TTmcBE2d = TTmcfList[0].Get("QCDbkg" + kinBkg[i]+"2D")
+	TTmcBE2d = TTmcfList[0].Get("QCDbkg" + kinBkg[i]+"2D")
 
 
 	TTmcBEh = TTmcfList[0].Get("QCDbkg" + kinBkg[i]+"h")
@@ -538,57 +471,10 @@ for i in range(0, iterations):
 	DataBEl = Data.Get("QCDbkg"+kinBkg[i]+"l")
 
 
-#TTmcFSScaleUp = TTmcScaleUp.Get("Mtw")
-#TTmcFSScaleDown = TTmcScaleDown.Get("Mtw")
-
-#TTmcFSQ2ScaleUp = TTmcQ2ScaleUp.Get("Mtw")
-#TTmcFSQ2ScaleDown = TTmcQ2ScaleDown.Get("Mtw")
-
-#TTmcFSPtSmearUp = TTmcPtSmearUp.Get("Mtw")
-#TTmcFSPtSmearDown = TTmcPtSmearDown.Get("Mtw")
-
-#TTmcFSEtaSmearUp = TTmcEtaSmearUp.Get("Mtw")
-#TTmcFSEtaSmearDown = TTmcEtaSmearDown.Get("Mtw")
-
-#TTmcFSTriggerUp = TTmcTriggerUp.Get("Mtw")
-#TTmcFSTriggerDown = TTmcTriggerDown.Get("Mtw")
-
-#DataBEMmup = DataBEMmup.Rebin(len(bins2)-1,"",bins2)
-#DataBEMmdown = DataBEMmdown.Rebin(len(bins2)-1,"",bins2)
-
-#DataBE2dup = DataBE2dup.Rebin(len(bins2)-1,"",bins2)
-#DataBE2ddown = DataBE2ddown.Rebin(len(bins2)-1,"",bins2)
-
-#TTmcFSQ2ScaleUp = TTmcFSQ2ScaleUp.Rebin(len(bins2)-1,"",bins2)
-#TTmcFSQ2ScaleDown = TTmcFSQ2ScaleDown.Rebin(len(bins2)-1,"",bins2)
-
-#TTmcFSScaleUp = TTmcFSScaleUp.Rebin(len(bins2)-1,"",bins2)
-#TTmcFSScaleDown =  TTmcFSScaleDown.Rebin(len(bins2)-1,"",bins2)
-
-#TTmcFSPtSmearUp =  TTmcFSPtSmearUp.Rebin(len(bins2)-1,"",bins2)
-#TTmcFSPtSmearDown =  TTmcFSPtSmearDown.Rebin(len(bins2)-1,"",bins2)
-
-#TTmcFSEtaSmearUp = TTmcFSEtaSmearUp.Rebin(len(bins2)-1,"",bins2)
-#TTmcFSEtaSmearDown = TTmcFSEtaSmearDown.Rebin(len(bins2)-1,"",bins2)
-
-#TTmcFSTriggerUp = TTmcFSTriggerUp.Rebin(len(bins2)-1,"",bins2)
-#TTmcFSTriggerDown = TTmcFSTriggerDown.Rebin(len(bins2)-1,"",bins2)
-
-
-#DataBE2d = DataBE2d.Rebin(len(bins2)-1,"",bins2)
-
-#TTmcFS = TTmcFS.Rebin(len(bins2)-1,"",bins2)
-#DataBE = DataBE.Rebin(len(bins2)-1,"",bins2)
-#DataFS = DataFS.Rebin(len(bins2)-1,"",bins2)
-#print DataFS.Integral()
-#DataBEl = DataBEl.Rebin(len(bins2)-1,"",bins2)
-#DataBEh = DataBEh.Rebin(len(bins2)-1,"",bins2)
-
-
 	DataBE = DataBE.Rebin(rebin[i])
 	DataFS = DataFS.Rebin(rebin[i])
 	TTmcBE = TTmcBE.Rebin(rebin[i])
-	#TTmcBE2d = TTmcBE2d.Rebin(rebin[i])
+	TTmcBE2d = TTmcBE2d.Rebin(rebin[i])
 	print "DataFS.Integral() = " + str(DataFS.Integral())
 	DataBEl = DataBEl.Rebin(rebin[i])
 	DataBEh = DataBEh.Rebin(rebin[i])
@@ -606,29 +492,24 @@ for i in range(0, iterations):
 			#print y
 			y+=1
 
-	# DataBEMmup = DataBEMmup.Rebin(rebin[i])
-	# DataBEMmdown = DataBEMmdown.Rebin(rebin[i])
-	# DataBE2d = DataBE2d.Rebin(rebin[i])
-	# DataBE2ddown = DataBE2ddown.Rebin(rebin[i])
-	# DataBE2dup = DataBE2dup.Rebin(rebin[i])
+	DataBEMmup = DataBEMmup.Rebin(rebin[i])
+	DataBEMmdown = DataBEMmdown.Rebin(rebin[i])
+	DataBE2d = DataBE2d.Rebin(rebin[i])
+	DataBE2ddown = DataBE2ddown.Rebin(rebin[i])
+	DataBE2dup = DataBE2dup.Rebin(rebin[i])
 
-#TTmcBE = TTmcBE.Rebin(len(bins2)-1,"",bins2)
-#TTmcBE2d = TTmcBE2d.Rebin(len(bins2)-1,"",bins2)
-#TTmcBEh = TTmcBEh.Rebin(len(bins2)-1,"",bins2)
-#TTmcBEl = TTmcBEl.Rebin(len(bins2)-1,"",bins2)
 
 #subtract weighted TT pretags
 
-#unsubbkg = DataBE.Clone()
 	if options.set == 'data':
 		DataBE.Add(TTmcBE,-1)
-		#DataBE2d.Add(TTmcBE2d,-1)
+		DataBE2d.Add(TTmcBE2d,-1)
 		DataBEl.Add(TTmcBE,-1)
 		DataBEh.Add(TTmcBE,-1)
-		# DataBEMmup.Add(TTmcBE,-1)
-		# DataBEMmdown.Add(TTmcBE,-1)
-		# DataBE2dup.Add(TTmcBE2d,-1)
-		# DataBE2ddown.Add(TTmcBE2d,-1)
+		DataBEMmup.Add(TTmcBE,-1)
+		DataBEMmdown.Add(TTmcBE,-1)
+		DataBE2dup.Add(TTmcBE2d,-1)
+		DataBE2ddown.Add(TTmcBE2d,-1)
 		
 	print "begin singletop"
 	main.cd()
@@ -655,24 +536,20 @@ for i in range(0, iterations):
 		ssubs.append(sfiles[ifile].Get("QCDbkg"+kinBkg[i]))
 		ssubsh.append(sfiles[ifile].Get("QCDbkg"+kinBkg[i]+"h"))
 		ssubsl.append(sfiles[ifile].Get("QCDbkg"+kinBkg[i]+"l"))
-		#ssubs2d.append(sfiles[ifile].Get("QCDbkg"+kinBkg[i]+"2D"))
+		ssubs2d.append(sfiles[ifile].Get("QCDbkg"+kinBkg[i]+"2D"))
 		shists[ifile] = shists[ifile].Rebin(rebin[i])
 		ssubs[ifile] = ssubs[ifile].Rebin(rebin[i])
 		ssubsh[ifile] = ssubsh[ifile].Rebin(rebin[i])
 		ssubsl[ifile] = ssubsl[ifile].Rebin(rebin[i])
-		#ssubs2d[ifile] = ssubs2d[ifile].Rebin(rebin[i])
-		#shists[ifile] = shists[ifile].Rebin(len(bins2)-1,"",bins2)
-		#ssubs[ifile] = ssubs[ifile].Rebin(len(bins2)-1,"",bins2)
-		#ssubsh[ifile] = ssubsh[ifile].Rebin(len(bins2)-1,"",bins2)
-		#ssubsl[ifile] = ssubsl[ifile].Rebin(len(bins2)-1,"",bins2)
-	#print str((Luminosity*stopxsecs[ifile]*TeffScale)/stopnevents[ifile]) 
+		ssubs2d[ifile] = ssubs2d[ifile].Rebin(rebin[i])
+
 		if options.set == 'data':
 			DataBE.Add(ssubs[ifile],-1)
 			DataBEl.Add(ssubsl[ifile],-1)
 			DataBEh.Add(ssubsh[ifile],-1)  
-			# DataBE2d.Add(ssubs2d[ifile],-1)
-			# DataBEMmup.Add(ssubs[ifile],-1)
-			# DataBEMmdown.Add(ssubs[ifile],-1)
+			DataBE2d.Add(ssubs2d[ifile],-1)
+			DataBEMmup.Add(ssubs[ifile],-1)
+			DataBEMmdown.Add(ssubs[ifile],-1)
 		
 		singletop.Add(shists[ifile])
 		if ifile<=1:
@@ -685,81 +562,36 @@ for i in range(0, iterations):
 		DataFS.Add(singletop)
 #output.cd()
 
-	# fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
-	# QCDbkg_ARR = []
-	# for ihist in range(0,len(fittitles)):
-	# 	print "Appending to QCDbkg_ARR - " + "QCDbkg"+kinBkg[i]+str(fittitles[ihist])
-	# 	QCDbkg_ARR.append(Data.Get("QCDbkg"+kinBkg[i]+str(fittitles[ihist])))
-	# 	#QCDbkg_ARR[ihist] = QCDbkg_ARR[ihist].Rebin(len(bins2)-1,"",bins2)
-	# 	QCDbkg_ARR[ihist] = QCDbkg_ARR[ihist].Rebin(rebin[i])
+	fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
+	QCDbkg_ARR = []
+	for ihist in range(0,len(fittitles)):
+		print "Appending to QCDbkg_ARR - " + "QCDbkg"+kinBkg[i]+str(fittitles[ihist])
+		QCDbkg_ARR.append(Data.Get("QCDbkg"+kinBkg[i]+str(fittitles[ihist])))
+		QCDbkg_ARR[ihist] = QCDbkg_ARR[ihist].Rebin(rebin[i])
 
-	# BEfiterrh = kinFit_Uncertainty(QCDbkg_ARR, kinBkg[i])
-
-#sig3d = DataBE2dup.Clone()
-#sig2d = DataBEh.Clone()
-#sig3d.Add(DataBE2d,-1)
-#sig2d.Add(DataBE,-1)
-#extrasig = sig3d.Clone()
+	BEfiterrh = kinFit_Uncertainty(QCDbkg_ARR, kinBkg[i])
 
 
-
-
-#for ibin in range(1,sig3d.GetNbinsX()+1):
-#	cont3d = sig3d.GetBinContent(ibin)
-#	cont2d = sig2d.GetBinContent(ibin)
-#	newcont = sqrt(max(cont3d*cont3d-cont2d*cont2d,0.0))
-#	extrasig.SetBinContent(ibin,newcont)
-
-
-#output.cd()
 	DataQCDBEH=DataBE.Clone("DataQCDBEH")
 	DataQCDBEL=DataBE.Clone("DataQCDBEL")
 	DataTOTALBEH=DataBE.Clone("DataTOTALBEH")
 	DataTOTALBEL=DataBE.Clone("DataTOTALBEL")
 
 	for ibin in range(0,DataBE.GetNbinsX()):
-#	PtScaleup=(TTmcFSScaleUp.GetBinContent(ibin) -TTmcFS.GetBinContent(ibin))
-#	Q2Scaleup=(TTmcFSQ2ScaleUp.GetBinContent(ibin) -TTmcFS.GetBinContent(ibin))
-#	PtSmearup=(TTmcFSPtSmearUp.GetBinContent(ibin) -TTmcFS.GetBinContent(ibin))
-#	EtaSmearup=(TTmcFSEtaSmearUp.GetBinContent(ibin) -TTmcFS.GetBinContent(ibin))
-#	Triggerup=(TTmcFSTriggerUp.GetBinContent(ibin) -TTmcFS.GetBinContent(ibin))
 
-
-#	PtScaledown=(TTmcFSScaleDown.GetBinContent(ibin) -TTmcFS.GetBinContent(ibin))
-#	Q2Scaledown=(TTmcFSQ2ScaleDown.GetBinContent(ibin) -TTmcFS.GetBinContent(ibin))
-#	PtSmeardown=(TTmcFSPtSmearDown.GetBinContent(ibin) -TTmcFS.GetBinContent(ibin))
-#	EtaSmeardown=(TTmcFSEtaSmearDown.GetBinContent(ibin) -TTmcFS.GetBinContent(ibin))
-#	Triggerdown=(TTmcFSTriggerDown.GetBinContent(ibin) -TTmcFS.GetBinContent(ibin))
-
-#	ups = [PtScaleup,Q2Scaleup,PtSmearup,EtaSmearup,Triggerup]
-#	downs = [PtScaledown,Q2Scaledown,PtSmeardown,EtaSmeardown,Triggerdown]
-	
-#	upstr = ["PtScaleup","Q2Scaleup","PtSmearup","EtaSmearup","Triggerup"]
-#	downstr = ["PtScaledown","Q2Scaledown","PtSmeardown","EtaSmeardown","Triggerdown"]
-
-#	sigsqup = 0.
-#	sigsqdown = 0.
-
-#	for i in range(0,len(ups)):
-#		upsig = max(ups[i],downs[i],0.)
-#		downsig = min(ups[i],downs[i],0.)
-#		sigsqup+=upsig*upsig
-#		sigsqdown+=downsig*downsig
-
-#	CrossSection=0.22*TTmcFS.GetBinContent(ibin)
 		TTstat=TTmcFS[0].GetBinError(ibin)
 		if DataBE.GetBinContent(ibin)>0:
 			QCDstat=DataBE.GetBinError(ibin)
 		else:
 			QCDstat=0.
-		#QCDfit=abs(BEfiterrh.GetBinContent(ibin))
+		QCDfit=abs(BEfiterrh.GetBinContent(ibin))
 		QCDfit1=abs((DataBEh.GetBinContent(ibin)-DataBEl.GetBinContent(ibin))/2)
 		#QCDfit2=abs(DataBE2d.GetBinContent(ibin)-DataBE.GetBinContent(ibin))
 #	QCDfit3=abs(extrasig.GetBinContent(ibin))
-		#QCDMm=abs((DataBEMmup.GetBinContent(ibin)-DataBEMmdown.GetBinContent(ibin))/2)
+		QCDMm=abs((DataBEMmup.GetBinContent(ibin)-DataBEMmdown.GetBinContent(ibin))/2)
 
 
-		QCDsys=sqrt(QCDfit1*QCDfit1)# QCDfit*QCDfit + +QCDMm*QCDMm+ QCDfit2*QCDfit2)
+		QCDsys=sqrt(QCDfit1*QCDfit1 + QCDfit*QCDfit+QCDMm*QCDMm)#+ QCDfit2*QCDfit2)
 		QCDerror= sqrt(QCDstat*QCDstat+QCDsys*QCDsys)
 		TTerrorup=sqrt(TTstat*TTstat)
 		TTerrordown=sqrt(TTstat*TTstat)
@@ -769,10 +601,10 @@ for i in range(0, iterations):
 		DataQCDBEL.SetBinContent(ibin,DataQCDBEL.GetBinContent(ibin)-QCDerror)
 		DataTOTALBEH.SetBinContent(ibin,DataTOTALBEH.GetBinContent(ibin)+Totalerrorup)
 		DataTOTALBEL.SetBinContent(ibin,DataTOTALBEL.GetBinContent(ibin)-Totalerrordown)
-#	print "QCDMm: " + str(QCDMm)
-#	print "QCDfit: " + str(QCDfit)
+	print "QCDMm: " + str(QCDMm)
+	print "QCDfit: " + str(QCDfit)
 	print "QCDfit1: " + str(QCDfit1)
-#	print "QCDfit2: " + str(QCDfit2)
+	#print "QCDfit2: " + str(QCDfit2)
 	print "QCDerror: " + str(QCDerror)
 	
 	print "QCD total error"
@@ -910,118 +742,118 @@ for i in range(0, iterations):
 
 
 
-		# c3 = TCanvas("QCD 2D uncertainty", "QCD uncertainty", 700, 700)
-		# QCD2D = ROOT.TPad("QCD2D", "QDC2D", 0, 0, 1, 1)
-		# QCD2D.SetLeftMargin(0.16)
-		# QCD2D.SetRightMargin(0.05)
-		# QCD2D.SetTopMargin(0.1)
-		# QCD2D.SetBottomMargin(0.1)
-		# QCD2D.Draw()
-		# QCD2D.cd()
+		c3 = TCanvas("QCD 2D uncertainty", "QCD uncertainty", 700, 700)
+		QCD2D = ROOT.TPad("QCD2D", "QDC2D", 0, 0, 1, 1)
+		QCD2D.SetLeftMargin(0.16)
+		QCD2D.SetRightMargin(0.05)
+		QCD2D.SetTopMargin(0.1)
+		QCD2D.SetBottomMargin(0.1)
+		QCD2D.Draw()
+		QCD2D.cd()
 	
-		# DataBE2d.SetLineColor(kRed)
-		# DataBE2ddown.SetLineColor(kGreen+1)
-		# DataBE2dup.SetLineColor(kBlue)
-		# DataBE2ddown.SetLineStyle(2)
-		# DataBE2dup.SetLineStyle(2)
-		# DataBE2d.SetLineWidth(2)
-		# DataBE2dup.SetLineWidth(2)
-		# DataBE2ddown.SetLineWidth(2)
+		DataBE2d.SetLineColor(kRed)
+		DataBE2ddown.SetLineColor(kGreen+1)
+		DataBE2dup.SetLineColor(kBlue)
+		DataBE2ddown.SetLineStyle(2)
+		DataBE2dup.SetLineStyle(2)
+		DataBE2d.SetLineWidth(2)
+		DataBE2dup.SetLineWidth(2)
+		DataBE2ddown.SetLineWidth(2)
 
-		# DataBE2d.SetStats(0)
-		# DataBE2ddown.SetStats(0)
-		# DataBE2dup.SetStats(0)
+		DataBE2d.SetStats(0)
+		DataBE2ddown.SetStats(0)
+		DataBE2dup.SetStats(0)
 
-		# c3Max = DataBE2dup.GetMaximum()
-		# DataBE2d.SetMaximum(c3Max*1.1)
-		# DataBE2dup.SetMaximum(c3Max*1.1)
-		# DataBE2ddown.SetMaximum(c3Max*1.1)
+		c3Max = DataBE2dup.GetMaximum()
+		DataBE2d.SetMaximum(c3Max*1.1)
+		DataBE2dup.SetMaximum(c3Max*1.1)
+		DataBE2ddown.SetMaximum(c3Max*1.1)
 
-		# DataBE2d.Draw("samehist")
-		# DataBE2ddown.Draw("samehist")
-		# DataBE2dup.Draw("samehist")
+		DataBE2d.Draw("samehist")
+		DataBE2ddown.Draw("samehist")
+		DataBE2dup.Draw("samehist")
 
-		# c3.Print('plots/UncertaintyQCD2D.root')
-		# c3.Print('plots/UncertaintyQCD2D.png')
-		# c3.Print('plots/UncertaintyQCD2D.pdf')
+		c3.Print('plots/UncertaintyQCD2D.root')
+		c3.Print('plots/UncertaintyQCD2D.png')
+		c3.Print('plots/UncertaintyQCD2D.pdf')
 
-		# QCDup = DataBE.Clone()
-		# QCDdown = DataBE.Clone()
-		# for ibin in range(0,DataBE.GetNbinsX()):
-		# 	#QCDfiterr=abs(BEfiterrh.GetBinContent(ibin))
-		# 	QCDnominal=abs(DataBE.GetBinContent(ibin))
-		# 	QCDup.SetBinContent(ibin,(QCDnominal + QCDfiterr))
-		# 	QCDdown.SetBinContent(ibin,(QCDnominal - QCDfiterr))
+		QCDup = DataBE.Clone()
+		QCDdown = DataBE.Clone()
+		for ibin in range(0,DataBE.GetNbinsX()):
+			QCDfiterr=abs(BEfiterrh.GetBinContent(ibin))
+			QCDnominal=abs(DataBE.GetBinContent(ibin))
+			QCDup.SetBinContent(ibin,(QCDnominal + QCDfiterr))
+			QCDdown.SetBinContent(ibin,(QCDnominal - QCDfiterr))
 		
 		
 	
 
-		# c4 = TCanvas("QCD fit uncertainty", "QCD uncertainty", 700, 700)
-		# QCDfit = ROOT.TPad("QCDfit", "QDCfit", 0, 0, 1, 1)
-		# QCDfit.SetLeftMargin(0.16)
-		# QCDfit.SetRightMargin(0.05)
-		# QCDfit.SetTopMargin(0.1)
-		# QCDfit.SetBottomMargin(0.1)
-		# QCDfit.Draw()
-		# QCDfit.cd()
+		c4 = TCanvas("QCD fit uncertainty", "QCD uncertainty", 700, 700)
+		QCDfit = ROOT.TPad("QCDfit", "QDCfit", 0, 0, 1, 1)
+		QCDfit.SetLeftMargin(0.16)
+		QCDfit.SetRightMargin(0.05)
+		QCDfit.SetTopMargin(0.1)
+		QCDfit.SetBottomMargin(0.1)
+		QCDfit.Draw()
+		QCDfit.cd()
 	
-		# DataBE.SetLineColor(kRed)
-		# QCDdown.SetLineColor(kGreen+1)
-		# QCDup.SetLineColor(kBlue)
-		# QCDdown.SetLineStyle(2)
-		# QCDup.SetLineStyle(2)
-		# QCDup.SetLineWidth(2)
-		# QCDdown.SetLineWidth(2)
+		DataBE.SetLineColor(kRed)
+		QCDdown.SetLineColor(kGreen+1)
+		QCDup.SetLineColor(kBlue)
+		QCDdown.SetLineStyle(2)
+		QCDup.SetLineStyle(2)
+		QCDup.SetLineWidth(2)
+		QCDdown.SetLineWidth(2)
 
-		# QCDup.SetStats(0)
-		# QCDdown.SetStats(0)
+		QCDup.SetStats(0)
+		QCDdown.SetStats(0)
 
-		# c4Max = QCDup.GetMaximum()
-		# DataBE.SetMaximum(c4Max*1.1)
-		# QCDdown.SetMaximum(c4Max*1.1)
-		# QCDup.SetMaximum(c4Max*1.1)
+		c4Max = QCDup.GetMaximum()
+		DataBE.SetMaximum(c4Max*1.1)
+		QCDdown.SetMaximum(c4Max*1.1)
+		QCDup.SetMaximum(c4Max*1.1)
 
-		# DataBE.Draw("samehist")
-		# QCDdown.Draw("samehist")
-		# QCDup.Draw("samehist")
+		DataBE.Draw("samehist")
+		QCDdown.Draw("samehist")
+		QCDup.Draw("samehist")
 
-		# c4.Print('plots/UncertaintyQCDfit.root')
-		# c4.Print('plots/UncertaintyQCDfit.png')
-		# c4.Print('plots/UncertaintyQCDfit.pdf')
+		c4.Print('plots/UncertaintyQCDfit.root')
+		c4.Print('plots/UncertaintyQCDfit.png')
+		c4.Print('plots/UncertaintyQCDfit.pdf')
 
 
-		# c5 = TCanvas("QCD mod mass uncertainty", "QCD mod mass uncertainty", 700, 700)
-		# QCDModMass = ROOT.TPad("QCDMm", "QCDMm", 0, 0, 1, 1)
-		# QCDModMass.SetLeftMargin(0.16)
-		# QCDModMass.SetRightMargin(0.05)
-		# QCDModMass.SetTopMargin(0.1)
-		# QCDModMass.SetBottomMargin(0.1)
-		# QCDModMass.Draw()
-		# QCDModMass.cd()
+		c5 = TCanvas("QCD mod mass uncertainty", "QCD mod mass uncertainty", 700, 700)
+		QCDModMass = ROOT.TPad("QCDMm", "QCDMm", 0, 0, 1, 1)
+		QCDModMass.SetLeftMargin(0.16)
+		QCDModMass.SetRightMargin(0.05)
+		QCDModMass.SetTopMargin(0.1)
+		QCDModMass.SetBottomMargin(0.1)
+		QCDModMass.Draw()
+		QCDModMass.cd()
 	
-		# DataBE.SetLineColor(kRed)
-		# DataBEMmdown.SetLineColor(kGreen+1)
-		# DataBEMmup.SetLineColor(kBlue)
-		# DataBEMmdown.SetLineStyle(2)
-		# DataBEMmup.SetLineStyle(2)
-		# DataBEMmup.SetLineWidth(2)
-		# DataBEMmdown.SetLineWidth(2)
+		DataBE.SetLineColor(kRed)
+		DataBEMmdown.SetLineColor(kGreen+1)
+		DataBEMmup.SetLineColor(kBlue)
+		DataBEMmdown.SetLineStyle(2)
+		DataBEMmup.SetLineStyle(2)
+		DataBEMmup.SetLineWidth(2)
+		DataBEMmdown.SetLineWidth(2)
 
-		# DataBEMmup.SetStats(0)
-		# DataBEMmdown.SetStats(0)
+		DataBEMmup.SetStats(0)
+		DataBEMmdown.SetStats(0)
 
-		# c5Max =DataBEMmup.GetMaximum()
-		# DataBE.SetMaximum(c5Max*1.1)
-		# DataBEMmdown.SetMaximum(c5Max*1.1)
-		# DataBEMmup.SetMaximum(c5Max*1.1)
+		c5Max =DataBEMmup.GetMaximum()
+		DataBE.SetMaximum(c5Max*1.1)
+		DataBEMmdown.SetMaximum(c5Max*1.1)
+		DataBEMmup.SetMaximum(c5Max*1.1)
 
-		# DataBE.Draw("samehist")
-		# DataBEMmdown.Draw("samehist")
-		# DataBEMmup.Draw("samehist")
+		DataBE.Draw("samehist")
+		DataBEMmdown.Draw("samehist")
+		DataBEMmup.Draw("samehist")
 
-		# c5.Print('plots/UncertaintyQCDModMass.root')
-		# c5.Print('plots/UncertaintyQCDModMass.png')
-		# c5.Print('plots/UncertaintyQCDModMass.pdf')
+		c5.Print('plots/UncertaintyQCDModMass.root')
+		c5.Print('plots/UncertaintyQCDModMass.png')
+		c5.Print('plots/UncertaintyQCDModMass.pdf')
 
 
 
@@ -1044,26 +876,10 @@ for i in range(0, iterations):
 	SR2800FS[0].SetLineWidth(2)
 	SR2000FS[0].SetLineColor(kBlue-2)
 	SR2000FS[0].SetLineWidth(2)
-	#BPB1200FS[0].SetLineColor(kOrange)
-	#BPB1200FS[0].SetLineWidth(2)
-	#BPB1400FS[0].SetLineColor(kOrange-1)
-	#BPB1400FS[0].SetLineWidth(2)
-	#BPB1600FS[0].SetLineColor(kOrange-2)
-	#BPB1600FS[0].SetLineWidth(2)
-	#BPB1800FS[0].SetLineColor(kOrange+2)
-	#BPB1800FS[0].SetLineWidth(2)
-	#BPT1200FS[0].SetLineColor(kGreen)
-	#BPT1200FS[0].SetLineWidth(2)
-	#BPT1400FS[0].SetLineColor(kGreen-1)
-	#BPT1400FS[0].SetLineWidth(2)
-	#BPT1600FS[0].SetLineColor(kGreen-2)
-	#BPT1600FS[0].SetLineWidth(2)
-	#BPT1800FS[0].SetLineColor(kGreen+2)
-	#BPT1800FS[0].SetLineWidth(2)
+
 
 	DataTOTALBEH.SetLineColor(kBlue)
 	DataTOTALBEH.SetLineWidth(2)
-#DataTOTALBEH.SetLineStyle(2)
 
 	centerqcd = DataTOTALBEL.Clone("centerqcd")
 	centerqcd.SetFillColor(kYellow)
@@ -1072,10 +888,6 @@ for i in range(0, iterations):
 
 	DataTOTALBEL.SetLineColor(kBlue)
 	DataTOTALBEL.SetLineWidth(2)
-#DataTOTALBEL.SetFillColor(0)
-#DataTOTALBEL.SetLineStyle(0)
-#DataTOTALBEL.SetLineWidth(2)
-#DataTOTALBEL.SetLineStyle(2)
 
 	sigst= ROOT.THStack("sigst", "sigst")
 	sigma = DataTOTALBEH.Clone("sigma")
@@ -1164,28 +976,18 @@ for i in range(0, iterations):
 
 
 
-#c1.cd()
-#c1.SetLeftMargin(0.17)
-#st1.GetXaxis().SetRangeUser(0,3000)
-	#st1.SetMaximum(DataTOTALBEH.GetMaximum() * 1.3)
-	#st1.SetMinimum(1.0)
 	st1.SetMaximum(DataTOTALBEH.GetMaximum() * 1.3)
 	st1.SetMinimum(0.1)
 	st1.SetTitle(st1_label[i])
 	st1.Draw("hist")
 	gPad.SetLeftMargin(.16)
 	st1.GetYaxis().SetTitleOffset(1)
-#DataTOTALBEH.Draw("histsame")
-#DataTOTALBEL.Draw("histsame")
+
 	sigst.Draw("samehist")
 	bkgline.Draw("samehist")
-#sigh[0].Draw("samehist")
-#sigh[1].Draw("samehist")
-#sigh[2].Draw("samehist")
 
 
 	DataFS1	    = TH1D("DataFS1",     str(kinVar[i])+" in b+1",	kinBin[i], kinLow[i], kinHigh[i] )
-#pythonDataFS1 = DataFS1.Rebin(len(bins2)-1,"",bins2)
 	DataFS1 = DataFS1.Rebin(rebin[i])
 	for ibin in range(1,DataFS.GetNbinsX()+1):
 		DataFS1.SetBinContent(ibin,DataFS.GetBinContent(ibin))
@@ -1247,11 +1049,9 @@ for i in range(0, iterations):
 		leg.Draw()
 		kinLeg.Print('kinleg.pdf','pdf')
 
-#prelim.DrawLatex( 0.5, 0.91, "#scale[0.8]{CMS Preliminary, 8 TeV, 19.7 fb^{-1}}" )
 	sub.cd()
 	gPad.SetLeftMargin(.16)
 
-#totalH.Add(TTmcFS)
 	if options.blinded == 'off':
 		pull = Make_Pull_plot( DataFS1,totalH,DataTOTALBEH,DataTOTALBEL )
 		print "Integral totalH: " + str(totalH.Integral())
@@ -1300,7 +1100,10 @@ for i in range(0, iterations):
 	analysis = ''
 	if options.bprime:
 		analysis = '_bprime'
-	mcscale = '_mcscale_'+options.mcsf
+	if options.mcsf != '':
+		mcscale = '_mcscale_'+options.mcsf
+	else:
+		mcscale = ''
 
 	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+'.root', 'root')
 	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+'.pdf', 'pdf')

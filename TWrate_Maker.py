@@ -43,8 +43,8 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
 
 gROOT.Macro("rootlogon.C")
 
-import Bstar_Functions	
-from Bstar_Functions import *
+import Bstar_Functions_local	
+from Bstar_Functions_local import *
 
 Cons = LoadConstants()
 
@@ -64,7 +64,7 @@ setstr = ""
 if options.set=='QCD':
 	setstr = 'QCD'
 elif options.set=='data':
-	setstr = 'Data'
+	setstr = 'data'
 
 #Make a bunch of txt files to store the fit parameters
 saveout = sys.stdout
@@ -93,6 +93,8 @@ Outf31   =   open("fitdata/expolininput"+setstr+"eta1_PSET_"+options.cuts+".txt"
 Outf32   =   open("fitdata/expolininput"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
 Outf34   =   open("fitdata/expolinerrorinput"+setstr+"eta1_PSET_"+options.cuts+".txt", "w")
 Outf35   =   open("fitdata/expolinerrorinput"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
+if options.set == "QCD":
+	MMout    =   open('fitdata/ModMass_pol3_PSET_'+options.cuts+'.txt','w')
 sto = sys.stdout  
 
 
@@ -138,10 +140,20 @@ if options.set == 'QCD':
 	ModM.Rebin(40)
 	ModMd.Rebin(40)
 
-	ModM.Scale(1/ModM.Integral())
-	ModMd.Scale(1/ModMd.Integral())
+	ModM.Scale(1.0/ModM.Integral())
+	ModMd.Scale(1.0/ModMd.Integral())
 
-	ModM.Divide(ModM,ModMd,1.0,1.0,"B")
+	ModM.Divide(ModM,ModMd)
+	#ModM.Divide(ModM,ModMd,1.0,1.0,"B")
+
+	sys.stdout = MMout
+	ModM.Fit("pol3","F")
+	fitter = TVirtualFitter.GetFitter()
+	for i in range(0,4):
+		print(fitter.GetParameter(i))
+	ModM.Draw()
+
+	sys.stdout = saveout
 
 	ModM.Write("rtmass")
 	output1.Close()
@@ -189,17 +201,19 @@ ntot2 = ttneta2.Integral() + neta2.Integral() + stneta2.Integral()
 dtot1 = ttdeta1.Integral() + deta1.Integral() + stdeta1.Integral()
 dtot2 = ttdeta2.Integral() + deta2.Integral() + stdeta2.Integral()
 
-bins=[]
-#bins= [350,400,460,570,700,1000,1600]
-#bins= [400,460,570,700,1000,1400]
-bins=[]
-previousBin = 400
-i = 0
-while (previousBin+40*i) < 2000:
-	bins.append(previousBin+40*i)
-	previousBin+=(40*i)
-	i+=1
-print bins
+# bins=[]
+# previousBin = 400
+# i = 0
+# while (previousBin+40*i) < 2000:
+# 	bins.append(previousBin+40*i)
+# 	previousBin+=(40*i)
+# 	i+=1
+# print bins
+
+bins= [400,540,570,600,650,720,850,1700]
+if options.set == 'QCD':
+	bins= [400,540,570,600,650,720,850,1000,1300,1600,2000]
+
 #bins= variableBins(deta1,10)
 bins2=array('d',bins)
 
@@ -268,24 +282,16 @@ mass = [1300,1500,1700,1900,2100,2300,2700]
 #	tagrateseta1.Write()
 #	tagrateseta2.Write()
 
-
-
-
-
-
-
-
-
 output.cd()
 
 # Create subtracted tagrates by division
 
 tagrateeta1 = neta1r.Clone("tagrateeta1")
-#tagrateeta1.Divide(deta1r)
-tagrateeta1.Divide(tagrateeta1,deta1r,1.0,1.0,"B")
+tagrateeta1.Divide(deta1r)
+#tagrateeta1.Divide(tagrateeta1,deta1r,1.0,1.0,"B")
 tagrateeta2 = neta2r.Clone("tagrateeta2")
-#tagrateeta2.Divide(deta2r)
-tagrateeta2.Divide(tagrateeta2,deta2r,1.0,1.0,"B")
+tagrateeta2.Divide(deta2r)
+#tagrateeta2.Divide(tagrateeta2,deta2r,1.0,1.0,"B")
 
 
 
@@ -362,7 +368,8 @@ print "------------------------------------"
 
 # This is the fit we use.  BIFP is the bifurcation point
 
-BIFP=500.0
+#BIFP=500.0
+BIFP = 700.0
 BP =TF1("BP",BifPoly,400,2000,5)
 BP.FixParameter(4,BIFP)
 
@@ -411,7 +418,8 @@ c4.Print("plots/"+options.cuts+"/WPTAGETA1FIT"+setstr+".root","root")
 c3 = TCanvas('c3', 'Tagrate2', 1300, 600)
 c3.cd()
 
-BIFP=500.0
+#BIFP=500.0
+BIFP = 700.0
 BP =TF1("BP",BifPoly,400,2000,5)
 BP.FixParameter(4,BIFP)
 tagrateeta2.Fit("BP","F")
@@ -975,7 +983,7 @@ gPad.SetLeftMargin(0.12)
 gPad.SetRightMargin(0.16)
 #c1.SetRightMargin(0.19)
 SB2dtempeta1.GetYaxis().SetTitleOffset(1.0)
-SB2dtempeta2.GetZaxis().SetLabelOffset(0.1)
+SB2dtempeta1.GetZaxis().SetLabelOffset(0.1)
 SB2dtempeta1.SetTitle(';Pt_{b} (GeV);M_{tb} (GeV)')
 SB2dtempeta1.SetStats(0)
 SB2dtempeta1.SetMaximum(0.11)
