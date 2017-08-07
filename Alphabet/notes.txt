@@ -1,0 +1,22 @@
+3/22/17
+- Trying to combine Alphabet output with TWanalyzer.py
+- TWanalyzer.py accessed rate information at the following locations
+
+240: ModFile = ROOT.TFile(di+"ModMassFile_rate_"+options.cuts+".root")
+- Used to find a mass weight 
+- Found by dividing the normalized post top tag t mass distribution by the normalized pre top tag t mass distribution
+	- Fixes the shape of the mass distribution
+- range of 0.6 to 1.75
+- Still necessary?
+	- Would need to ...
+
+378: TTR = TTR_Init('Bifpoly','rate_'+options.cuts,setstr,di)
+- This takes in the text files outputed from the rate maker to recreate the fits within the analyzer
+- Later used to do the background weighting (TTRweight)
+- Alphabet outputs similar text files - can probably alter output of these to match TWrate output
+	- NEED TO CHANGE FROM BIFPOLY TO POL2
+
+396: TagFile1 = TFile(di+"Tagrate"+setstr+"2D_rate_"+options.cuts+".root")
+- The file is made by the rate maker and is a comparison between tpt and Mtw (2D plots but also parameterized in 2 eta regions, so 3D)
+- Used to weight the 2D Qcd bkg (important since it is a propagated error)
+

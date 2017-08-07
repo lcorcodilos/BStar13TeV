@@ -49,7 +49,7 @@ parser.add_option('-j', '--jobs', metavar='F', type='string', action='store',
 				  dest		=	'jobs',
 				  help		=	'number of jobs')
 parser.add_option('-t', '--tname', metavar='F', type='string', action='store',
-				   default	=	'HLT_PFHT900,HLT_AK8PFJet450',
+				   default	=	'HLT_PFHT900,HLT_PFHT800,HLT_JET450',
 				   dest		=	'tname',
 				   help		=	'trigger name')
 parser.add_option('-J', '--JES', metavar='F', type='string', action='store',
@@ -60,6 +60,14 @@ parser.add_option('-R', '--JER', metavar='F', type='string', action='store',
 				  default	=	'nominal',
 				  dest		=	'JER',
 				  help		=	'nominal, up, or down')
+parser.add_option('-a', '--JMS', metavar='F', type='string', action='store',
+				  default	=	'nominal',
+				  dest		=	'JMS',
+				  help		=	'nominal, up, or down')
+parser.add_option('-b', '--JMR', metavar='F', type='string', action='store',
+				  default	=	'nominal',
+				  dest		=	'JMR',
+				  help		=	'nominal, up, or down')
 parser.add_option('-m', '--modulesuffix', metavar='F', type='string', action='store',
 				  default	=	'none',
 				  dest		=	'modulesuffix',
@@ -69,7 +77,7 @@ parser.add_option('-g', '--grid', metavar='F', type='string', action='store',
 				  dest		=	'grid',
 				  help		=	'running on grid off or on')
 parser.add_option('-u', '--ptreweight', metavar='F', type='string', action='store',
-				  default	=	'none',
+				  default	=	'on',
 				  dest		=	'ptreweight',
 				  help		=	'on or off')
 
@@ -101,6 +109,10 @@ parser.add_option('-A', '--Alphabet', metavar='F', type='string', action='store'
 				  default	=	'off',
 				  dest		=	'Alphabet',
 				  help		=	'turn alphabet on or off')
+parser.add_option('-r', '--rate', metavar='F', type='string', action='store',
+				  default	=	'tpt',
+				  dest		=	'rate',
+				  help		=	'tpt, Mt, Mtw')
 
 
 (options, args) = parser.parse_args()
@@ -133,14 +145,9 @@ for iname in range(0,len(tname)):
 	tnamestr+=tname[iname]
 	if iname!=len(tname)-1:
 		tnamestr+='OR'
-#trig='none'
-#if options.set!= 'data' and options.tname!='none': 
-# 	if options.tname=='HLT_PFHT800_v2ORHLT_AK8DiPFJet280_200_TrimMass30_BTagCSV0p45_v3':
-# 		trig = 'nominal'
-# 	elif options.tname!= []:
-# 		trig = 'tnamestr'
+
 		
-if tnamestr=='HLT_PFHT900ORHLT_AK8PFJet450':
+if tnamestr=='HLT_PFHT900ORHLT_PFHT800ORHLT_JET450':
 	tnameformat='nominal'
 elif tnamestr=='':
 	tnameformat='none'
@@ -150,7 +157,12 @@ else:
 pie = math.pi 
 
 #Load up cut values based on what selection we want to run 
-Cuts = LoadCuts(options.cuts)
+if options.cuts == 'lowWmass' or options.cuts == 'highWmass':
+	Cuts = LoadCuts('default')
+elif options.cuts == 'lowWmass1' or options.cuts == 'highWmass1':
+	Cuts = LoadCuts('sideband')
+else:
+	Cuts = LoadCuts(options.cuts)
 wpt = Cuts['wpt']
 tpt = Cuts['tpt']
 dy = Cuts['dy']
@@ -166,6 +178,19 @@ eta = Cuts['eta']
 Cons = LoadConstants()
 lumi = Cons['lumi']
 Lumi = str(lumi/1000)+'fb'
+Lumi2 = str(int(lumi)) + 'pb'
+ttagsf = Cons['ttagsf']
+ttagsf_errUp = Cons['ttagsf_errUp']
+ttagsf_errDown = Cons['ttagsf_errDown']
+if options.cuts.find('default') != -1:
+	Wpurity = 'HP'
+	wtagsf = Cons['wtagsf_HP']
+	wtagsfsig = Cons['wtagsfsig_HP']
+elif options.cuts.find('sideband') != -1:
+	Wpurity = 'LP'
+	wtagsf = Cons['wtagsf_LP']
+	wtagsfsig = Cons['wtagsfsig_LP']
+
 
 
 #For large datasets we need to parallelize the processing
@@ -179,20 +204,33 @@ else:
 	print "Running over all events"
 
 #This section defines some strings that are used in naming the output files
+
+#-- Postuncorr is used for softdrop mass, post is used for LV
 mod = ''
 post = ''
+post2 = ''
 if options.JES!='nominal':
-	mod = mod + 'JES_' + options.JES
+	mod = mod + 'JES' + '_' + options.JES
 	post='jes'+options.JES
 if options.JER!='nominal':
-	mod = mod + 'JER_' + options.JER
+	mod = mod + 'JER' + '_' + options.JER
 	post='jer'+options.JER
+if options.JMS!='nominal':
+	mod = mod + 'JMS' + '_' + options.JMS
+	post2='jes'+options.JMS
+if options.JMR!='nominal':
+	mod = mod + 'JMR' + '_' + options.JMR
+	post2='jer'+options.JMR
 
+
+ptString = ''
+# if options.ptreweight == 'off':
+# 	ptString = '_ptreweight_off'
 
 pstr = ""
 if options.pdfweights!="nominal":
 	print "using pdf uncertainty"
-	pstr = "_pdf_"+options.pdfset+"_"+options.pdfweights
+	pstr = "_pdf_"+options.pdfweights
 
 pustr = ""
 if options.pileup=='off':
@@ -220,35 +258,48 @@ if options.grid == "on":
 else:
 	mainDir='TTrees/'
 
-file = TFile(mainDir + "TWtreefile_"+options.set+"_Trigger_"+tnameformat+"_"+mod+pstr+".root")
+file = TFile(mainDir + "TWtreefile_"+options.set+"_Trigger_"+tnameformat+"_"+mod+".root")
 tree = file.Get("Tree")
 
-if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
-	settype = 'ttbar'
-elif (options.set.find('QCD') != -1):
-	settype ='ttbar'
-	run_b_SF = False
-else :
-	settype = options.set
+settype = 'ttbar'
+
+# CHANGE BACK if we get signal pileup
+# if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
+# 	settype = 'ttbar'
+# elif (options.set.find('QCD') != -1):
+# 	settype ='ttbar'
+# 	run_b_SF = False
+# else :
+# 	settype = options.set
 
 print 'The type of set is ' + settype
 
+#----------------Need to grab extra top pt reweight factor-------------------
+
+TopPtReweightFile = TFile(di+'/TWTopPtSF.root')
+TopPtReweightPlot = TopPtReweightFile.Get('TopPtSF')
 
 #---------------Modmass file if you dont want alphabet-----------------------
-
+rateCuts = 'rate_'+options.cuts
+if options.cuts == 'sideband1':
+	rateCuts = 'rate_default'
 
 if options.Alphabet != "on":
-	ModFile = ROOT.TFile(di+"ModMassFile_rate_"+options.cuts+".root")
+	ModFile = ROOT.TFile(di+"ModMassFile_"+rateCuts+".root")
 	ModPlot = ModFile.Get("rtmass")
 
-	ModFitParams = open(di+'fitdata/ModMass_pol3_PSET_rate_'+options.cuts+'.txt')
-	ModFitParams.seek(0)
-	ModFit = TF1("ModFit",'pol3',tmass[0],tmass[1])
+	# if options.rate == 'tpt':
+	# 	ModFitParams = open(di+'fitdata/ModMass_pol3_PSET_rate_'+options.cuts+'.txt')
+	# else:
+	# 	ModFitParams = open(di+'fitdata/'+options.rate+'/ModMass_pol3_PSET_rate_'+options.cuts+'.txt')
 
-	ModFitParams2 = ModFitParams.read()
+	# ModFitParams.seek(0)
+	# ModFit = TF1("ModFit",'pol3',tmass[0],tmass[1])
 
-	for i in range(0,4):
-		ModFit.SetParameter(i,float(ModFitParams2.split('\n')[i]) )
+	# ModFitParams2 = ModFitParams.read()
+
+	# for i in range(0,4):
+	# 	ModFit.SetParameter(i,float(ModFitParams2.split('\n')[i]) )
 
 	# ModFile = ROOT.TFile(di+"ModMassFile_"+options.cuts+".root")
 	# ModPlot = ModFile.Get("rtmass")
@@ -257,8 +308,8 @@ if options.Alphabet != "on":
 if options.set != 'data':
 	#Load up scale factors (to be used for MC only)
 
-	TrigFile = TFile(di+"Triggerweight_data80X.root")
-	TrigPlot = TrigFile.Get("TriggerWeight_"+tnamestr+"_pre_HLT_PFHT475_v3")
+	TrigFile = TFile(di+"Triggerweight_2jethack_data.root")
+	TrigPlot = TrigFile.Get("TriggerWeight_"+tnamestr+"_pre_HLT_PFHT475")
 
 
 
@@ -277,38 +328,43 @@ B2Gnev = nevHisto.Integral()/jobs
 tpt = Cuts['tpt']
 
 #---------------------------------------------------------------------------------------------------------------------#
-var = ""
-if options.var == "kinematics":
-	var = "_kin"
+# var = ""
+# if options.var == "kinematics":
+# 	var = "_kin"
 
 if jobs != 1:
-	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pstr+mmstr+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+var+".root", "recreate" )
+	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pstr+mmstr+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+ptString+".root", "recreate" )
 else:
-	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pstr+mmstr+"_PSET_"+options.cuts+var+".root", "recreate" )
+	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pstr+mmstr+"_PSET_"+options.cuts+ptString+".root", "recreate" )
 
 #Load up the average t-tagging rates -- Takes parameters from text file and makes a function
 #CHANGE BACK
 if options.Alphabet == "on":
-	TTR = TTR_Init('QUAD',options.cuts,setstr,di)
-	TTR_errUp = TTR_Init('QUAD_errUp',options.cuts,setstr,di)
-	TTR_errDown = TTR_Init('QUAD_errDown',options.cuts,setstr,di)
+	TTR = TTR_Init('QUAD',rateCuts,setstr,options.rate,di)
+	TTR_errUp = TTR_Init('QUAD_errUp',rateCuts,setstr,options.rate,di)
+	TTR_errDown = TTR_Init('QUAD_errDown',rateCuts,setstr,options.rate,di)
 	fittitles = ["QUAD"]
 	fits = []
 	for fittitle in fittitles:
-		fits.append(TTR_Init(fittitle,options.cuts,setstr,di))
+		fits.append(TTR_Init(fittitle,rateCuts,setstr,options.rate,di))
 
 elif options.Alphabet == "off":
-	TTR = TTR_Init('Bifpoly','rate_'+options.cuts,setstr,di)
-	TTR_err = TTR_Init('Bifpoly_err','rate_'+options.cuts,setstr,di)
-	#TTR = TTR_Init('Bifpoly',options.cuts,setstr,di)
-	#TTR_err = TTR_Init('Bifpoly_err',options.cuts,setstr,di)
+	TagFile = TFile(di+"plots/TWrate_Maker_"+setstr+"_"+Lumi2+"_PSET_"+rateCuts+".root")
+	TagPlote1 = TagFile.Get("tagrateeta1")
+	TagPlote2 = TagFile.Get("tagrateeta2") 
+
+
+	TTR = TTR_Init('Bifpoly',rateCuts,setstr,options.rate,di)
+	TTR_err = TTR_Init('Bifpoly_err',rateCuts,setstr,options.rate,di)
+	#TTR = TTR_Init('Bifpoly',options.cuts,setstr,options.rate,di)
+	#TTR_err = TTR_Init('Bifpoly_err',options.cuts,setstr,options.rate,di)
 
 	fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
 	fits = []
 	for fittitle in fittitles:
-		fits.append(TTR_Init(fittitle,'rate_'+options.cuts,setstr,di))
-		#fits.append(TTR_Init(fittitle,options.cuts,setstr,di))
-	TagFile1 = TFile(di+"Tagrate"+setstr+"2D_rate_"+options.cuts+".root")
+		fits.append(TTR_Init(fittitle,rateCuts,setstr,options.rate,di))
+		#fits.append(TTR_Init(fittitle,options.cuts,setstr,options.rate,di))
+	TagFile1 = TFile(di+"Tagrate"+setstr+"2D_"+rateCuts+".root")
 	#TagFile1 = TFile(di+"Tagrate"+setstr+"2D_"+options.cuts+".root")
 	TagPlot2de1= TagFile1.Get("tagrateeta1")
 	TagPlot2de2= TagFile1.Get("tagrateeta2")
@@ -322,23 +378,37 @@ Mtw	    = TH1F("Mtw",     "mass of tw",     	  	      140, 500, 4000 )
 
 nev = TH1F("nev",	"nev",		1, 0, 1 )
 
+hEta1Count = TH1I("eta1Count", "number of events in low eta region", 1, 0, 1)
+hEta2Count = TH1I("eta2Count", "number of events in high eta region", 1, 0, 1)
+
+hmatchingFailed = TH1F("matchingFailed", "fraction of events that failed w jet matching requirement", 1, 0, 1)
+
 Mtwtrigup	= TH1F("Mtwtrigup",	"mass of tw trig up",     	  	140, 500, 4000 )
 Mtwtrigdown	= TH1F("Mtwtrigdown",	"mass of tw trig up",     	  	140, 500, 4000 )
 
-MtwTup		= TH1F("MtwTup",	"mass of tw top tag SF up",     	  	140, 500, 4000 )
-MtwTdown	= TH1F("MtwTdown",	"mass of tw top tag SF down",     	  	140, 500, 4000 )
+MtwWup		= TH1F("MtwWup",	"mass of tw w tag SF up",     	  	140, 500, 4000 )
+MtwWdown	= TH1F("MtwWdown",	"mass of tw w tag SF down",     	  	140, 500, 4000 )
+
+MtwTptup	= TH1F("MtwTptup",	"mass of tw top pt reweight up",     	  	140, 500, 4000 )
+MtwTptdown 	= TH1F("MtwTptdown",	"mass of tw top pt reweight down",     	  	140, 500, 4000 )
+
+MtwExtrapUp = TH1F("MtwExtrapUp", "mass of top extrapolation uncertainty up", 140, 500, 4000)
+MtwExtrapDown = TH1F("MtwExtrapDown", "mass of top extrapolation uncertainty down", 140, 500, 4000)
 
 Nevents	    = TH1F("Nevents",     	  "mass of tb",     	  	         5, 0., 5. )
 QCDbkg= TH1F("QCDbkg",     "QCD background estimate",     	  	      140, 500, 4000 )
-QCDbkgh= TH1F("QCDbkgh",     "QCD background estimate up error",     	  	      140, 500, 4000 )
+QCDbkgh= TH1F("QCDbkgh",     "QCD background estimate up error",     	  	     140, 500, 4000 )
 QCDbkgl= TH1F("QCDbkgl",     "QCD background estimate down error",     	  	      140, 500, 4000 )
 if options.Alphabet == "off":
 	QCDbkg2D= TH1F("QCDbkg2D",     "QCD background estimate 2d error",     	  	      140, 500, 4000 )
 	QCDbkg2Dup= TH1F("QCDbkg2Dup",     "QCD background estimate 2d error",     	  	      140, 500, 4000 )
 	QCDbkg2Ddown= TH1F("QCDbkg2Ddown",     "QCD background estimate 2d error",     	  	      140, 500, 4000 )
 
-MtStack		= TH1F("MtStack",	"top candidate mass for stack",		100,   0, 500 )
-QCDbkgMtStack	= TH1F("QCDbkgMtStack", "QCD background for top mass",		100, 0, 500 )
+preAntiTag = TH1F("preAntiTag",     "Antitag distribution before R p/f weighting",     	  	      140, 500, 4000 )
+preAntiTag.Sumw2()
+
+MwStack		= TH1F("MwStack",	"top candidate mass for stack",		100,   105, 210 )
+QCDbkgMwStack	= TH1F("QCDbkgMwStack", "QCD background for top mass",		100, 105, 210 )
 
 masswHist = TH1F("Massw", "Massw", 25,  0, 5 )
 masswHist.Sumw2()
@@ -348,15 +418,23 @@ Mtw.Sumw2()
 Mtwtrigup.Sumw2()
 Mtwtrigdown.Sumw2()
 
-MtwTup.Sumw2()
-MtwTdown.Sumw2()
+MtwWup.Sumw2()
+MtwWdown.Sumw2()
+
+MtwTptup.Sumw2()
+MtwTptdown.Sumw2()
+
+MtwExtrapUp.Sumw2()
+MtwExtrapDown.Sumw2()
 
 QCDbkg.Sumw2()
 QCDbkgh.Sumw2()
 QCDbkgl.Sumw2()
 
-MtStack.Sumw2()
-QCDbkgMtStack.Sumw2()
+MwStack.Sumw2()
+QCDbkgMwStack.Sumw2()
+
+
 
 
 Mtw_cut1    = TH1F("Mtw_cut1",  "mass of tw after wpt cut", 140, 500, 4000)
@@ -381,7 +459,7 @@ PhiTop    = TH1F("PhiTop",      "Top Candidate Phi (rad)",     	  	             
 PhiW 	  = TH1F("PhiW",   	"Top Candidate Phi (rad)",     	  	             12, -pie, pie )
 dPhi      = TH1F("dPhi",        "delta theat between Top and W Candidates",    	     12, 2.2, pie )
 
-TopMass		= TH1F("TopMass",	"Top mass",				10,0,500)
+Mt		= TH1F("Mt",	"Top mass",				25,105,210)
 Nsubjetiness32	= TH1F("Nsubjetiness32",	"Nsubjetiness",				8,0,1.6)
 Nsubjetiness21	= TH1F("Nsubjetiness21",	"Nsubjetiness",				8,0,1.6)
 deltaY		= TH1F("deltaY",	"delta y between Top and b candidates",	10,0,5)
@@ -456,6 +534,13 @@ if options.Alphabet == "off":
 	QCDbkgdPhi2Dup= TH1F("QCDbkgdPhi2Dup",     "QCD background estimate 2d error",     	  	      12, 2.2, pie )
 	QCDbkgdPhi2Ddown= TH1F("QCDbkgdPhi2Ddown",     "QCD background estimate 2d error",     	  	      12, 2.2, pie )
 
+QCDbkgMt	= TH1F("QCDbkgMt",     "QCD background estimate top mass",       	     25,105,210 )
+QCDbkgMth= TH1F("QCDbkgMth",     "QCD background estimate up error",     	  	      25,105,210 )
+QCDbkgMtl= TH1F("QCDbkgMtl",     "QCD background estimate down error",     	  	      25,105,210 )
+if options.Alphabet == "off":
+	QCDbkgMt2D= TH1F("QCDbkgMt2D",     "QCD background estimate 2d error",     	  	      25,105,210 )
+	QCDbkgMt2Dup= TH1F("QCDbkgMt2Dup",     "QCD background estimate 2d error",     	  	      25,105,210 )
+	QCDbkgMt2Ddown= TH1F("QCDbkgMt2Ddown",     "QCD background estimate 2d error",     	  	      25,105,210 )
 
 
 Mtw_cut1.Sumw2()
@@ -482,7 +567,7 @@ PhiW.Sumw2()
 dPhi.Sumw2()
 
 
-TopMass.Sumw2()
+Mt.Sumw2()
 Nsubjetiness32.Sumw2()
 Nsubjetiness21.Sumw2()
 deltaY.Sumw2()
@@ -525,13 +610,16 @@ QCDbkgdPhi.Sumw2()
 QCDbkgdPhih.Sumw2()
 QCDbkgdPhil.Sumw2()
 	
+QCDbkgMt.Sumw2()
+QCDbkgMth.Sumw2()	
+QCDbkgMtl.Sumw2()
 	
 QCDbkg_ARR = []
 	
-kinVars = 	['', 	'ET', 	'EW', 	'PT', 	'PW', 	'PTW', 	'PhT', 	'PhW', 	'dPhi'	]
-kinBin = 	[140, 	12, 	12, 	50, 	50,	35,	12,	12,	12	]
-kinLow = 	[500, 	-2.4, 	-2.4, 	450, 	370,	0,	-pie,	-pie,	2.2	]
-kinHigh = 	[4000, 	2.4, 	2.4, 	1500, 	1430,	700,	pie,	pie,	pie	]
+kinVars = 	['', 	'ET', 	'EW', 	'PT', 	'PW', 	'PTW', 	'PhT', 	'PhW', 	'dPhi', 'Mt'	]
+kinBin = 	[140, 	12, 	12, 	50, 	50,	35,	12,	12,	12, 25	]
+kinLow = 	[500, 	-2.4, 	-2.4, 	450, 	370,	0,	-pie,	-pie,	2.2, 105	]
+kinHigh = 	[4000, 	2.4, 	2.4, 	1500, 	1430,	700,	pie,	pie,	pie, 210	]
 
 # if options.var == 'analyzer':
 # 	iterations = 1
@@ -554,6 +642,10 @@ for iVar in range(0,iterations):
 
 # loop over events
 #---------------------------------------------------------------------------------------------------------------------#
+eta1Count = 0
+eta2Count = 0
+
+matchingFailed = 0
 
 count = 0
 jobiter = 0
@@ -590,7 +682,6 @@ else:
 nev.SetBinContent(1,B2Gnev)
 print "Range of events: (" + str(lowBinEdge) + ", " + str(highBinEdge) + ")"
 
-
 for entry in range(lowBinEdge,highBinEdge):
 	# Have to grab tree entry first
 	tree.GetEntry(entry)
@@ -614,7 +705,7 @@ for entry in range(lowBinEdge,highBinEdge):
 				"pt":tree.pt_leading,
 				"eta":tree.eta_leading,
 				"sjbtag":tree.sjbtag_leading,
-				"SDmass":tree.SDmass_leading
+				"SDmass":tree.topSDmass_leading
 			}
 
 			wVals = {
@@ -626,7 +717,7 @@ for entry in range(lowBinEdge,highBinEdge):
 				"pt":tree.pt_subleading,
 				"eta":tree.eta_subleading,
 				"sjbtag":tree.sjbtag_subleading,
-				"SDmass":tree.SDmass_subleading
+				"SDmass":tree.wSDmass_subleading
 			}
 
 		if hemis == 'hemis1' and doneAlready == False  :
@@ -639,7 +730,7 @@ for entry in range(lowBinEdge,highBinEdge):
 				"pt":tree.pt_leading,
 				"eta":tree.eta_leading,
 				"sjbtag":tree.sjbtag_leading,
-				"SDmass":tree.SDmass_leading
+				"SDmass":tree.wSDmass_leading
 			}
 
 			tVals = {
@@ -651,11 +742,11 @@ for entry in range(lowBinEdge,highBinEdge):
 				"pt":tree.pt_subleading,
 				"eta":tree.eta_subleading,
 				"sjbtag":tree.sjbtag_subleading,
-				"SDmass":tree.SDmass_subleading
+				"SDmass":tree.topSDmass_subleading
 			}
 
 		elif hemis == 'hemis1' and doneAlready == True:
-			continue
+		 	continue
 
 		# Remake the lorentz vectors
 		tjet = TLorentzVector()
@@ -682,36 +773,47 @@ for entry in range(lowBinEdge,highBinEdge):
 
 			if dy_cut:
 				Mtw_cut3.Fill(MtopW,weight)
-				# Have never used this so ignoring for now (pdfLabel/Handle also not defined)
-				# if options.pdfweights != "nominal" :
-				# 	tree.getByLabel( pdfLabel, pdfHandle )
-				# 	pdfs = pdfHandle.product()
-				# 	iweight = PDF_Lookup( pdfs , options.pdfweights )
-				# 	weight *= iweight
+				if options.pdfweights != "nominal" :
+					if options.pdfweights == 'up':
+						iweight = tree.pdf_weightUp
+					elif options.pdfweights == 'down':
+						iweight = tree.pdf_weightDown
+					weight *= iweight
 
+
+# Apply top scale factor and pileup correction to all MC
+# Got rid of uncertainties since they are flat and applied in theta
 				weightSFt = 1.0
-				weightSFtdown = 1.0
-				weightSFtup = 1.0
-
+				# weightSFtdown = 1.0
+				# weightSFtup = 1.0
 				if options.set!="data":
 					bin1 = tree.pileBin
 
-					if False:#options.pileup != 'off':
+					if options.pileup != 'off':
 						weight *= PilePlot.GetBinContent(bin1)
 
-					# CHANGE BACK - When you have the correct top scale factors
-					# if options.cuts=="default" and options.set!="QCD":
-					# 	#top scale factor reweighting done here
-					# 	SFT = SFT_Lookup( tjet.Perp() )
-					# 	weightSFt = SFT[0]
-					# 	weightSFtdown = SFT[1]
-					# 	weightSFtup = SFT[2]
+					if options.cuts=="default" and options.set.find("QCD") == -1:
+						weightSFt = ttagsf
+						# weightSFtup = ttagsf + ttagsf_errUp
+						# weightSFtdown = ttagsf - ttagsf_errDown
+					
+				# weightSFtup=weight*weightSFtup
+				# weightSFtdown=weight*weightSFtdown
+				weight*=weightSFt
 
+# Apply w tagging scale factor for anything that passes w jet matching requirement and is ST_tW or signal
+				weightSFwup = 1.0
+				weightSFwdown = 1.0
+				if tree.WJetMatchingRequirement == 1:
+					if options.set.find('tW') != -1 and options.set.find('signal') != -1:
+						weightSFwup = wtagsf + wtagsfsig
+						weightSFwdown = wtagsf - wtagsfsig
+						weight*=wtagsf
+				elif tree.WJetMatchingRequirement == 0:
+					matchingFailed += 1
 
-				# For top mass
 
 				tmass_cut = tmass[0]<tVals["SDmass"]<tmass[1]
-				TopMass.Fill(tVals["SDmass"],weight)
 
 				if tmass_cut :
 					Mtw_cut4.Fill(MtopW,weight)
@@ -719,40 +821,42 @@ for entry in range(lowBinEdge,highBinEdge):
 					ht = tjet.Perp() + wjet.Perp()
 
 
-					if ht < 1100.0:
-						continue
-
 					weighttrigup=1.0
 					weighttrigdown=1.0
+					if tname != 'none' and options.set!='data' :
+						#Trigger reweighting done here
+						TRW = Trigger_Lookup( ht , TrigPlot )[0]
+						TRWup = Trigger_Lookup( ht , TrigPlot )[1]
+						TRWdown = Trigger_Lookup( ht , TrigPlot )[2]
 
-					# CHANGE BACK - When triggers aren't wonky any more
-					# if tname != 'none' and options.set!='data' :
-					# 	#Trigger reweighting done here
-					# 	TRW = Trigger_Lookup( ht , TrigPlot )[0]
-					# 	TRWup = Trigger_Lookup( ht , TrigPlot )[1]
-					# 	TRWdown = Trigger_Lookup( ht , TrigPlot )[2]
+						weighttrigup=weight*TRWup
+						weighttrigdown=weight*TRWdown
+						weight*=TRW
 
-					# 	weighttrigup=weight*TRWup
-					# 	weighttrigdown=weight*TRWdown
-					# 	weight*=TRW
+						weightSFwup*=TRW
+						weightSFwdown*=TRW
 				
-				# Like pdfweights, have never turned this on and GenLabel/Handle don't exist so ignoring for now
-					# if options.ptreweight == "on":
-					# 	#ttbar pt reweighting done here
-					# 	tree.getByLabel( GenLabel, GenHandle )
-					# 	GenParticles = GenHandle.product()
-					# 	PTW = PTW_Lookup( GenParticles )
-					# 	weight*=PTW
-					# 	weightSFptup=max(0.0,weight*(2*PTW-1))
-					# 	weightSFptdown=weight
 
+					weightSFptup=1.0
+					weightSFptdown=1.0
+					if options.ptreweight == "on" and options.set.find('ttbar') != -1:
+					# 	ttbar pt reweighting done here
+						#if options.cuts != 'sideband1':
+						extraCorrection = TopPtReweightPlot.GetBinContent(1)
+						#else:
+						#	extraCorrection = 0
+						PTW = tree.pt_reweight*(1+extraCorrection)
+						weightSFptSig = abs(weight - weight*PTW)
 
-					weightSFtup=weight*weightSFtup
-					weightSFtdown=weight*weightSFtdown
-					weight*=weightSFt
+						weightSFptup=weight*PTW+weightSFptSig
+						weightSFptdown=max(0.0,weight*PTW-weightSFptSig)
+						weight*=PTW
 
-					weighttrigup*=weightSFt
-					weighttrigdown*=weightSFt
+						weightSFwup*=PTW
+						weightSFwdown*=PTW
+
+						weighttrigup*=PTW
+						weighttrigdown*=PTW
 			
 					try:
 						tau32val		= 	tVals["tau3"]/tVals["tau2"] 
@@ -788,6 +892,11 @@ for entry in range(lowBinEdge,highBinEdge):
 						if tau21_cut:
 							Mtw_cut6.Fill(MtopW,weight)
 
+					# Get the extrapolation uncertainty
+							extrap = ExtrapUncert_Lookup(wjet.Perp(),Wpurity)
+							extrapUp = weight*(1+extrap)
+							extrapDown = weight*(1-extrap)
+
 # ------------------- Now going to split into alphabet and tagrate parts -----------------
 							if options.Alphabet == "off":
 								eta_regions = [eta1,eta2]
@@ -796,22 +905,25 @@ for entry in range(lowBinEdge,highBinEdge):
 
 								TTRweight = bkg_weight_pt(tjet,TTR,eta_regions)
 								TTRweightsigsq = bkg_weight_pt(tjet,TTR_err,eta_regions)
+								#TTRweight = bkg_weight_twmass(tjet,MtopW,TTR,eta_regions)
+								#TTRweightsigsq = bkg_weight_twmass(tjet,MtopW,TTR_err,eta_regions)
 								TTRweighterrup = TTRweight+sqrt(TTRweightsigsq)
 								TTRweighterrdown = TTRweight-sqrt(TTRweightsigsq)
 
 								modm = tVals["SDmass"]
 								if options.modmass=='nominal':
-									massw = ModFit.Eval(modm) #ModPlot.Interpolate(modm)
+									massw = ModPlot.Interpolate(modm) #ModFit.Eval(modm) 
 								if options.modmass=='up':
-									massw = 1 + 0.5*(ModFit.Eval(modm) -1)
+									massw = 1 + 0.5*(ModPlot.Interpolate(modm) -1)
 								if options.modmass=='down':
-									massw = max(0.0,1 + 1.5*(ModFit.Eval(modm) -1))
+									massw = max(0.0,1 + 1.5*(ModPlot.Interpolate(modm) -1))
 								if options.modmass=='none':
 									massw = 1
 								
 								masswHist.Fill(massw)
 
 								if (eta1_cut) and not FullTop:
+									eta1Count += 1
 									xbin = TagPlot2de2.GetXaxis().FindBin(tjet.Perp())
 									ybin = TagPlot2de2.GetYaxis().FindBin(MtopW)
 									tagrate2d = TagPlot2de2.GetBinContent(xbin,ybin)
@@ -852,8 +964,13 @@ for entry in range(lowBinEdge,highBinEdge):
 									QCDbkgdPhi2D.Fill(abs(tjet.Phi()-wjet.Phi()),tagrate2d*weight*massw)
 									QCDbkgdPhi2Dup.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d+tagrate2derr)*weight*massw)
 									QCDbkgdPhi2Ddown.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d-tagrate2derr)*weight*massw)
+
+									QCDbkgMt2D.Fill(tjet.M(),tagrate2d*weight*massw)
+									QCDbkgMt2Dup.Fill(tjet.M(),(tagrate2d+tagrate2derr)*weight*massw)
+									QCDbkgMt2Ddown.Fill(tjet.M(),(tagrate2d-tagrate2derr)*weight*massw)
 
 								if (eta2_cut) and not FullTop:
+									eta2Count += 1
 									xbin = TagPlot2de2.GetXaxis().FindBin(tjet.Perp())
 									ybin = TagPlot2de2.GetYaxis().FindBin(MtopW)
 									tagrate2d = TagPlot2de2.GetBinContent(xbin,ybin)
@@ -895,7 +1012,11 @@ for entry in range(lowBinEdge,highBinEdge):
 									QCDbkgdPhi2Dup.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d+tagrate2derr)*weight*massw)
 									QCDbkgdPhi2Ddown.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d-tagrate2derr)*weight*massw)
 
-								fillSpec = [MtopW, tjet.Eta(), wjet.Eta(), tjet.Perp(), wjet.Perp(), tjet.Perp()+wjet.Perp(), tjet.Phi(), wjet.Phi(), abs(tjet.Phi()-wjet.Phi())]
+									QCDbkgMt2D.Fill(wjet.M(),tagrate2d*weight*massw)
+									QCDbkgMt2Dup.Fill(wjet.M(),(tagrate2d+tagrate2derr)*weight*massw)
+									QCDbkgMt2Ddown.Fill(wjet.M(),(tagrate2d-tagrate2derr)*weight*massw)
+
+								fillSpec = [MtopW, tjet.Eta(), wjet.Eta(), tjet.Perp(), wjet.Perp(), tjet.Perp()+wjet.Perp(), tjet.Phi(), wjet.Phi(), abs(tjet.Phi()-wjet.Phi()), wVals['SDmass']]
 
 								arr_count = 0
 								for spec in fillSpec:
@@ -904,12 +1025,26 @@ for entry in range(lowBinEdge,highBinEdge):
 										QCDbkg_ARR[arr_count].Fill(spec,tempweight*weight*massw) 
 										arr_count+=1
 
+								preAntiTag.Fill(MtopW,weight*massw)
 								if not FullTop:
+									# if eta1_cut:
+									# 	pt_bin = TagPlote1.GetXaxis().FindBin(tjet.Perp())
+									# 	TTRweight = TagPlote1.GetBinContent(pt_bin)
+									# 	TTRweightsigsq = TagPlote1.GetBinError(pt_bin)
+					
+									# elif eta2_cut:
+									# 	pt_bin = TagPlote2.GetXaxis().FindBin(tjet.Perp())
+									# 	TTRweight = TagPlote2.GetBinContent(pt_bin)
+									# 	TTRweightsigsq = TagPlote2.GetBinError(pt_bin)
+										
+									# TTRweighterrup = TTRweight+sqrt(TTRweightsigsq)
+									# TTRweighterrdown = TTRweight-sqrt(TTRweightsigsq)
+									
 									QCDbkg.Fill(MtopW,TTRweight*weight*massw)
 									QCDbkgh.Fill(MtopW,TTRweighterrup*weight*massw)
 									QCDbkgl.Fill(MtopW,TTRweighterrdown*weight*massw)
 
-									QCDbkgMtStack.Fill(tVals["SDmass"],TTRweight*weight*massw)
+									QCDbkgMwStack.Fill(wjet.M(),TTRweight*weight*massw)
 
 									QCDbkgET.Fill(tjet.Eta(),TTRweight*weight*massw)
 									QCDbkgETh.Fill(tjet.Eta(),TTRweighterrup*weight*massw)
@@ -927,9 +1062,9 @@ for entry in range(lowBinEdge,highBinEdge):
 									QCDbkgPWh.Fill(wjet.Perp(),TTRweighterrup*weight*massw)
 									QCDbkgPWl.Fill(wjet.Perp(),TTRweighterrdown*weight*massw)
 
-									QCDbkgPTW.Fill((tjet.Perp()+wjet.Perp()),TTRweight*weight*massw)
-									QCDbkgPTWh.Fill((tjet.Perp()+wjet.Perp()),TTRweighterrup*weight*massw)
-									QCDbkgPTWl.Fill((tjet.Perp()+wjet.Perp()),TTRweighterrdown*weight*massw)
+									QCDbkgPTW.Fill((tjet+wjet).Perp(),TTRweight*weight*massw)
+									QCDbkgPTWh.Fill((tjet+wjet).Perp(),TTRweighterrup*weight*massw)
+									QCDbkgPTWl.Fill((tjet+wjet).Perp(),TTRweighterrdown*weight*massw)
 
 									QCDbkgPhT.Fill(tjet.Phi(),TTRweight*weight*massw)
 									QCDbkgPhTh.Fill(tjet.Phi(),TTRweighterrup*weight*massw)
@@ -943,6 +1078,9 @@ for entry in range(lowBinEdge,highBinEdge):
 									QCDbkgdPhih.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweighterrup*weight*massw)
 									QCDbkgdPhil.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweighterrdown*weight*massw)
 
+									QCDbkgMt.Fill(tjet.M(),TTRweight*weight*massw)
+									QCDbkgMth.Fill(tjet.M(),TTRweighterrup*weight*massw)
+									QCDbkgMtl.Fill(tjet.M(),TTRweighterrdown*weight*massw)
 
 								if sjbtag_cut:
 									Mtw_cut9.Fill(MtopW,weight)
@@ -955,25 +1093,32 @@ for entry in range(lowBinEdge,highBinEdge):
 										#	goodEvents.append( [ tree.object().id().run(), tree.object().id().luminosityBlock(), tree.object().id().event(),  ] )
 										Mtw.Fill(MtopW,weight) 
 
-										MtStack.Fill(tVals["SDmass"],weight)
+										MwStack.Fill(wjet.M(),weight)
 
 										Mtwtrigup.Fill(MtopW,weighttrigup)
 										Mtwtrigdown.Fill(MtopW,weighttrigdown)
-										MtwTup.Fill(MtopW,weightSFtup) 
-										MtwTdown.Fill(MtopW,weightSFtdown) 
+										MtwWup.Fill(MtopW,weightSFwup) 
+										MtwWdown.Fill(MtopW,weightSFwdown)
+
+										MtwTptup.Fill(MtopW,weightSFptup)
+										MtwTptdown.Fill(MtopW,weightSFptdown) 
+
+										MtwExtrapUp.Fill(MtopW,extrapUp)
+										MtwExtrapDown.Fill(MtopW,extrapDown)
 
 										EtaTop.Fill(tjet.Eta(),weight)
 										EtaW.Fill(wjet.Eta(),weight)
 										
 										PtTop.Fill(tjet.Perp(),weight)
 										PtW.Fill(wjet.Perp(),weight)
-										PtTopW.Fill((tjet.Perp()+wjet.Perp()),weight)
+										PtTopW.Fill((tjet+wjet).Perp(),weight)
 		
 										
 										PhiTop.Fill(tjet.Phi(),weight)
 										PhiW.Fill(wjet.Phi(),weight)
 										dPhi.Fill(abs(tjet.Phi()-wjet.Phi()),weight)
 
+										Mt.Fill(tjet.M(),weight)
 
 										temp_variables = {	"wpt":wjet.Perp(),
 															"wmass":wVals["SDmass"],
@@ -987,7 +1132,7 @@ for entry in range(lowBinEdge,highBinEdge):
 										for tv in tree_vars.keys():
 											tree_vars[tv][0] = temp_variables[tv]
 										NewTree.Fill()
-
+										
 										doneAlready = True
 
 # ---------------------- Now for Alphabet ----------------------------------------
@@ -1019,7 +1164,7 @@ for entry in range(lowBinEdge,highBinEdge):
 										QCDbkgh.Fill(MtopW,TTRweighterrup*weight*massw)
 										QCDbkgl.Fill(MtopW,TTRweighterrdown*weight*massw)
 
-										QCDbkgMtStack.Fill(tVals["SDmass"],TTRweight*weight*massw)
+										QCDbkgMwStack.Fill(wVals["SDmass"],TTRweight*weight*massw)
 
 										QCDbkgET.Fill(tjet.Eta(),TTRweight*weight*massw)
 										QCDbkgETh.Fill(tjet.Eta(),TTRweighterrup*weight*massw)
@@ -1060,12 +1205,12 @@ for entry in range(lowBinEdge,highBinEdge):
 										#	goodEvents.append( [ tree.object().id().run(), tree.object().id().luminosityBlock(), tree.object().id().event(),  ] )
 										Mtw.Fill(MtopW,weight) 
 
-										MtStack.Fill(tVals["SDmass"],weight)
+										MwStack.Fill(tjet.M(),weight)
 
 										Mtwtrigup.Fill(MtopW,weighttrigup)
 										Mtwtrigdown.Fill(MtopW,weighttrigdown)
-										MtwTup.Fill(MtopW,weightSFtup) 
-										MtwTdown.Fill(MtopW,weightSFtdown) 
+										MtwWup.Fill(MtopW,weightSFwup) 
+										MtwWdown.Fill(MtopW,weightSFwdown) 
 
 										EtaTop.Fill(tjet.Eta(),weight)
 										EtaW.Fill(wjet.Eta(),weight)
@@ -1093,12 +1238,19 @@ for entry in range(lowBinEdge,highBinEdge):
 											tree_vars[tv][0] = temp_variables[tv]
 										NewTree.Fill()
 
+hEta1Count.SetBinContent(1,eta1Count)
+hEta2Count.SetBinContent(1,eta2Count)
+hmatchingFailed.SetBinContent(1,float(matchingFailed/count))
+
+print "fraction of events that failed matching: " + str(float(matchingFailed/count))
 
 f.cd()
 f.Write()
 f.Close()
 
 print "number of events: " + str(count)
+
+
 
 # if options.printEvents:
 # 	Outf1   =   open("DataEvents"+options.num+".txt", "w")

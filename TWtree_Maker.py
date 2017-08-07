@@ -16,7 +16,7 @@
 import os
 import glob
 import math
-from math import sqrt,exp
+from math import sqrt,exp, log
 import ROOT
 from ROOT import std,ROOT,TFile,TLorentzVector,TMath,gROOT, TF1,TH1F,TH1D,TH2F,TH2D,TTree
 from ROOT import TVector
@@ -42,18 +42,26 @@ parser.add_option('-R', '--JER', metavar='F', type='string', action='store',
 				  default	=	'nominal',
 				  dest		=	'JER',
 				  help		=	'nominal, up, or down')
+parser.add_option('-a', '--JMS', metavar='F', type='string', action='store',
+				  default	=	'nominal',
+				  dest		=	'JMS',
+				  help		=	'nominal, up, or down')
+parser.add_option('-b', '--JMR', metavar='F', type='string', action='store',
+				  default	=	'nominal',
+				  dest		=	'JMR',
+				  help		=	'nominal, up, or down')
 parser.add_option('-t', '--tname', metavar='F', type='string', action='store',
-				   default	=	'HLT_PFHT900,HLT_AK8PFJet450',
+				   default	=	'HLT_PFHT900,HLT_PFHT800,HLT_AK8PFJet450',
 				   dest		=	'tname',
 				   help		=	'trigger name')
-parser.add_option('-y', '--modmass', metavar='F', type='string', action='store',
-				  default	=	'nominal',
-				  dest		=	'modmass',
-				  help		=	'nominal up or down')
-parser.add_option('-p', '--pdfweights', metavar='F', type='string', action='store',
-				  default	=	'nominal',
-				  dest		=	'pdfweights',
-				  help		=	'nominal, up, or down')
+# parser.add_option('-y', '--modmass', metavar='F', type='string', action='store',
+# 				  default	=	'nominal',
+# 				  dest		=	'modmass',
+# 				  help		=	'nominal up or down')
+# parser.add_option('-p', '--pdfweights', metavar='F', type='string', action='store',
+# 				  default	=	'nominal',
+# 				  dest		=	'pdfweights',
+# 				  help		=	'nominal, up, or down')
 parser.add_option('-x', '--pileup', metavar='F', type='string', action='store',
 				  default	=	'on',
 				  dest		=	'pileup',
@@ -82,15 +90,23 @@ parser.add_option('-S', '--split', metavar='F', type='string', action='store',
 (options, args) = parser.parse_args()
 
 #------------------Jet energy mods--------------------------------
-# Helps grab the propper AK8 jet information
+# Postuncorr is used for softdrop mass, post is used for LV
 mod = ''
 post = ''
+post2 = ''
 if options.JES!='nominal':
-	mod = mod + 'JES_' + options.JES
+	mod = mod + 'JES' + '_' + options.JES
 	post='jes'+options.JES
 if options.JER!='nominal':
-	mod = mod + 'JER_' + options.JER
+	mod = mod + 'JER' + '_' + options.JER
 	post='jer'+options.JER
+if options.JMS!='nominal':
+	mod = mod + 'JMS' + '_' + options.JMS
+	post2='jes'+options.JMS
+if options.JMR!='nominal':
+	mod = mod + 'JMR' + '_' + options.JMR
+	post2='jer'+options.JMR
+
 
 #--------------------- Trigger------------------------------------
 # We check that the data passes the trigger
@@ -108,13 +124,13 @@ if options.set!= 'data' and options.tname!='none':
 	elif options.tname!= []:
 		trig = 'tnamestr'
 		
-if tnamestr=='HLT_PFHT900ORHLT_AK8PFJet450':
+if tnamestr=='HLT_PFHT900ORHLT_PFHT800ORHLT_AK8PFJet450':
 	tnameformat='nominal'
 elif tnamestr=='':
 	tnameformat='none'
 else:
 	tnameformat=tnamestr
-#--------------------- PDFs-----------------------------------------
+#----------- PDFs - Removed since it's auto on----------------------
 # Currently commented out since we don't use it
 pstr = ""
 # if options.pdfweights!="nominal":
@@ -166,15 +182,16 @@ else:
 
 files = Load_Ntuples(options.set,di)
 
-if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
-	settype = 'ttbar'
-elif (options.set.find('QCD') != -1):
-	settype ='ttbar'
-	run_b_SF = False
-else :
-	settype = options.set
+# Just using the ttbar pileup for all MC
+# if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
+# 	settype = 'ttbar'
+# elif (options.set.find('QCD') != -1):
+# 	settype ='ttbar'
+# 	run_b_SF = False
+# else :
+# 	settype = options.set
 
-print 'The type of set is ' + settype
+# print 'The type of set is ' + settype
 
 # We select all the events:    
 events = Events (files)
@@ -216,20 +233,33 @@ print "Total unfiltered events in selection: ",totnev
 #To see all the current types in an Ntuple use edmDumpEventContent /PathtoNtuple/Ntuple.root
 
 AK8HL = Initlv("jetsAK8",post)
-GeneratorHandle 	= 	Handle (  "GenEventInfoProduct")
-GeneratorLabel  	= 	( "generator" , "")
+
+looseJetIDHandle = Handle("vector<float>")
+looseJetIDLabel = ("jetsAK8", "jetAK8PuppiLoose")
+
+filtersHandle = Handle("vector<bool>")
+filtersLabel = ('Filter','filtersbit')
+
+GenHandle 	= 	Handle (  "vector<reco::GenParticle>")
+GenLabel  	= 	( "filteredPrunedGenParticles" , "")
 
 puHandle    	= 	Handle("int")
 puLabel     	= 	( "eventUserData", "puNtrueInt" )
 
-softDropPuppiMassHandle		=	Handle (  "vector<float> "  )
-softDropPuppiMassLabel		=	( "jetsAK8" , "jetAK8PuppiCorrectedsoftDropMass")
+pdfHandle = Handle("vector<float>")
+pdfLabel = ("weights","pdfWeights")
+
+topMassHandle		=	Handle (  "vector<float> "  )
+topMassLabel		=	( "jetsAK8"+post2 , "jetAK8PuppisoftDropMassForTopPUPPIAK8JEC")
+
+wMassHandle		= Handle("vector<float>")
+wMassLabel		= ( "jetsAK8"+post2 , "jetAK8PuppiCorrectedsoftDropMass")
 
 vsubjets0indexHandle 	= 	Handle (  "vector<float> "  )
-vsubjets0indexLabel  	= 	( "jetsAK8" , "jetAK8PuppivSubjetIndex0")
+vsubjets0indexLabel  	= 	( "jetsAK8", "jetAK8PuppivSubjetIndex0")
 
 vsubjets1indexHandle 	= 	Handle (  "vector<float> "  )
-vsubjets1indexLabel  	= 	( "jetsAK8" , "jetAK8PuppivSubjetIndex1")
+vsubjets1indexLabel  	= 	( "jetsAK8", "jetAK8PuppivSubjetIndex1")
 
 subjetsAK8CSVHandle 	= 	Handle (  "vector<float> "  )
 subjetsAK8CSVLabel  	= 	( "subjetsAK8Puppi" , "subjetAK8PuppiCSVv2")
@@ -282,15 +312,16 @@ print "Start looping"
 # Tree = Make_Trees(tree_vars)
 # Tree.Fill()
 
-#totevents = events.size()
-#print "Total events in edmntuple form: " + str(totevents)
+# totevents = events.size()
+# print "Total events in slim form: " + str(totevents)
 
 # This tree is done now
 
 # Now book a tree for each of the jets (leading and subleading) 
 # These jets can be identified based on hemisphere. Hemi0 has the leading jet
 treeVars = {
-	"SDmass_leading":array('d',[0]),
+	"topSDmass_leading":array('d',[0]),
+	"wSDmass_leading":array('d',[0]),
 	"tau1_leading":array('d',[0]),
 	"tau2_leading":array('d',[0]),
 	"tau3_leading":array('d',[0]),
@@ -299,7 +330,9 @@ treeVars = {
 	"eta_leading":array('d',[0]),
 	"phi_leading":array('d',[0]),
 	"mass_leading":array('d',[0]),
-	"SDmass_subleading":array('d',[0]),
+
+	"topSDmass_subleading":array('d',[0]),
+	"wSDmass_subleading":array('d',[0]),
 	"tau1_subleading":array('d',[0]),
 	"tau2_subleading":array('d',[0]),
 	"tau3_subleading":array('d',[0]),
@@ -307,24 +340,44 @@ treeVars = {
 	"pt_subleading":array('d',[0]),
 	"eta_subleading":array('d',[0]),
 	"phi_subleading":array('d',[0]),
-	"mass_subleading":array('d',[0])}
+	"mass_subleading":array('d',[0]),
+
+	"WJetMatchingRequirement":array('i',[0])
+	}
 
 Tree = TTree("Tree", "Tree")
 for v in treeVars.keys():
-	Tree.Branch(v, treeVars[v], v+"/D")
+	if v == 'WJetMatchingRequirement':
+		Tree.Branch(v, treeVars[v], v+"/I")
+	else:
+		Tree.Branch(v, treeVars[v], v+"/D")
 Tree.AutoSave("Overwrite")
 
-
+# Initialize some set specific branches
 if options.set != 'data':
 	treeVars['pileBin'] = array('i',[0])
 	Tree.Branch('pileBin',treeVars['pileBin'],'pileBin/I')
 
+	if options.set.find("singletop_tW") == -1:
+		treeVars['pdf_weightUp'] = array('d',[0])
+		treeVars['pdf_weightDown'] = array('d',[0])
+		Tree.Branch('pdf_weightUp',treeVars['pdf_weightUp'],'pdf_weightUp/D')
+		Tree.Branch('pdf_weightDown',treeVars['pdf_weightDown'],'pdf_weightDown/D')
+
+
+if options.set.find('ttbar') != -1:
+	treeVars['pt_reweight'] = array('d',[0])
+	Tree.Branch('pt_reweight',treeVars['pt_reweight'],'pt_reweight/D')
+
+
 # Now we can loop
 # We check for the trigger on data, do pt cuts on the jets, and eta cuts
+jfailCount = 0
+ffailCount = 0
 for event in events:
 	count	= 	count + 1
 
-	if count % 100000 == 0 :
+	if count % 10000 == 0 :
 	  print  '--------- Processing Event ' + str(count) #+'   -- percent complete ' + str(100*count/totevents) + '% -- '
 	
 	# Need to ask Kevin about the indices here
@@ -348,8 +401,40 @@ for event in events:
 
 	AK8LV = Makelv(AK8HL,event)
 
+	# Do some quick basic checks
 	if len(AK8LV)==0:
 		continue
+
+	event.getByLabel(looseJetIDLabel, looseJetIDHandle)
+	looseJetID = looseJetIDHandle.product()
+
+	looseJetIDFailed = 0
+	for i in range(2):
+		try:
+			if looseJetID[i] != 1.0:
+				looseJetIDFailed += 1
+		except:
+			continue
+
+	if looseJetIDFailed > 0:
+		#print str(looseJetIDFailed) + " looseJetIDs failed"
+		jfailCount += 1
+		continue
+
+	event.getByLabel(filtersLabel, filtersHandle)
+	filters = filtersHandle.product()
+
+	filterFails = 0
+	for thisFilter in filters:
+	 	if not thisFilter:
+	 		filterFails += 1
+	 		
+	if filterFails > 0:
+		#print str(filterFails)+ " filters failed"
+		ffailCount += 1
+		continue
+
+
 
 	# Only need one of these since they are identical
 	tindex,windex = Hemispherize(AK8LV,AK8LV)
@@ -386,14 +471,17 @@ for event in events:
 
 		# MANUAL HT CUT -- TAKE OUT WHEN TRIGGER CORRECTION FINALIZED
 		ht = leadingJet.Perp() + subleadingJet.Perp()
-		if ht < 1100.0:
-			continue
+		# if ht < 1100.0:
+		# 	continue
 
 
 		if abs(leadingJet.Eta())<2.40 and abs(subleadingJet.Eta())<2.40:
 			# Grab ntuple value vectors
-			event.getByLabel (softDropPuppiMassLabel, softDropPuppiMassHandle)
-			puppiJetMass 	= 	softDropPuppiMassHandle.product()
+			event.getByLabel (topMassLabel, topMassHandle)
+			topJetMass 	= 	topMassHandle.product()
+
+			event.getByLabel (wMassLabel, wMassHandle)
+			wJetMass 	= 	wMassHandle.product()
 
 			event.getByLabel (tau3Label, tau3Handle)
 			Tau3		= 	tau3Handle.product() 
@@ -413,6 +501,14 @@ for event in events:
 			event.getByLabel (subjetsAK8CSVLabel,subjetsAK8CSVHandle )
 			subjetsAK8CSV		= 	subjetsAK8CSVHandle.product() 
 
+			WJetMatchingRequirement = 0
+			if options.set != 'data':
+				event.getByLabel ( GenLabel, GenHandle )
+				GenParticles = GenHandle.product()
+
+				WJetMatchingRequirement = WJetMatching(GenParticles)
+
+			# print 'WJetMatchingRequirement is ' + str(WJetMatchingRequirement)
 
 			if len(subjetsAK8CSV)==0:
 				continue
@@ -429,7 +525,8 @@ for event in events:
 				subSJ_csvmax = max(subSJ_csvvals)
 
 				Temp_vars = {
-					"SDmass_leading":puppiJetMass[leadingIndexVal],
+					"topSDmass_leading":topJetMass[leadingIndexVal],
+					"wSDmass_leading":topJetMass[leadingIndexVal],
 					"tau1_leading":Tau1[leadingIndexVal],
 					"tau2_leading":Tau2[leadingIndexVal],
 					"tau3_leading":Tau3[leadingIndexVal],		
@@ -438,7 +535,9 @@ for event in events:
 					"eta_leading":leadingJet.Eta(),
 					"phi_leading":leadingJet.Phi(),
 					"mass_leading":leadingJet.M(),
-					"SDmass_subleading":puppiJetMass[subleadingIndexVal],
+
+					"topSDmass_subleading":topJetMass[subleadingIndexVal],
+					"wSDmass_subleading":topJetMass[subleadingIndexVal],
 					"tau1_subleading":Tau1[subleadingIndexVal],
 					"tau2_subleading":Tau2[subleadingIndexVal],
 					"tau3_subleading":Tau3[subleadingIndexVal],		
@@ -446,12 +545,14 @@ for event in events:
 					"pt_subleading":subleadingJet.Perp(),
 					"eta_subleading":subleadingJet.Eta(),
 					"phi_subleading":subleadingJet.Phi(),
-					"mass_subleading":subleadingJet.M()}
+					"mass_subleading":subleadingJet.M(),
+
+					"WJetMatchingRequirement":WJetMatchingRequirement}
 
 
 				# Get pileup info if not data
 				if options.set != 'data':
-					PileFile = TFile(di+"PileUp_Ratio_"+settype+".root")
+					PileFile = TFile(di+"PileUp_Ratio_ttbar.root")
 					if options.pileup=='up':
 						PilePlot = PileFile.Get("Pileup_Ratio_up")
 					elif options.pileup=='down':
@@ -463,17 +564,37 @@ for event in events:
 					PileUp 		= 	puHandle.product()
 					Temp_vars['pileBin'] = PilePlot.FindBin(PileUp[0])
 
+					# Missing weights from singletop_tW(B) because of slimtuple reason
+					if options.set.find("singletop_tW") == -1:
+						event.getByLabel( pdfLabel, pdfHandle )
+						pdfs = pdfHandle.product()
+						if len(pdfs) <= 0:
+							print "pdfs empty"
+						PDF_weightUp = PDF_Lookup( pdfs , 'up' )
+						PDF_weightDown = PDF_Lookup( pdfs , 'down' )	
+
+						Temp_vars['pdf_weightUp'] = PDF_weightUp
+						Temp_vars['pdf_weightDown'] = PDF_weightDown
+				
+
+				if options.set.find('ttbar') != -1:
+					# For pt reweighting
+					PTW = PTW_Lookup( GenParticles )
+					Temp_vars['pt_reweight'] = PTW
+
 				passedNev += 1
 
 				for key in treeVars.keys():
 					treeVars[key][0] = Temp_vars[key]
-				try:
-					Tree.Fill()
-				except:
-					print "Failure at " + str(count)
+				# try:
+				Tree.Fill()
+				# except:
+					# print "Failure at " + str(count)
 
-print "Events in edmntuple: " + str(count)
+print "Events in slim form: " + str(count)
 print "Events that passed: " + str(passedNev)
+print "Percent lost to JetID: " + str(float(jfailCount)/float(count))
+print "Percent lost to filters: " + str(float(ffailCount)/float(count))
 
 f.cd()
 f.Write()

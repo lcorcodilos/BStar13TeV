@@ -25,6 +25,8 @@ import ROOT
 import sys
 from array import *
 from ROOT import *
+ROOT.gROOT.SetBatch(True)
+ROOT.PyConfig.IgnoreCommandLineOptions = True
 from optparse import OptionParser
 
 parser = OptionParser()
@@ -43,8 +45,8 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
 
 gROOT.Macro("rootlogon.C")
 
-import Bstar_Functions_local	
-from Bstar_Functions_local import *
+import Bstar_Functions	
+from Bstar_Functions import *
 
 Cons = LoadConstants()
 
@@ -146,11 +148,11 @@ if options.set == 'QCD':
 	ModM.Divide(ModM,ModMd)
 	#ModM.Divide(ModM,ModMd,1.0,1.0,"B")
 
-	sys.stdout = MMout
-	ModM.Fit("pol3","F")
-	fitter = TVirtualFitter.GetFitter()
-	for i in range(0,4):
-		print(fitter.GetParameter(i))
+	# sys.stdout = MMout
+	# ModM.Fit("pol3","F")
+	# fitter = TVirtualFitter.GetFitter()
+	# for i in range(0,4):
+	# 	print(fitter.GetParameter(i))
 	ModM.Draw()
 
 	sys.stdout = saveout
@@ -210,7 +212,7 @@ dtot2 = ttdeta2.Integral() + deta2.Integral() + stdeta2.Integral()
 # 	i+=1
 # print bins
 
-bins= [400,540,570,600,650,720,850,1700]
+bins= [400,540,570,600,650,720,850,1100,1700]
 if options.set == 'QCD':
 	bins= [400,540,570,600,650,720,850,1000,1300,1600,2000]
 

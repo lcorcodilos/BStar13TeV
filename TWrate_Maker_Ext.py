@@ -37,6 +37,8 @@ import ROOT
 import sys
 from array import *
 from ROOT import *
+ROOT.gROOT.SetBatch(True)
+ROOT.PyConfig.IgnoreCommandLineOptions = True
 from optparse import OptionParser
 
 parser = OptionParser()
@@ -50,16 +52,16 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
                   default	=	'rate_default',
                   dest		=	'cuts',
                   help		=	'Cuts type (ie default, rate, etc)')
-parser.add_option('-p', '--param', metavar='F', type='string', action='store',
+parser.add_option('-r', '--rate', metavar='F', type='string', action='store',
                   default	=	'Mtw',
-                  dest		=	'param',
+                  dest		=	'rate',
                   help		=	'1D Rate parameterization (tpt, Mtw, Mt)')
 (options, args) = parser.parse_args()
 
 gROOT.Macro("rootlogon.C")
 
-import Bstar_Functions_local	
-from Bstar_Functions_local import *
+import Bstar_Functions	
+from Bstar_Functions import *
 
 Cons = LoadConstants()
 
@@ -82,19 +84,19 @@ elif options.set=='data':
 	setstr = 'data'
 
 
-if options.param == "tpt":
+if options.rate == "tpt":
 	param1D = ''
 	histPassEta1 = "pteta1"
 	histFailEta1 = "pteta1pretag"
 	histPassEta2 = "pteta2"
 	histFailEta2 = "pteta2pretag"
-elif options.param == "Mtw":
+elif options.rate == "Mtw":
 	param1D = 'Mtw/'
 	histPassEta1 = "Mtwpasseta1"
 	histFailEta1 = "Mtwfaileta1"
 	histPassEta2 = "Mtwpasseta2"
 	histFailEta2 = "Mtwfaileta2"
-elif options.param == "Mt":
+elif options.rate == "Mt":
 	param1D = 'Mt/'
 	histPassEta1 = "MpassEta1"
 	histFailEta1 = "MfailEta1"
@@ -204,7 +206,7 @@ if options.set == 'QCD':
 #TFile(rootdir+"TWratefileweightedsignalright1400_PSET_"+options.cuts+".root"),
 #]
 
-output = TFile( "plots/TWrate_Maker_"+setstr+"_"+Lumi+"_PSET_"+options.param+'_'+options.cuts+"_Ext.root", "recreate" )
+output = TFile( "plots/"+param1D+"TWrate_Maker_"+setstr+"_"+Lumi+"_PSET_"+options.cuts+".root", "recreate" )
 output.cd()
 
 # Get numerators and denominators for each eta region
@@ -244,7 +246,7 @@ dtot2 = ttdeta2.Integral() + deta2.Integral() + stdeta2.Integral()
 # 	i+=1
 # print bins
 
-MtwBins = [1000, 1200, 1300, 1400, 1500, 1700, 2000, 2500, 3000, 3500, 4000]
+MtwBins = [1000, 1200, 1300, 1400, 1600, 1900, 2300, 2900, 4000]
 MtwBins2 = array('d',MtwBins)
 
 bins= [400,540,570,600,650,720,850,1700]
@@ -257,9 +259,9 @@ MtBins2 = array('d',MtBins)
 #bins= variableBins(deta1,10)
 bins2=array('d',bins)
 
-if options.param == "Mtw":
+if options.rate == "Mtw":
 	bins1D = MtwBins2
-elif options.param == "Mt":
+elif options.rate == "Mt":
 	bins1D = MtBins2
 else:
 	bins1D = bins2
@@ -418,7 +420,7 @@ print "------------------------------------"
 
 #BIFP=500.0
 BIFP = 700.0
-BP =TF1("BP",BifPoly,400,2000,5)
+BP =TF1("BP",BifPoly,0,4000,5)
 BP.FixParameter(4,BIFP)
 
 c4 = TCanvas('c4', 'Tagrate1', 1300, 600)
@@ -468,7 +470,7 @@ c3.cd()
 
 #BIFP=500.0
 BIFP = 700.0
-BP =TF1("BP",BifPoly,400,2000,5)
+BP =TF1("BP",BifPoly,0,4000,5)
 BP.FixParameter(4,BIFP)
 tagrateeta2.Fit("BP","F")
 sys.stdout = saveout

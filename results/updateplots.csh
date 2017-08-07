@@ -1,10 +1,10 @@
-#rm resultsright/had/*limits*.txt
-#cp ../limitsetting/theta/analysis_bstar_right_had/results/*.txt resultsright/had/
-#cat resultsright/had/*observed*.txt | grep -v "# x; y" >resultsright/had/observed_limits.txt
-#cat resultsright/had/*expected*.txt | grep -v "# x; y; band 0 low; band 0 high; band 1 low; band 1 high" >resultsright/had/expected_limits.txt
-#cd resultsright/had/
-#python limit_plot_shape.py --coupling=right --channel=had --inputFileExp=expected_limits.txt --inputFileObs=observed_limits.txt --useLog --outputName=comb
-#cd ../../
+rm resultsright/had/*limits*.txt
+cp ../limitsetting/theta/analysis_bstar_right_had/results/*.txt resultsright/had/
+cat resultsright/had/*observed*.txt | grep -v "# x; y" >resultsright/had/observed_limits.txt
+cat resultsright/had/*expected*.txt | grep -v "# x; y; band 0 low; band 0 high; band 1 low; band 1 high" >resultsright/had/expected_limits.txt
+cd resultsright/had/
+python limit_plot_shape.py --coupling=right --channel=had --inputFileExp=expected_limits.txt --inputFileObs=observed_limits.txt --useLog --outputName=comb
+cd ../../
 
 
 #rm resultsright/semilep/*limits*.txt
@@ -63,13 +63,13 @@ cd ../../
 #python limit_plot_shape.py --coupling=left --channel=dilep --inputFileExp=expected_limits.txt --inputFileObs=observed_limits.txt --useLog --outputName=comb
 #cd ../../
 
-#rm resultsvector/had/*limits*.txt
-#cp ../limitsetting/theta/analysis_bstar_vector_had/*.txt resultsvector/had/
-#cat resultsvector/had/*observed*.txt | grep -v "# x; y" >resultsvector/had/observed_limits.txt
-#cat resultsvector/had/*expected*.txt | grep -v "# x; y; band 0 low; band 0 high; band 1 low; band 1 high" >resultsvector/had/expected_limits.txt
-#cd resultsvector/had/
-#python limit_plot_shape.py --coupling=vector --channel=had --inputFileExp=expected_limits.txt --inputFileObs=observed_limits.txt --useLog --outputName=comb
-#cd ../../
+rm resultsvector/had/*limits*.txt
+cp ../limitsetting/theta/analysis_bstar_vector_had/results/*.txt resultsvector/had/
+cat resultsvector/had/*observed*.txt | grep -v "# x; y" >resultsvector/had/observed_limits.txt
+cat resultsvector/had/*expected*.txt | grep -v "# x; y; band 0 low; band 0 high; band 1 low; band 1 high" >resultsvector/had/expected_limits.txt
+cd resultsvector/had/
+python limit_plot_shape.py --coupling=vector --channel=had --inputFileExp=expected_limits.txt --inputFileObs=observed_limits.txt --useLog --outputName=comb
+cd ../../
 
 #rm resultsvector/semilep/*limits*.txt
 #cp ../limitsetting/theta/analysis_bstar_vector_semilep/*.txt resultsvector/semilep/

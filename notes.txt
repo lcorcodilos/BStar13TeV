@@ -1,0 +1,73 @@
+Differnces from Kevin's files:
+TWrate.py
+	- I call HT900 and JET450 triggers but doesn't really matter since I have trigger turned off
+	- Kevin lines 565-573 are going to use trigger weights from the HT800 trigger
+		- This should be okay because we're in the plateau and weights will just be 1 but should ask
+		- Changing mine to look like his
+	- Changed binning to Kevin's
+	- Left in doneAlready
+
+Bstar_Functions.py
+	- 35867.0 for lumi in Kevin's (36420 in mine) (changed mine but didn't make a difference so changed back)
+	- changed wsf to 1.0
+	- Changed sjbtag from [0.80,1.0] to [0.46,1.0]
+	- Did not change wmass from [65.0,95.0] to [65.0,105.0]
+	- Changed Masslabel to be for PuppiMass rather than PuppiCorrectedsoftDropMass
+
+TWanalyzer_plotter.py
+	- Doesn't have changes from Kevin but I commented out a lot of kinematics stuff and needs to be visited
+
+TWrate_Maker.py
+	- Kevin has singletop turned off
+
+
+
+Long-term fixes and updates
+- W and top tagging scale factors (X)
+- pt reweighting (?)
+- PDF uncertainties (X)
+- Rerun slimtuples (X)
+- Cross sections + uncertainties
+- QCD Parameterization uncertainty
+- Study effect of new cuts
+- tau21 v tau32 comparison (X)
+- Try binned Mt correction (X)
+- Rp/f(top pt v Mt) - [fit of Rp/f(top pt) * fi of Rp/f(Mt)]
+
+6/20/17
+1. [DONE] Need to check STtWB has finished running
+2. [DONE] Need to do Eos2d3Gen.py in /uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples and then move files over with myEos2d3.csh
+3. [Need to ask Kevin about GenEventInfo] Need to run ttree maker
+4. [Kevin is running it]Need to figure out why trigger is 100% efficient
+5. [DONE] Need to try running TWpileup
+6. [DONE] Need to run brillCalc for data
+- B = 5.788
+- C = 2.573
+- D = 4.233
+- E = 4.009
+- F = 3.102
+- G = 7.540
+- H = 8.391
+- H2 = 0.215
+- Total = 35.845
+
+
+6/7/17
+Line changes to analyzer to change back 
+337-354,688, 801
+Line changes to analyzer plotter
+72-25
+
+6/22/17
+Failed ttrees
+- ttbar, scaleup, scaledown
+Traceback (most recent call last):
+  File "./tardir/TWtree_Maker.py", line 496, in <module>
+    PTW = PTW_Lookup( GenParticles )
+  File "tardir/Bstar_Functions.py", line 624, in PTW_Lookup
+    for ig in GP :
+TypeError: 'GenEventInfoProduct' object is not iterable
+- Need to ask kevin what's supposed to be in here
+
+7/5/17
+- look at "W mass" in sideband1 (Mtstack)

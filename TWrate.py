@@ -18,7 +18,7 @@ import glob
 import math
 from math import sqrt,exp
 import ROOT
-from ROOT import std,ROOT,TFile,TLorentzVector,TMath,gROOT, TF1,TH1F,TH1D,TH2F,TH2D
+from ROOT import std,ROOT,TFile,TLorentzVector,TMath,gROOT, TF1,TH1F,TH1D,TH2F,TH2D, TH1I
 from ROOT import TVector
 from ROOT import TFormula
 
@@ -42,7 +42,7 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
 				  dest		=	'cuts',
 				  help		=	'Cuts type (ie default, rate, etc)')
 parser.add_option('-t', '--tname', metavar='F', type='string', action='store',
-				   default	=	'HLT_PFHT900,HLT_AK8PFJet450',
+				   default	=	'HLT_PFHT900,HLT_PFHT800,HLT_JET450',
 				   dest		=	'tname',
 				   help		=	'trigger name')
 parser.add_option('-y', '--modmass', metavar='F', type='string', action='store',
@@ -69,7 +69,10 @@ parser.add_option('-j', '--jobs', metavar='F', type='string', action='store',
 				  default   =   '1',
 				  dest      =   'jobs',
 				  help      =   'number of jobs')
-
+parser.add_option('-u', '--ptreweight', metavar='F', type='string', action='store',
+				  default	=	'none',
+				  dest		=	'ptreweight',
+				  help		=	'on or off')
 
 (options, args) = parser.parse_args()
 
@@ -89,23 +92,13 @@ for iname in range(0,len(tname)):
 	if iname!=len(tname)-1:
 		tnamestr+='OR'
 
-# CHANGE BACK
-
-
-# For when triggers actually work 
-# trig='none'
-# if options.set!= 'data' and options.tname!='none': 
-# 	if options.tname=='HLT_PFHT900,HLT_AK8PFJet450':
-# 		trig = 'nominal'
-# 	elif options.tname!= []:
-# 		trig = 'tnamestr'
 		
-# if tnamestr=='HLT_PFHT900ORHLT_AK8PFJet450':
-# 	tnameformat='nominal'
-# elif tnamestr=='':
-# 	tnameformat='none'
-# else:
-# 	tnameformat=tnamestr
+if tnamestr=='HLT_PFHT900ORHLT_PFHT800ORHLT_AK8PFJet450':
+	tnameformat='nominal'
+elif tnamestr=='':
+	tnameformat='none'
+else:
+	tnameformat=tnamestr
 
 #If running on the grid we access the script within a tarred directory
 di = ""
@@ -167,11 +160,11 @@ print 'The type of set is ' + settype
 
 if options.set != 'data':
 	#Load up scale factors (to be used for MC only)
-	TrigFile = TFile(di+"Triggerweight_data80X.root")
-	# CHANGE BACK
-	#TrigPlot = TrigFile.Get("TriggerWeight_"+tnamestr+"_pre_HLT_PFHT475_v3")
-	TrigPlot = TrigFile.Get("TriggerWeight_HLT_PFHT800_v3_pre_HLT_PFHT475_v3")
+	TrigFile = TFile(di+"Triggerweight_2jethack_data.root")
+	TrigPlot = TrigFile.Get("TriggerWeight_"+tnamestr+"_pre_HLT_PFHT475")
 
+	print "TriggerWeight_"+tnamestr+"_pre_HLT_PFHT475"
+	
 	PileFile = TFile(di+"PileUp_Ratio_"+settype+".root")
 	if options.pileup=='up':
 		PilePlot = PileFile.Get("Pileup_Ratio_up")
@@ -193,6 +186,9 @@ print "Creating histograms"
 #Define Histograms
 f.cd()
 #---------------------------------------------------------------------------------------------------------------------#
+hEta1Count = TH1I("eta1Count", "number of events in low eta region", 1, 0, 1)
+hEta2Count = TH1I("eta2Count", "number of events in high eta region", 1, 0, 1)
+
 pteta1pretag          = TH1D("pteta1pretag",           "t Probe pt in 0<Eta<0.8",             400,  0,  2000 )
 pteta2pretag          = TH1D("pteta2pretag",           "t Probe pt in 0.8<Eta<2.4",             400,  0,  2000 )
 
@@ -275,6 +271,8 @@ nev = TH1F("nev",	"nev",		1, 0, 1 )
 
 # loop over events
 #---------------------------------------------------------------------------------------------------------------------#
+eta1Count = 0
+eta2Count = 0
 
 count = 0
 jobiter = 0
@@ -334,7 +332,7 @@ for entry in range(lowBinEdge,highBinEdge):
 				"pt":tree.pt_leading,
 				"eta":tree.eta_leading,
 				"sjbtag":tree.sjbtag_leading,
-				"SDmass":tree.SDmass_leading
+				"SDmass":tree.topSDmass_leading
 			}
 
 			wVals = {
@@ -346,7 +344,7 @@ for entry in range(lowBinEdge,highBinEdge):
 				"pt":tree.pt_subleading,
 				"eta":tree.eta_subleading,
 				"sjbtag":tree.sjbtag_subleading,
-				"SDmass":tree.SDmass_subleading
+				"SDmass":tree.wSDmass_subleading
 			}
 
 		if hemis == 'hemis1' and doneAlready == False  :
@@ -359,7 +357,7 @@ for entry in range(lowBinEdge,highBinEdge):
 				"pt":tree.pt_leading,
 				"eta":tree.eta_leading,
 				"sjbtag":tree.sjbtag_leading,
-				"SDmass":tree.SDmass_leading
+				"SDmass":tree.wSDmass_leading
 			}
 
 			tVals = {
@@ -371,7 +369,7 @@ for entry in range(lowBinEdge,highBinEdge):
 				"pt":tree.pt_subleading,
 				"eta":tree.eta_subleading,
 				"sjbtag":tree.sjbtag_subleading,
-				"SDmass":tree.SDmass_subleading
+				"SDmass":tree.topSDmass_subleading
 			}
 
 		elif hemis == 'hemis1' and doneAlready == True:
@@ -396,23 +394,28 @@ for entry in range(lowBinEdge,highBinEdge):
 
 		#We first perform the top and w candidate pt cuts and the deltaY cut
 		if wpt_cut and tpt_cut and dy_cut: 
+			if options.pdfweights != "nominal":
+				if options.pdfweights == 'up':
+					iweight = tree.pdf_weightUp
+				elif options.pdfweights == 'down':
+					iweight = tree.pdf_weightDown
+				weight *= iweight
+
+
 			weightSFt = 1.0
-			weightSFtdown = 1.0
-			weightSFtup = 1.0       
+			# weightSFtdown = 1.0
+			# weightSFtup = 1.0       
 			if options.set!="data":
 				#Pileup reweighting is done here 
 				bin1 = tree.pileBin
 
-				# CHANGE BACK - When you have the correct top scale factors
-				#if options.pileup != 'off':
-				#	weight *= PilePlot.GetBinContent(bin1)
-				#
-				# if options.cuts=="rate_default" and options.set.find("QCD") == -1:
-				# 	#top scale factor reweighting done here
-				# 	SFT = SFT_Lookup( tjet.Perp() )
-				# 	weightSFt = SFT[0]
-				# 	weightSFtdown = SFT[1]
-				# 	weightSFtup = SFT[2]
+				if options.pileup != 'off':
+					weight *= PilePlot.GetBinContent(bin1)
+				
+				if options.cuts=="default" and options.set.find("QCD") == -1:
+					weightSFt = ttagsf
+					# weightSFtup = ttagsf + ttagsf_errUp
+					# weightSFtdown = ttagsf - ttagsf_errDown
 
 			tmass_cut = tmass[0]<tVals["SDmass"]<tmass[1]
 
@@ -421,29 +424,35 @@ for entry in range(lowBinEdge,highBinEdge):
 				ht = tjet.Perp() + wjet.Perp()
 
 				#MANUAL HT CUT -- TAKE OUT WHEN TRIGGER CORRECTION FINALIZED
-				if ht<1100.0:
-					continue 
+				# if ht<1100.0:
+				# 	continue 
 
-				weighttrigup=1.0
-				weighttrigdown=1.0
+				# weighttrigup=1.0
+				# weighttrigdown=1.0
 
 				if tname != [] and options.set!='data' :
 					#Trigger reweighting done here
 					TRW = Trigger_Lookup( ht , TrigPlot )[0]
-					TRWup = Trigger_Lookup( ht , TrigPlot )[1]
-					TRWdown = Trigger_Lookup( ht , TrigPlot )[2]
+					# TRWup = Trigger_Lookup( ht , TrigPlot )[1]
+					# TRWdown = Trigger_Lookup( ht , TrigPlot )[2]
 
-					weighttrigup=weight*TRWup
-					weighttrigdown=weight*TRWdown
+					# weighttrigup=weight*TRWup
+					# weighttrigdown=weight*TRWdown
 					weight*=TRW
 
-				
-				weightSFtup=weight*weightSFtup
-				weightSFtdown=weight*weightSFtdown
+				if options.ptreweight == "on" and options.set.find('ttbar') != -1:
+					#ttbar pt reweighting done here
+					PTW = tree.pt_reweight
+					weight*=PTW
+					# weightSFptup=max(0.0,weight*(2*PTW-1))
+					# weightSFptdown=weight
+
+				# weightSFtup=weight*weightSFtup
+				# weightSFtdown=weight*weightSFtdown
 				weight*=weightSFt
 
-				weighttrigup*=weightSFt
-				weighttrigdown*=weightSFt
+				# weighttrigup*=weightSFt
+				# weighttrigdown*=weightSFt
 
 				try:
 					tau32val		= 	tVals["tau3"]/tVals["tau2"] 
@@ -473,41 +482,43 @@ for entry in range(lowBinEdge,highBinEdge):
 						#Extract tags and probes for the average b tagging rate here 
 						#We use two eta regions 
 						if eta1_cut:
+							eta1Count += 1
 							if not FullTop:
 								MtwtptcomparepreSB1e1.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
 								pteta1pretag.Fill(tjet.Perp(),weight)
-								Mpre.Fill(tVals["SDmass"],weight)
+								Mpre.Fill(tjet.M(),weight)
 
-								MfailEta1.Fill(tVals["SDmass"],weight)
+								MfailEta1.Fill(tjet.M(),weight)
 								Mtwfaileta1.Fill((tjet+wjet).M(),weight)
 								ptFullEtaFail.Fill(tjet.Perp(),weight)
 								MtvsptFaileta1.Fill(tjet.Perp(),tjet.M(),weight)
 							if FullTop :
-								MpostFull.Fill(tVals["SDmass"],weight)
+								MpostFull.Fill(tjet.M(),weight)
 								MtwtptcomparepostSB1e1.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
 								pteta1.Fill( tjet.Perp(),weight)
 
-								MpassEta1.Fill(tVals["SDmass"],weight)
+								MpassEta1.Fill(tjet.M(),weight)
 		 						Mtwpasseta1.Fill((tjet+wjet).M(),weight)
 								ptFullEtaPass.Fill(tjet.Perp(),weight)
 								MtvsptPasseta1.Fill(tjet.Perp(),tjet.M(),weight)
 
 						if eta2_cut:
+							eta2Count += 1
 							if not FullTop:
 								MtwtptcomparepreSB1e2.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
 								pteta2pretag.Fill( tjet.Perp(),weight)
-								Mpre.Fill(tVals["SDmass"],weight)
+								Mpre.Fill(tjet.M(),weight)
 
-								MfailEta2.Fill(tVals["SDmass"],weight)
+								MfailEta2.Fill(tjet.M(),weight)
 								Mtwfaileta2.Fill((tjet+wjet).M(),weight)
 								ptFullEtaFail.Fill(tjet.Perp(),weight)
 								MtvsptFaileta2.Fill(tjet.Perp(),tjet.M(),weight)
 							if FullTop :
-								MpostFull.Fill(tVals["SDmass"],weight)
+								MpostFull.Fill(tjet.M(),weight)
 								MtwtptcomparepostSB1e2.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
 								pteta2.Fill( tjet.Perp(),weight)
 
-								MpassEta2.Fill(tVals["SDmass"],weight) 
+								MpassEta2.Fill(tjet.M(),weight) 
 								Mtwpasseta2.Fill((tjet+wjet).M(),weight)
 								ptFullEtaPass.Fill(tjet.Perp(),weight)
 								MtvsptPasseta2.Fill(tjet.Perp(),tjet.M(),weight)
@@ -516,11 +527,14 @@ for entry in range(lowBinEdge,highBinEdge):
 						for tv in tree_vars.keys():
 							tree_vars[tv][0] = temp_variables[tv]
 						NewTree.Fill()
-						doneAlready = True
 
+						doneAlready = True
+hEta1Count.SetBinContent(1,eta1Count)
+hEta2Count.SetBinContent(1,eta2Count)
 
 f.cd()
 f.Write()
 f.Close()
 
 print "number of events: " + str(count)
+

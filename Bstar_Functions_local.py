@@ -15,12 +15,11 @@
 ##								 ##
 ###################################################################
 
-#from DataFormats.FWLite import Runs
 import os
 import array
 import glob
 import math
-from math import sqrt
+from math import sqrt, exp
 import ROOT
 import sys
 import cppyy
@@ -31,21 +30,26 @@ from ROOT import *
 #If I wanted to access the left handed W' cross section at 1900 GeV I could do Xsecl1900 = LoadConstants()['xsec_wpl']['1900']
 def LoadConstants():
 	 return  {
-		'lumi':36420.0,#12367.583,
-		'wtagsf':1.0,#0.997,
-		'wtagsfsig':1.0,#1.07,
+		'lumi':35851.0,
+		'wtagsf_HP':1.0,# HP = High purity
+		'wtagsfsig_HP':0.06,
+		'wtagsf_LP':0.96,# LP = Low purity
+		'wtagsfsig_LP':0.11,
+		'ttagsf':1.07,
+		'ttagsf_errUp':0.15,
+		'ttagsf_errDown':0.06,
 		'xsec_bsl':{'1200': 1.944,'1400': 0.7848,'1600': 0.3431,'1800': 0.1588,'2000': 0.07711,'2200': 0.03881,'2400': 0.02015,'2600': 0.01073,'2800': 0.005829,'3000': 0.003234},
 		'xsec_bsr':{'1200': 1.936,'1400': 0.7816,'1600': 0.3416,'1800': 0.1583,'2000': 0.07675,'2200': 0.03864,'2400': 0.02008,'2600': 0.01068,'2800': 0.005814,'3000': 0.003224},
 		'xsec_bpl':{'B1200': 0.0016852,'B1400': 0.0007134,'B1600': 0.0003220,'B1800': 0.0001523,'T1200': 0.0016852,'T1400': 0.0007134,'T1600': 0.0003220,'T1800': 0.0001523},
 		'xsec_ttbar':{'MG':831.76,'PH':831.76,'PHscaleup':831.76,'PHscaledown':831.76},
 		'xsec_qcd':{'PT300':7823,'PT470':648.2,'PT600':186.9,'PT800':32.293,'PT1000':9.4183,'PT1400':0.84265,'PT1800':0.114943,'PT2400':0.00683,'PT3200':0.000165,'800_BROKEN':32.293,'FLAT7000':2022100000,'HT500':31630,'HT700':6802,'HT1000':1206,'HT1500':120.4,'HT2000':25.25},
-		'xsec_st':{'S':11.36,'T':216.97,'TB':80.95,'TW':35.85,'TWB':35.85},
-		'nev_bsl':{'1200':99600,'1400':100000,'1600':100000,'1800':100000,'2000':100000,'2200':97000,'2400':100000,'2600':100000,'2800':98000,'3000':100000},
-		'nev_bsr':{'1200':100000,'1400':98200,'1600':100000,'1800':97600,'2000':99200,'2200':100000,'2400':97800,'2600':99200,'2800':99200,'3000':100000},
-		'nev_bpl':{'B1200': 100000,'B1400': 99200,'B1600': 99200,'B1800': 97600, 'T1200': 299200, 'T1400': 300000,'T1600': 293400,'T1800': 299600},
-		'nev_ttbar':{'MG':11339232, 'PH':180037820,'PHscaleup':9933327,'PHscaledown':9942427},
-		'nev_qcd':{'HT500':44058594,'HT700':15020802,'HT1000':4980387,'HT1500':1648549,'HT2000':1680210},
-		'nev_st':{'S':984400,'T':49858384,'TW':998400 ,'TWB':985000}
+		'xsec_st':{'S':11.36,'T':136.02,'TB':80.95,'TW':35.85,'TWB':35.85},
+		#'nev_bsl':{'1200':99600,'1400':100000,'1600':100000,'1800':100000,'2000':100000,'2200':97000,'2400':100000,'2600':100000,'2800':98000,'3000':100000},
+		#'nev_bsr':{'1200':100000,'1400':98200,'1600':100000,'1800':97600,'2000':99200,'2200':100000,'2400':97800,'2600':99200,'2800':99200,'3000':100000},
+		#'nev_bpl':{'B1200': 100000,'B1400': 99200,'B1600': 99200,'B1800': 97600, 'T1200': 299200, 'T1400': 300000,'T1600': 293400,'T1800': 299600},
+		#'nev_ttbar':{'MG':11339232, 'PH':180037820,'PHscaleup':9933327,'PHscaledown':9942427},
+		#'nev_qcd':{'HT500':44058594,'HT700':15020802,'HT1000':4980387,'HT1500':1648549,'HT2000':1680210},
+		#'nev_st':{'S':984400,'T':49858384,'TW':998400 ,'TWB':985000}
 		}
 
 #This is also a very impostant Function.  The analysis runs on "PSETS", which correspond to the TYPE variable here.
@@ -59,7 +63,7 @@ def LoadCuts(TYPE):
 			'tmass':[105.0,210.0],
 			'tau32':[0.0,0.65],
 			'tau21':[0.0,0.4],
-			'sjbtag':[0.46,1.0],
+			'sjbtag':[0.5426,1.0],
 			'wmass':[65.0,105.0],
 			'eta1':[0.0,0.8],
 			'eta2':[0.8,2.4],
@@ -72,9 +76,9 @@ def LoadCuts(TYPE):
 			'dy':[0.0,1.8],
 			'tmass':[105.0,210.0],
 			'tau32':[0.0,0.65],
-			'tau21':[0.0,0.4],
-			'sjbtag':[0.46,1.0],
-			'wmass':[[30.0,65.0],[105.0,130.0]],
+			'tau21':[0.4,1.0],
+			'sjbtag':[0.5426,1.0],
+			'wmass':[65.0,105.0],
 			'eta1':[0.0,0.8],
 			'eta2':[0.8,2.4],
 			'eta':[0.0,2.4]
@@ -87,8 +91,8 @@ def LoadCuts(TYPE):
 			'dy':[0.0,1.8],
 			'tmass':[105.0,210.0],
 			'tau32':[0.0,0.65],
-			'tau21':[0.4,1.0],
-			'sjbtag':[0.46,1.0],
+			'tau21':[0.0,0.4],
+			'sjbtag':[0.5426,1.0],
 			'wmass':[130.0,float("inf")],
 			'eta1':[0.0,0.8],
 			'eta2':[0.8,2.4],
@@ -101,9 +105,9 @@ def LoadCuts(TYPE):
 			'dy':[0.0,1.8],
 			'tmass':[105.0,210.0],
 			'tau32':[0.0,0.65],
-			'tau21':[0.0,0.4],
-			'sjbtag':[0.46,1.0],
-			'wmass':[[30.0,65.0],[95.0,130.0]],
+			'tau21':[0.4,1.0],
+			'sjbtag':[0.5426,1.0],
+			'wmass':[130.0,float("inf")],
 			'eta1':[0.0,0.8],
 			'eta2':[0.8,2.4],
 			'eta':[0.0,2.4]
@@ -116,9 +120,9 @@ def LoadCuts(TYPE):
 			'dy':[0.0,1.8],
 			'tmass':[105.0,210.0],
 			'tau32':[0.0,0.65],
-			'tau21':[0.4,1.0],
-			'sjbtag':[0.46,1.0],
-			'wmass':[65.0,105.0],
+			'tau21':[0.0,0.4],
+			'sjbtag':[0.5426,1.0],
+			'wmass':[30.0,65.0],
 			'eta1':[0.0,0.8],
 			'eta2':[0.8,2.4],
 			'eta':[0.0,2.4]
@@ -131,8 +135,64 @@ def LoadCuts(TYPE):
 			'tmass':[105.0,210.0],
 			'tau32':[0.0,0.65],
 			'tau21':[0.4,1.0],
-			'sjbtag':[0.46,1.0],
-			'wmass':[[30.0,65.0],[105.0,130.0]],
+			'sjbtag':[0.5426,1.0],
+			'wmass':[30.0,65.0],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
+			}
+	if TYPE=='rate_lowWmass':
+		return  {
+			'wpt':[400.0,float("inf")],
+			'tpt':[400.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[105.0,210.0],
+			'tau32':[0.0,0.65],
+			'tau21':[0.0,0.4],
+			'sjbtag':[0.5426,1.0],
+			'wmass':[30.0,65.0],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
+			}
+	if TYPE=='rate_highWmass':
+		return  {
+			'wpt':[400.0,float("inf")],
+			'tpt':[400.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[105.0,210.0],
+			'tau32':[0.0,0.65],
+			'tau21':[0.0,0.4],
+			'sjbtag':[0.5426,1.0],
+			'wmass':[105.0,130.0],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
+			}
+	if TYPE=='rate_lowWmass1':
+		return  {
+			'wpt':[400.0,float("inf")],
+			'tpt':[400.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[105.0,210.0],
+			'tau32':[0.0,0.65],
+			'tau21':[0.4,1.0],
+			'sjbtag':[0.5426,1.0],
+			'wmass':[30.0,65.0],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
+			}
+	if TYPE=='rate_highWmass1':
+		return  {
+			'wpt':[400.0,float("inf")],
+			'tpt':[400.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[105.0,210.0],
+			'tau32':[0.0,0.65],
+			'tau21':[0.4,1.0],
+			'sjbtag':[0.5426,1.0],
+			'wmass':[105.0,130.0],
 			'eta1':[0.0,0.8],
 			'eta2':[0.8,2.4],
 			'eta':[0.0,2.4]
@@ -144,9 +204,9 @@ def LoadCuts(TYPE):
 			'dy':[0.0,1.8],
 			'tmass':[105.0,210.0],
 			'tau32':[0.0,0.65],
-			'tau21':[0.6,1.0],
-			'sjbtag':[0.46,1.0],
-			'wmass':[65.0,95.0],
+			'tau21':[0.4,1.0],
+			'sjbtag':[0.5426,1.0],
+			'wmass':[65.0,105.0],
 			'eta':[0.0,2.4]
 			}			
 
@@ -168,116 +228,113 @@ def Load_Ntuples(string,di=''):
 
 
 	if string == 'ttbar':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
-	#if string == 'ttbarscaleup':
-	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224514/0000/*.root")
-	#if string == 'ttbarscaledown':
-	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaledown-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224307/0000/*.root")
+		files = glob.glob("/eos/uscms/store/group/lpcrutgers/knash/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/crab_TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_Slim_V11/*/0000/*.root")
+	if string == 'ttbarscaleup':
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8/crab_TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8_B2GAnaFW_V2p5_80x_Slim_V11/170612_170816/0000/*.root")
+	if string == 'ttbarscaledown':
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/TT_TuneCUETP8M1_13TeV-powheg-scaledown-pythia8/crab_TT_TuneCUETP8M1_13TeV-powheg-scaledown-pythia8_B2GAnaFW_V2p5_80x_Slim_V11/170612_171233/0000/*.root")
 
 	#80X 2.4
 	if string == 'QCDHT500':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/170611_054714/*/*.root")
 	if string == 'QCDHT700':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/170611_055847/*/*.root")
 	if string == 'QCDHT1000':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/170611_061036/*/*.root")
 	if string == 'QCDHT1500':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+		files = glob.glob("/eos/uscms/store/group/lpcrutgers/knash/QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Slim_V11/*/*/*.root")
 	if string == 'QCDHT2000':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/170611_062212/*/*.root")
 
 	#80X 1.1
 	if string == 'QCDPT300':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_Pt_300to470_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")	
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/crab_QCD_Pt_300to470_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")	
 	if string == 'QCDPT470':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_Pt_470to600_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/crab_QCD_Pt_470to600_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
 	if string == 'QCDPT600':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_Pt_600to800_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/crab_QCD_Pt_600to800_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
 	if string == 'QCDPT800':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_Pt_800to1000_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/crab_QCD_Pt_800to1000_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
 	if string == 'QCDPT1000':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_Pt_1000to1400_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/crab_QCD_Pt_1000to1400_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
 	if string == 'QCDPT1400':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_Pt_1400to1800_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/crab_QCD_Pt_1400to1800_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
 	if string == 'QCDPT1800':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_Pt_1800to2400_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/crab_QCD_Pt_1800to2400_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
 	if string == 'QCDPT2400':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_Pt_2400to3200_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/crab_QCD_Pt_2400to3200_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
 	if string == 'QCDPT3200':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_Pt_3200toInf_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/crab_QCD_Pt_3200toInf_TuneCUETP8M1_13TeV_pythia8_B2GAnaFW_V1p1_80x_Slim_V3/*/0000/*.root")
 
 	#80X V2.4 36420 pb-1
 	if string == 'data':
-		files = glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016B-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_200136/0000/*.root")
-		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016C-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_200613/0000/*.root")
-		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016D-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_201042/0000/*.root")
-		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016E-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_202518/0000/*.root")
-		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016F-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_202748/0000/*.root")
-		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016G-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_203648/0000/*.root")
-		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016H-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170214_204048/0000/*.root")
-		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016HV2-23Sep2016-v3_B2GAnaFW_80X_Slim_V9/170215_183239/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016B-23Sep2016-v3_B2GAnaFW_80X_V2p3_Slim_V11/170611_183123/0000/*.root")
+		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016C-23Sep2016-v1_B2GAnaFW_80X_V2p3_Slim_V11/170611_190801/0000/*.root")
+		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016D-23Sep2016-v1_B2GAnaFW_80X_V2p3_Slim_V11/170616_154147/0000/*.root")
+		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016E-23Sep2016-v1_B2GAnaFW_80X_V2p3_Slim_V11/170611_194831/0000/*.root")
+		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016F-23Sep2016-v1_B2GAnaFW_80X_V2p3_Slim_V11/170611_194922/0000/*.root")
+		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016G-23Sep2016-v1_B2GAnaFW_80X_V2p3_Slim_V11/170611_195021/0000/*.root")
+		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016H-PromptReco-v2_B2GAnaFW_80X_V2p3_Slim_V11/170611_195055/0000/*.root")
+		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016H-PromptReco-v3_B2GAnaFW_80X_V2p3_Slim_V11/170611_200625/0000/*.root")
 
 	#80X V2.4
 	if string == 'signalRH1200':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-1200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalRH1400':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-1400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalRH1600':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-1600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalRH1800':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-1800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalRH2000':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2000_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2000_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-2000_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalRH2200':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-2200_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalRH2400':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-2400_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalRH2600':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-2600_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalRH2800':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-2800_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalRH3000':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-3000_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-3000_RH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-3000_RH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 
 	#80X V2.4
 	if string == 'signalLH1200':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-1200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p5_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalLH1400':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-1400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalLH1600':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1600_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1600_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-1600_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalLH1800':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-1800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-1800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalLH2000':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2000_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2000_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-2000_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalLH2200':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-2200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalLH2400':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-2400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalLH2600':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2600_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2600_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-2600_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalLH2800':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-2800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-2800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-2800_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p5_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalLH3000':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_BstarToTW_M-3000_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-3000_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-3000_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 
 
 
 	#80X 2.4 (CURRENTLY tW and tWB need to be rerun on slim level)
-	if string == 'singletop_s':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_B2GAnaFW_V2p4_80x_Slim_V7/170215_084815/0000/*.root")	
+	# if string == 'singletop_s':
+	# 	files = glob.glob("/eos/uscms/store/user/lcorcodi/crab_ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_B2GAnaFW_V2p4_80x_Slim_V7/170215_084815/0000/*.root")	
 	if string == 'singletop_t':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_ST_t-channel_top_4f_inclusiveDecays_TuneCUETP8M2T4_13TeV-powhegV2-madspin_B2GAnaFW_V2p4_80x_Slim_V7/170215_084815/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/ST_t-channel_top_4f_inclusiveDecays_TuneCUETP8M2T4_13TeV-powhegV2-madspin/crab_ST_t-channel_top_4f_inclusiveDecays_TuneCUETP8M2T4_13TeV-powhegV2-madspin_B2GAnaFW_V2p4_80x_Slim_V11/170611_062429/0000/*.root")
 	if string == 'singletop_tB':
-		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_ST_t-channel_antitop_4f_inclusiveDecays_TuneCUETP8M2T4_13TeV-powhegV2-madspin_B2G_V2p4_80x_Slim_V7/170215_085241/0000/*.root")
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/ST_t-channel_antitop_4f_inclusiveDecays_TuneCUETP8M2T4_13TeV-powhegV2-madspin/crab_ST_t-channel_antitop_4f_inclusiveDecays_TuneCUETP8M2T4_-powhegV2-madspin_B2GAnaFW_V2p4_80x_Slim_V11/170611_064940/0000/*.root")
 	if string == 'singletop_tWB':
-		files = glob.glob('root://cmsxrootd.fnal.gov//store/group/phys_b2g/B2GAnaFW_80X_V2p4/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/RunIISummer16MiniAODv2/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/170124_204058/0000/*.root')
+		files = glob.glob('/eos/uscms/store/user/lcorcodi/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/crab_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4_B2GAnaFW_V2p4_80x_Slim_V11/170621_025901/0000/*.root')
 	if string == 'singletop_tW':
-		files = glob.glob('root://cmsxrootd.fnal.gov//store/group/phys_b2g/B2GAnaFW_80X_V2p4/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/RunIISummer16MiniAODv2/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/170124_204154/0000/B2GEDMNtuple_1.root')
-	#if string == 'singletop_tW':
-	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples//*/0000/*.root")
-	#if string == 'singletop_tWB':
-	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples//*/0000/*.root")
+		files = glob.glob('/eos/uscms/store/user/lcorcodi/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/crab_ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4_B2GAnaFW_V2p4_80x_Slim_V11/170612_200620/0000/*.root')
+
 
 
 
@@ -307,16 +364,16 @@ def BTR_Init(ST,CUT,di,setval):
 		TRBPE1.seek(0)
 		TRBPE2 = open("./"+di+"fitdata/bpinput"+setval+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit = TF1("eta1fit",BifPoly,0,2000,5)
-		eta2fit = TF1("eta2fit",BifPoly,0,2000,5)
+		eta1fit = TF1("eta1fit",BifPoly,0,4000,5)
+		eta2fit = TF1("eta2fit",BifPoly,0,4000,5)
 		Params = 5
 	if ST == 'Bifpoly_err':
 		TRBPE1 = open("./"+di+"fitdata/bperrorinput"+setval+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
 		TRBPE2 = open("./"+di+"fitdata/bperrorinput"+setval+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit=TF1("eta1fit",BifPolyErr,0,2000,10)
-		eta2fit=TF1("eta2fit",BifPolyErr,0,2000,10)
+		eta1fit=TF1("eta1fit",BifPolyErr,0,4000,10)
+		eta2fit=TF1("eta2fit",BifPolyErr,0,4000,10)
 		Params = 10
 
 	if ST == 'pol0':
@@ -377,65 +434,68 @@ def BTR_Init(ST,CUT,di,setval):
 
 #This is a poorly written function, but I cant think of a better way to do this 
 #It works, but you should be able to just have one input
-def TTR_Init(ST,CUT,SET,di):
+def TTR_Init(ST,CUT,SET,RATE,di):
+	rateFolder = ''
+	if RATE != 'tpt':
+		rateFolder = RATE + '/'
 	if ST == 'Bifpoly':
-		TRBPE1 = open(di+"fitdata/bpinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"bpinput"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/bpinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"bpinput"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit = TF1("eta1fit",BifPoly,0,2000,5)
-		eta2fit = TF1("eta2fit",BifPoly,0,2000,5)
+		eta1fit = TF1("eta1fit",BifPoly,0,4000,5)
+		eta2fit = TF1("eta2fit",BifPoly,0,4000,5)
 		Params = 5
 	if ST == 'Bifpoly_err':
-		TRBPE1 = open(di+"fitdata/bperrorinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"bperrorinput"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/bperrorinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"bperrorinput"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit=TF1("eta1fit",BifPolyErr,0,2000,10)
-		eta2fit=TF1("eta2fit",BifPolyErr,0,2000,10)
+		eta1fit=TF1("eta1fit",BifPolyErr,0,4000,10)
+		eta2fit=TF1("eta2fit",BifPolyErr,0,4000,10)
 		Params = 10
 
 	if ST == 'pol0':
-		TRBPE1 = open(di+"fitdata/pol0input"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol0input"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/pol0input"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol0input"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit = TF1("eta1fit",'pol0',0,2000)
-		eta2fit = TF1("eta2fit",'pol0',0,2000)
+		eta1fit = TF1("eta1fit",'pol0',0,4000)
+		eta2fit = TF1("eta2fit",'pol0',0,4000)
 		Params = 1
 
 	if ST == 'pol2':
-		TRBPE1 = open(di+"fitdata/pol2input"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol2input"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/pol2input"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol2input"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit = TF1("eta1fit",'pol2',0,2000)
-		eta2fit = TF1("eta2fit",'pol2',0,2000)
+		eta1fit = TF1("eta1fit",'pol2',0,4000)
+		eta2fit = TF1("eta2fit",'pol2',0,4000)
 		Params = 3
 
 	if ST == 'pol3':
-		TRBPE1 = open(di+"fitdata/pol3input"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol3input"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/pol3input"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol3input"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit = TF1("eta1fit",'pol3',0,2000)
-		eta2fit = TF1("eta2fit",'pol3',0,2000)
+		eta1fit = TF1("eta1fit",'pol3',0,4000)
+		eta2fit = TF1("eta2fit",'pol3',0,4000)
 		Params = 4
 	if ST == 'FIT':
-		TRBPE1 = open(di+"fitdata/newfitinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"newfitinput"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/newfitinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"newfitinput"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit = TF1("eta1fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,2000)
-		eta2fit = TF1("eta2fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,2000)
+		eta1fit = TF1("eta1fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,4000)
+		eta2fit = TF1("eta2fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,4000)
 		Params = 4
 	if ST == 'expofit':
-		TRBPE1 = open(di+"fitdata/expoconinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"expoconinput"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/expoconinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"expoconinput"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit = TF1("eta1fit",'expo(0) + pol0(2)',0,2000)
-		eta2fit = TF1("eta2fit",'expo(0) + pol0(2)',0,2000)
+		eta1fit = TF1("eta1fit",'expo(0) + pol0(2)',0,4000)
+		eta2fit = TF1("eta2fit",'expo(0) + pol0(2)',0,4000)
 		Params = 3
 	if ST == 'QUAD':
 		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
@@ -478,11 +538,16 @@ def bkg_weight_pt(vector, funcs, etabins):
 			tagratept = funcs[ibin].Eval(vector.Perp())		
 	return tagratept
 
-def bkg_weight_mass(event, funcs, etabins):
+def bkg_weight_mass(vector, funcs, etabins):
 	if (etabins[0] <= abs(vector.Eta()) < etabins[1]) :
 		tagratetmass = funcs[0].Eval(vector.M())		
 	return tagratetmass
 
+def bkg_weight_twmass(vector, MtopW, funcs, etabins):
+	for ibin in range(0,len(etabins)):
+		if (etabins[ibin][0] <= abs(vector.Eta()) < etabins[ibin][1]) :
+			tagratetwmass = funcs[ibin].Eval(MtopW)		
+	return tagratetwmass
 
 #This is the bifurcated polynomial function and its associated uncertainty 
 def BifPoly( x, p ):
@@ -549,24 +614,28 @@ def Trigger_Pass(tnamestr,trigs,bits):
 				return True
 	return False
 
-#This looks up the ttbar pt reweighting scale factor 
+#This looks up the ttbar pt reweighting scale factor when making ttrees
 def PTW_Lookup( GP ):
 		genTpt = -100.
 		genTBpt = -100	
 		for ig in GP :
-			isT = ig.pdgId() == 6 and ig.status() == 3
-			isTB = ig.pdgId() == -6 and ig.status() == 3
+			isT = ig.pdgId() == 6 and ig.status() == 22
+			isTB = ig.pdgId() == -6 and ig.status() == 22
 			if isT:
-				genTpt = ig.Perp()
+				genTpt = ig.pt()
 			if isTB:
-				genTBpt = ig.Perp()	
+				genTBpt = ig.pt()	
 		if (genTpt<0) or (genTBpt<0):
 			print "ERROR"
 
-		wTPt = exp(0.156-0.00137*genTpt)
-		wTbarPt = exp(0.156-0.00137*genTBpt)
+		# wTPt = exp(0.156-0.00137*genTpt)
+		# wTbarPt = exp(0.156-0.00137*genTBpt)
+
+		wTPt = exp(0.0615-0.0005*genTpt)
+		wTbarPt = exp(0.0615-0.0005*genTBpt)
 		return sqrt(wTPt*wTbarPt)
 
+ 
  
 def Hemispherize(LV1,LV2):
 	tjets = [[],[]]
@@ -690,25 +759,25 @@ def variableBins (TF1plot, newNumberOfBins):
 	for ibin in range(oldMaxBin,oldLeastBin-1,-1):
 		val = TF1plot.GetBinContent(ibin)
 		if len(finalBins) == newNumberOfBins-1:
-			# print "on final bin"
+			print "on final bin"
 			finalBins.append(TF1plot.GetBinLowEdge(oldLeastBin))
-			# print "Bin we're in: " + str(newBinIndex)
+			print "Bin we're in: " + str(newBinIndex)
 			newBinIndex-=1
 			continue
 		if totalNewBinVal + val < newEventsPerBin[newBinIndex]:
 			totalNewBinVal += val
 		elif (totalNewBinVal + val) < (newEventsPerBin[newBinIndex] + val/2):
-			# print "adding bin: " + 	str(TF1plot.GetBinLowEdge(ibin))
-			# print "totalNewBinVal = " + str(totalNewBinVal+val)	
+			print "adding bin: " + 	str(TF1plot.GetBinLowEdge(ibin))
+			print "totalNewBinVal = " + str(totalNewBinVal+val)	
 			finalBins.append(TF1plot.GetBinLowEdge(ibin))
-			# print "Bin we're in: " + str(newBinIndex)
+			print "Bin we're in: " + str(newBinIndex)
 			newBinIndex-=1
 			totalNewBinVal = 0
 		elif (totalNewBinVal + val) > (newEventsPerBin[newBinIndex] + val/2):
-			# print "going back one and adding: " + 	str(TF1plot.GetBinLowEdge(ibin+1))
-			# print "totalNewBinVal = " + str(totalNewBinVal) + "instead of " + str(totalNewBinVal+val)	
+			print "going back one and adding: " + 	str(TF1plot.GetBinLowEdge(ibin+1))
+			print "totalNewBinVal = " + str(totalNewBinVal) + "instead of " + str(totalNewBinVal+val)	
 			finalBins.append(TF1plot.GetBinLowEdge(ibin+1))
-			# print "Bin we're in: " + str(newBinIndex)	
+			print "Bin we're in: " + str(newBinIndex)	
 			newBinIndex-=1
 			totalNewBinVal = 0
 

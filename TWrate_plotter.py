@@ -19,12 +19,15 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
                   default	=	'rate_default',
                   dest		=	'cuts',
                   help		=	'Cuts type (ie default, rate, etc)')
-
+parser.add_option('-r', '--rate', metavar='F', type='string', action='store',
+				  default	=	'tpt',
+				  dest		=	'rate',
+				  help		=	'tpt, Mt, Mtw')
 (options, args) = parser.parse_args()
 
 rootdir="rootfiles/"
-import Bstar_Functions_local	
-from Bstar_Functions_local import *
+import Bstar_Functions	
+from Bstar_Functions import *
 
 Cons = LoadConstants()
 
@@ -42,13 +45,13 @@ elif options.set=='data':
 gROOT.Macro("rootlogon.C")
 #gROOT.LoadMacro("insertlogo.C+")
 
-TTR = TTR_Init('Bifpoly',options.cuts,options.set,'')
-TTR_err = TTR_Init('Bifpoly_err',options.cuts,options.set,'')
+TTR = TTR_Init('Bifpoly',options.cuts,options.set,options.rate,'')
+TTR_err = TTR_Init('Bifpoly_err',options.cuts,options.set,options.rate,'')
 
 fittitles = ["pol0","pol2","pol3","FIT","expofit"]
 fits = []
 for fittitle in fittitles:
-	fits.append(TTR_Init(fittitle,options.cuts,options.set,''))
+	fits.append(TTR_Init(fittitle,options.cuts,options.set,options.rate,''))
 
 leg1 = TLegend(0.45,0.57,.84,.78)
 leg1.SetFillColor(0)
@@ -259,7 +262,7 @@ if options.set=='data':
 
 gPad.SetLeftMargin(0.16)
 
-# Numerator and deneminator plots
+# Numerator and denominator plots
 stack1.Add( probeeta1st, "Hist" )
 stack1.Add( probeeta1mc, "Hist" )
 stack1.Add( probeeta1data, "Hist" )
@@ -306,8 +309,8 @@ prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (
 c1.cd(6)
 gPad.SetLeftMargin(0.16)
 
-c1.Print("tagrates.png",'png')
-c1.Print("tagrates_root.root",'root')
+c1.Print("plots/"+options.cuts+"/tagrates.png",'png')
+c1.Print("plots/"+options.cuts+"tagrates.root",'root')
 
 
 
@@ -383,9 +386,26 @@ etastring = [
 '0.80 < |#eta| < 2.40'
 ]
 
+if options.set == 'data':
+	plotTitle1 = 'Data'
+elif options.set == 'QCD':
+	plotTitle1 = 'QCD MC'
+if options.cuts == 'rate_default':
+	plotTitle2 = 'Signal Region'
+elif options.cuts == 'rate_sideband':
+	plotTitle2 = 'Sideband Region'
+elif options.cuts == 'rate_sideband1':
+	plotTitle2 = 'High W Mass Region'
+
 for eta in range(0,2):
 	print eta
-	trs[eta].SetTitle(';p_{T} (GeV);Average t-tagging rate')
+	if eta == 0:
+		etaRegion = 'Low Eta'
+	elif eta == 1:
+		etaRegion = 'High Eta'
+	trs[eta].SetTitle('Derived from ' + plotTitle1 + ' - Applied to ' + plotTitle2 + ' - ' + etaRegion)
+	trs[eta].GetXaxis().SetTitle('p_{T} (GeV)')
+	trs[eta].GetYaxis().SetTitle('R_{P/F}')
 	trs[eta].GetYaxis().SetTitleOffset(0.8)
 	trs[eta].SetMaximum(0.20)
 	trs[eta].SetMinimum(0.0)
@@ -414,7 +434,7 @@ for eta in range(0,2):
 	c4.Print('plots/'+options.cuts+'/tagrateeta'+str(eta+1)+options.set+'fitBP.png', 'png')
 
 	for ifit in range(0,len(fits)):
-		trs[eta].SetTitle(';p_{T} (GeV);Average t-tagging rate')
+		trs[eta].SetTitle(';p_{T} (GeV);R_{P/F}')
 		trs[eta].GetYaxis().SetTitleOffset(0.8)
 		trs[eta].SetMaximum(0.20)
 		trs[eta].SetMinimum(0.0)

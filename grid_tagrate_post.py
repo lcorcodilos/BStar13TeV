@@ -36,18 +36,25 @@ Lumi = str(int(cLumi))+'pb'
 #lumiList = [1000, 5000, 10000]
 #Lumi = ['1fb', '5fb', '10fb']
 
+
+#if options.cuts.find('default') != -1:
+#	wtagsf = Cons['wtagsf_HP']
+#	wtagsfsig = Cons['wtagsfsig_HP']
+#elif options.cuts.find('sideband') != -1:
+wtagsf = Cons['wtagsf_LP']
+wtagsfsig = Cons['wtagsfsig_LP']
 xsec_bsr = Cons['xsec_bsr']
 xsec_bsl = Cons['xsec_bsl']
 xsec_ttbar = Cons['xsec_ttbar']
 xsec_qcd = Cons['xsec_qcd']
 xsec_st = Cons['xsec_st']
 xsec_bpl = Cons['xsec_bpl']
-nev_bsr = Cons['nev_bsr']
-nev_bsl = Cons['nev_bsl']
-nev_ttbar = Cons['nev_ttbar']
-nev_qcd = Cons['nev_qcd']
-nev_st = Cons['nev_st']
-nev_bpl = Cons['nev_bpl']
+#nev_bsr = Cons['nev_bsr']
+#nev_bsl = Cons['nev_bsl']
+#nev_ttbar = Cons['nev_ttbar']
+#nev_qcd = Cons['nev_qcd']
+#nev_st = Cons['nev_st']
+#nev_bpl = Cons['nev_bpl']
 
 
 files = sorted(glob.glob("*job*of*.root"))
@@ -103,11 +110,11 @@ commands.append('mv TWratefileQCD_PSET_'+cuts+'.root rootfiles/'+Lumi+'/')
 
 # Singletop
 commands.append('rm rootfiles/'+Lumi+'/TWratefilesingletop_*_PSET_'+cuts+'.root')
-commands.append('python HistoWeight.py -i TWratefilesingletop_s_PSET_'+cuts+'.root -o TWratefilesingletop_s_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_st['S']))
+#commands.append('python HistoWeight.py -i TWratefilesingletop_s_PSET_'+cuts+'.root -o TWratefilesingletop_s_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_st['S']))
 commands.append('python HistoWeight.py -i TWratefilesingletop_t_PSET_'+cuts+'.root -o TWratefilesingletop_t_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_st['T']))
 commands.append('python HistoWeight.py -i TWratefilesingletop_tB_PSET_'+cuts+'.root -o TWratefilesingletop_tB_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_st['TB']))
-#commands.append('python HistoWeight.py -i TWratefilesingletop_tW_PSET_'+cuts+'.root -o TWratefilesingletop_tW_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_st['TW']))
-#commands.append('python HistoWeight.py -i TWratefilesingletop_tWB_PSET_'+cuts+'.root -o TWratefilesingletop_tWB_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_st['TWB']))
+commands.append('python HistoWeight.py -i TWratefilesingletop_tW_PSET_'+cuts+'.root -o TWratefilesingletop_tW_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_st['TW']))
+commands.append('python HistoWeight.py -i TWratefilesingletop_tWB_PSET_'+cuts+'.root -o TWratefilesingletop_tWB_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_st['TWB']))
 commands.append('hadd TWratefilesingletop_PSET_'+cuts+'.root TWratefilesingletop_*_PSET_'+cuts+'weighted.root')
 commands.append('mv TWratefilesingletop_*_PSET_'+cuts+'weighted.root rootfiles/'+Lumi+'/')
 commands.append('mv TWratefilesingletop_*_PSET_'+cuts+'.root temprootfiles/')
@@ -136,7 +143,7 @@ for coup in ['LH','RH']:
 		elif coup == 'LH':
 			xsec_sig = xsec_bsl[mass]
 		commands.append('rm ' + f.replace('TWratefilesignal'+coup,'TWratefileweightedsignal'+coup))	 
-		commands.append('python HistoWeight.py -i '+f+' -o '+f.replace('TWratefilesignal'+coup,'TWratefileweightedsignal'+coup)+' -n auto -w ' + str(cLumi*xsec_sig))
+		commands.append('python HistoWeight.py -i '+f+' -o '+f.replace('TWratefilesignal'+coup,'TWratefileweightedsignal'+coup)+' -n auto -w ' + str(wtagsf*cLumi*xsec_sig))
 		commands.append('mv '+f+' temprootfiles/')
 		commands.append('mv '+f.replace('TWratefilesignal'+coup,'TWratefileweightedsignal'+coup)+' rootfiles/'+Lumi+'/')
 for s in commands :

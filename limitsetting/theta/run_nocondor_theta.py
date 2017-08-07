@@ -43,6 +43,8 @@ commands1= [
     'rm analysis.tgz',
     'cp ' + options.file + ' ./analysis.py',
     './utils2/theta-auto.py',
+    'mkdir ' + options.uidir,
+    'cp -r analysis ' + options.uidir
 ] 
 
 

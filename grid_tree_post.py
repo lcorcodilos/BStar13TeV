@@ -55,7 +55,7 @@ xsec_bpl = Cons['xsec_bpl']
 
 files = sorted(glob.glob("*job*of*.root"))
 
-filestr = ['none','pileup_up','pileup_down','JES_up','JES_down','JER_up','JER_down']
+filestr = ['none','pileup_up','pileup_down','JES_up','JES_down','JER_up','JER_down','JMS_up','JMS_down','JMR_up','JMR_down']
 
 j = []
 for f in files:
@@ -101,13 +101,13 @@ commands.append('mv TWtreefile_QCDHT*_Trigger_nominal_none.root TTrees/')
 
 
 # Singletop
-commands.append('rm TTrees/TWtreefile_singletop_*_Trigger_nominal_none.root')
+commands.append('rm TTrees/TWtreefile_singletop_*_Trigger_nominal_*.root')
 #commands.append('python HistoWeight.py -i TWtreefile_singletop_s_Trigger_nominal_none.root -o TTrees/TWtreefile_singletop_s_Trigger_nominal_none_weighted.root -n auto -w ' + str(cLumi*xsec_st['S']))
 #commands.append('python HistoWeight.py -i TWtreefile_singletop_t_Trigger_nominal_none.root -o TTrees/TWtreefile_singletop_t_Trigger_nominal_none_weighted.root -n auto -w ' + str(cLumi*xsec_st['T']))
 #commands.append('python HistoWeight.py -i TWtreefile_singletop_tB_Trigger_nominal_none.root -o TTrees/TWtreefile_singletop_tB_Trigger_nominal_none_weighted.root -n auto -w ' + str(cLumi*xsec_st['TB']))
 #commands.append('python HistoWeight.py -i TWtreefile_singletop_tW.root -o TWtreefile_singletop_tWweighted.root -n auto -w ' + str(cLumi*xsec_st['TW']))
 #commands.append('python HistoWeight.py -i TWtreefile_singletop_tWB.root -o TWtreefile_singletop_tWBweighted.root -n auto -w ' + str(cLumi*xsec_st['TWB']))
-commands.append('mv TWtreefile_singletop_*_Trigger_nominal_none.root TTrees/')
+commands.append('mv TWtreefile_singletop_*_Trigger_nominal_*.root TTrees/')
 #commands.append('mv TWtreefile_singletop_*_Trigger_nominal_none.root tempTTrees/')
 
 # Data

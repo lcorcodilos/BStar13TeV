@@ -1,5 +1,5 @@
 #sed -i 's/(model, 0)/(model, 1)/g' analysis_bsright_Combination.py 
-#sed -i 's/(model, 0)/(model, 1)/g' analysis_bsright_AllHad.py
+sed -i 's/(model, 0)/(model, 1)/g' analysis_bsright_AllHad.py
 #sed -i 's/(model, 0)/(model, 1)/g' analysis_bsright_Semilep.py
 #sed -i 's/(model, 0)/(model, 1)/g' analysis_bsright_dilep.py 
 
@@ -9,7 +9,7 @@ sed -i 's/(model, 0)/(model, 1)/g' analysis_bsleft_AllHad.py
 #sed -i 's/(model, 0)/(model, 1)/g' analysis_bsleft_dilep.py 
 
 #sed -i 's/(model, 0)/(model, 1)/g' analysis_bsvector_Combination.py 
-#sed -i 's/(model, 0)/(model, 1)/g' analysis_bsvector_AllHad.py
+sed -i 's/(model, 0)/(model, 1)/g' analysis_bsvector_AllHad.py
 #sed -i 's/(model, 0)/(model, 1)/g' analysis_bsvector_Semilep.py
 #sed -i 's/(model, 0)/(model, 1)/g' analysis_bsvector_dilep.py 
 
@@ -29,12 +29,12 @@ sed -i 's/(model, 0)/(model, 1)/g' analysis_bsleft_AllHad.py
 #python run_postprocess_theta.py --file=analysis_bsvector_Combination.py
 #cd ../
 
-#mkdir analysis_bstar_right_had/ 
-#cp BStarCombinationHistos_Right_Allhadronic.root analysis_bstar_right_had/
-#cd analysis_bstar_right_had/
-#cp ../run_postprocess_theta.py ./
-#python run_postprocess_theta.py --file=analysis_bsright_AllHad.py
-#cd ../
+
+cp BStarCombinationHistos_Right_Allhadronic.root analysis_bstar_right_had/
+cd analysis_bstar_right_had/
+cp ../run_postprocess_theta.py ./
+python run_postprocess_theta.py --file=analysis_bsright_AllHad.py
+cd ../
 
 cp BStarCombinationHistos_Left_Allhadronic.root analysis_bstar_left_had/
 cd analysis_bstar_left_had/ 
@@ -42,10 +42,11 @@ cp ../run_postprocess_theta.py ./
 python run_postprocess_theta.py --file=analysis_bsleft_AllHad.py
 cd ../
 
-#cd analysis_bstar_vector_had/ 
-#cp ../run_postprocess_theta.py ./
-#python run_postprocess_theta.py --file=analysis_bsvector_AllHad.py
-#cd ../
+cp BStarCombinationHistos_Vector_Allhadronic.root analysis_bstar_vector_had/
+cd analysis_bstar_vector_had/ 
+cp ../run_postprocess_theta.py ./
+python run_postprocess_theta.py --file=analysis_bsvector_AllHad.py
+cd ../
 
 
 #cd analysis_bstar_right_semilep/ 

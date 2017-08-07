@@ -28,13 +28,17 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
                   dest		=	'cuts',
                   help		=	'Cuts type (ie default, rate, etc)')
 parser.add_option('-l', '--lumi', metavar='F', type='string', action='store',
-                  default	=	'36420pb',
+                  default	=	'35851pb',
                   dest		=	'lumi',
                   help		=	'Lumi folder to look in')
 parser.add_option('-x', '--pileup', metavar='F', type='string', action='store',
                   default	=	'on',
                   dest		=	'pileup',
                   help		=	'If not data do pileup reweighting?')
+parser.add_option('-u', '--ptreweight', metavar='F', type='string', action='store',
+				  default	=	'on',
+				  dest		=	'ptreweight',
+				  help		=	'on or off')
 parser.add_option('-b', '--blinded', metavar='F', type='string', action='store',
                   default	=	'off',
                   dest		=	'blinded',
@@ -67,21 +71,21 @@ Lumi = options.lumi
 
 pie = TMath.Pi()
 
-kinVar = ['Mtw', 	'EtaTop', 	'EtaW', 	'PtTop', 	'PtW', 		'PtTopW', 	'PhiTop', 	'PhiW', 	'dPhi']
-kinBkg = ['', 		'ET', 		'EW', 		'PT', 		'PW', 		'PTW', 		'PhT', 		'PhW', 		'dPhi']
-kinBin = [140, 		12, 		12, 		50, 		50,		35,		12,		12,		12    ]
-kinLow = [500, 		-2.4, 		-2.4, 		450, 		370,		0,		-pie,		-pie,		2.2   ]
-kinHigh= [4000, 	2.4, 		2.4, 		1500, 		1430,		700,		pie,		pie,		pie   ]
-rebin =  [4,		 1,		 1, 		 2,		 2,		 1,		 1,		 1,		 1    ]
-st1_label= [";M_{tw} (GeV);Counts", ";Eta_{t} (rad);Counts", ";Eta_{W} (rad);Counts", ";Pt_{t} (GeV);Counts", ";Pt_{W} (GeV);Counts", ";Pt_{tW} (GeV);Counts", ";Phi_{t} (rad)", ";Phi_{W} (rad);Counts", ";Delta Phi (rad);Counts"]
-pull_label= [";M_{tw} (GeV);(Data-Bkg)/#sigma", ";Eta_{t} (rad);(Data-Bkg)/#sigma", ";Eta_{W} (rad);(Data-Bkg)/#sigma", ";Pt_{t} (GeV);(Data-Bkg)/#sigma", ";Pt_{W} (GeV);(Data-Bkg)/#sigma", ";Pt_{tW} (GeV);(Data-Bkg)/#sigma", ";Phi_{t} (rad)", ";Phi_{W} (rad);(Data-Bkg)/#sigma", ";Delta Phi (rad);(Data-Bkg)/#sigma"]
+kinVar = ['Mtw', 	'EtaTop', 	'EtaW', 	'PtTop', 	'PtW', 		'PtTopW', 	'PhiTop', 	'PhiW', 	'dPhi',		'Mt']
+kinBkg = ['', 		'ET', 		'EW', 		'PT', 		'PW', 		'PTW', 		'PhT', 		'PhW', 		'dPhi',		'Mt']
+kinBin = [140, 		12, 		12, 		50, 		50,			35,			12,			12,			12,			25    ]
+kinLow = [500, 		-2.4, 		-2.4, 		450, 		370,		0,		   -pie,		-pie,		2.2,		105   ]
+kinHigh= [4000, 	2.4, 		2.4, 		1500, 		1430,		700,		pie,		pie,		pie,		210   ]
+rebin =  [4,		 1,		 	1, 		 	2,		 	2,		 	1,		 	1,			 1,		 	1,			1    ]
+st1_label= [";M_{tw} (GeV);Counts", ";Eta_{t} (rad);Counts", ";Eta_{W} (rad);Counts", ";top p_{T} (GeV);Counts", ";W p_{T} (GeV);Counts", ";tW pair p_{T} (GeV);Counts", ";Phi_{t} (rad)", ";Phi_{W} (rad);Counts", ";Delta Phi (rad);Counts", ";M_{t} (Gev);Counts"]
+pull_label= [";M_{tw} (GeV);(Data-Bkg)/#sigma", ";Eta_{t} (rad);(Data-Bkg)/#sigma", ";Eta_{W} (rad);(Data-Bkg)/#sigma", ";top p_{T} (GeV);(Data-Bkg)/#sigma", ";W p_{T} (GeV);(Data-Bkg)/#sigma", ";tW pair p_{T} (GeV);(Data-Bkg)/#sigma", ";Phi_{t} (rad)", ";Phi_{W} (rad);(Data-Bkg)/#sigma", ";Delta Phi (rad);(Data-Bkg)/#sigma", ";M_{t} (GeV);(Data-Bkg)/#sigma"]
 
 if options.var == 'analyzer':
 	iterations = 1
 	kin = ''
 elif options.var == 'kinematics':
 	iterations = len(kinVar)
-	kin = '_kin'
+	kin = ''
 else:
 	print "Error in var option"
 	quit()
@@ -89,6 +93,10 @@ else:
 pustr = 'none'
 if options.pileup == 'off':
 	pustr = 'pileup_unweighted'
+
+ptString = ''
+if options.ptreweight == 'off':
+	ptString = '_ptreweight_off'
 
 mmstr = ""
 if options.modmass!="nominal":
@@ -101,7 +109,7 @@ else:
 	sBlind = ''
 
 if options.cuts == 'default' and options.var == 'analyzer':
-	mod = ['none','pileup_up','pileup_down','JES_up','JES_down','JER_up','JER_down']
+	mod = ['none','pileup_up','pileup_down','JES_up','JES_down','JER_up','JER_down','none_pdf_up','none_pdf_down']
 else:
 	mod = ['none']
 #string lists for naming
@@ -110,7 +118,6 @@ SR2800sList = []
 SR2000sList = []
 TTmcsList = []
 for m in mod:
-
 	SR1200sList.append("rootfiles/"+Lumi+"/TWanalyzerweightedsignalRH1200_Trigger_nominal_"+m+mmstr+"_PSET_"+options.cuts+kin+".root")
 	SR2800sList.append("rootfiles/"+Lumi+"/TWanalyzerweightedsignalRH2800_Trigger_nominal_"+m+mmstr+"_PSET_"+options.cuts+kin+".root")
 	SR2000sList.append("rootfiles/"+Lumi+"/TWanalyzerweightedsignalRH2000_Trigger_nominal_"+m+mmstr+"_PSET_"+options.cuts+kin+".root")
@@ -122,7 +129,11 @@ for m in mod:
 	#BPT1400sList.append("rootfiles/"+Lumi+"/TWanalyzerBprimeTToTW1400_Trigger_nominal_"+m+mmstr+"_PSET_"+options.cuts+kin+"weighted.root")
 	#BPT1600sList.append("rootfiles/"+Lumi+"/TWanalyzerBprimeTToTW1600_Trigger_nominal_"+m+mmstr+"_PSET_"+options.cuts+kin+"weighted.root")
 	#BPT1800sList.append("rootfiles/"+Lumi+"/TWanalyzerBprimeTToTW1800_Trigger_nominal_"+m+mmstr+"_PSET_"+options.cuts+kin+"weighted.root")
-	TTmcsList.append("rootfiles/"+Lumi+"/TWanalyzer"+"weightedttbar_Trigger_nominal_"+m+mmstr+"_PSET_"+options.cuts+kin+".root")
+	if m == 'none':
+		TTmcsList.append("rootfiles/"+Lumi+"/TWanalyzer"+"weightedttbar_Trigger_nominal_"+m+mmstr+"_PSET_"+options.cuts+ptString+kin+".root")
+	else:
+		TTmcsList.append("rootfiles/"+Lumi+"/TWanalyzer"+"weightedttbar_Trigger_nominal_"+m+mmstr+"_PSET_"+options.cuts+kin+".root")
+
 
 #Make root file lists by pulling from string lists
 SR1200fList = []
@@ -142,9 +153,9 @@ for i in range(len(TTmcsList)):
 	TTmcfList.append(ROOT.TFile(TTmcsList[i]))
 
 #Have to also put the two extra ttbar files in TTmcfList
-#if options.cuts == 'default' and options.var == 'analyzer':
-	#TTmcfList.append(ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+"weightedttbarscaleup_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root"))
-	#TTmcfList.append(ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+"weightedttbarscaledown_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root"))
+if options.cuts == 'default' and options.var == 'analyzer':
+	TTmcfList.append(ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+"weightedttbarscaleup_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root"))
+	TTmcfList.append(ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+"weightedttbarscaledown_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root"))
 
 
 Data = ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+options.set+"_Trigger_nominal_"+pustr+mmstr+"_PSET_"+options.cuts+kin+".root")
@@ -156,29 +167,28 @@ print "Root file opened"
 #---------For ttbar closure test, using MtStack-----------------------------------
 
 st2 = ROOT.THStack('st2','st2')
-MtStackData = Data.Get('MtStack')
-MtStackBE = Data.Get('QCDbkgMtStack')
-MtStackTTmc = TTmcfList[0].Get('MtStack')
-MtStackTTmcBE = TTmcfList[0].Get('QCDbkgMtStack')
+MtStackData = Data.Get('Mt')
+MtStackBE = Data.Get('QCDbkgMt')
+MtStackTTmc = TTmcfList[0].Get('Mt')
+MtStackTTmcBE = TTmcfList[0].Get('QCDbkgMt')
 
-MtStackData.Rebin(2)
-MtStackBE.Rebin(2)
-MtStackTTmc.Rebin(2)
+MtStackData.Rebin(1)
+MtStackBE.Rebin(1)
+MtStackTTmc.Rebin(1)
+MtStackTTmcBE.Rebin(1)
 
 cMtStack = TCanvas('MtStack', 'Top mass with Full selection', 700, 700)
-legend = TLegend(0.7, 0.6, 0.93, 0.9)
+legend = TLegend(0.7, 0.7, 0.93, 0.9)
 
 cMtStack.SetLeftMargin(0.16)
 cMtStack.SetRightMargin(0.05)
 cMtStack.SetTopMargin(0.13)
 cMtStack.SetBottomMargin(0.15)
 
-print "check1"
 MtStackBE.Add(MtStackTTmcBE,-1)
 
 MtStackBE.SetFillColor(kYellow)
 MtStackTTmc.SetFillColor(kRed)
-print "check2"
 st2.Add(MtStackBE)
 st2.Add(MtStackTTmc)
 
@@ -198,9 +208,9 @@ cMtStack.cd()
 
 legend.Draw()
 
-cMtStack.Print('rootfiles/'+Lumi+'/MtStack_'+Lumi+'_'+options.cuts+'.root')
-cMtStack.Print('rootfiles/'+Lumi+'/MtStack_'+Lumi+'_'+options.cuts+'.pdf')
-
+cMtStack.Print('rootfiles/'+Lumi+'/MtStack_'+Lumi+'_'+options.set+'_'+options.cuts+'.root')
+cMtStack.Print('rootfiles/'+Lumi+'/MtStack_'+Lumi+'_'+options.set+'_'+options.cuts+'.pdf')
+cMtStack.Print('rootfiles/'+Lumi+'/MtStack_'+Lumi+'_'+options.set+'_'+options.cuts+'.png')
 
 
 
@@ -215,7 +225,7 @@ for i in range(0, iterations):
 	st1 = ROOT.THStack('st1', 'st1')
 
 	if i == 0:
-		leg = TLegend(0.7, 0.6, 0.93, 0.9)
+		leg = TLegend(0.6, 0.55, 0.93, 0.9)
 	else:
 		leg = TLegend(0.0, 0.0, 1.0, 1.0)
 	leg.SetNColumns(1)
@@ -515,7 +525,7 @@ for i in range(0, iterations):
 	main.cd()
 
 
-	stop = ['singletop_s','singletop_t','singletop_tB']
+	stop = ['singletop_tW','singletop_tWB','singletop_t','singletop_tB']
 	sfiles = []
 	shists = []
 	ssubs = []
@@ -591,7 +601,7 @@ for i in range(0, iterations):
 		QCDMm=abs((DataBEMmup.GetBinContent(ibin)-DataBEMmdown.GetBinContent(ibin))/2)
 
 
-		QCDsys=sqrt(QCDfit1*QCDfit1 + QCDfit*QCDfit+QCDMm*QCDMm)#+ QCDfit2*QCDfit2)
+		QCDsys=sqrt(QCDMm*QCDMm+ QCDfit*QCDfit+ QCDfit1*QCDfit1) #+QCDfit2*QCDfit2)
 		QCDerror= sqrt(QCDstat*QCDstat+QCDsys*QCDsys)
 		TTerrorup=sqrt(TTstat*TTstat)
 		TTerrordown=sqrt(TTstat*TTstat)
@@ -607,6 +617,9 @@ for i in range(0, iterations):
 	#print "QCDfit2: " + str(QCDfit2)
 	print "QCDerror: " + str(QCDerror)
 	
+	print "DataQCDBEH: " + str(DataQCDBEH.Integral())
+	print "DataBE: " + str(DataBE.Integral())
+
 	print "QCD total error"
 	print (DataQCDBEH.Integral()-DataBE.Integral())/DataBE.Integral()
 	print 
@@ -630,16 +643,15 @@ for i in range(0, iterations):
 	
 	# Indexes of relevant histos in *FS
 	if options.cuts == 'default' and options.var == 'analyzer':
-		myIndexes = {'Pileup':[0,1,2],'JES':[0,3,4],'JER':[0,5,6], 'TSF':[0,7,8], 'Trig':[0,9,10],'Scale':[0,11,12]}
-		orderedKeys = ['Pileup','JES','JER','TSF','Trig','Scale']
+		myIndexes = {'Pileup':[0,1,2],'JES':[0,3,4],'JER':[0,5,6], 'PDF':[0,7,8], 'TSF':[0,9,10], 'Trig':[0,11,12], 'Scale':[0,13,14]}
+		orderedKeys = ['Pileup','JES','JER','PDF','TSF','Trig','Scale']
 		strSetList = ['SR1200', 'SR2800', 'SR2000', 'TTmc']#, 'BPT1200', 'BPT1400', 'BPT1600', 'BPT1800','BPB1200', 'BPB1400', 'BPB1600', 'BPB1800', 'BPT1200', 'BPT1400', 'BPT1600', 'BPT1800']
 		for selection in setList:
-#CHANGE BACK (4 lines)
-			#if selection == TTmcFS:
-			#	indexRange = (len(myIndexes))
-			#	print 'Index range changed to ' + str(indexRange)
-			#else:
-			indexRange = (len(myIndexes)-1)#indent back when changing back
+			if selection == TTmcFS:
+				indexRange = (len(myIndexes))
+				print 'Index range changed to ' + str(indexRange)
+			else:
+				indexRange = (len(myIndexes)-1)#indent back when changing back
 
 			for x in range(indexRange):
 				sSet =  strSetList[setList.index(selection)]
@@ -650,7 +662,7 @@ for i in range(0, iterations):
 				pad.SetLeftMargin(0.16)
 				pad.SetRightMargin(0.05)
 				pad.SetTopMargin(0.1)
-				pad.SetBottomMargin(0.1)
+				pad.SetBottomMargin(0.15)
 				pad.Draw()
 				pad.cd()
 
@@ -665,6 +677,10 @@ for i in range(0, iterations):
 
 				normal.SetLineColor(kRed)
 				normal.SetLineWidth(2)
+				normal.SetTitle(sSet+' - ' + sUncertainty)
+				normal.GetXaxis().SetTitle('M_{tW} (GeV)')
+				normal.GetYaxis().SetTitle('Counts')
+				normal.GetXaxis().SetNdivisions(50504)
 				up.SetLineColor(kBlue)
 				up.SetLineWidth(2)
 				down.SetLineColor(kGreen+1)
@@ -676,7 +692,7 @@ for i in range(0, iterations):
 				up.SetStats(0)
 				down.SetStats(0)
 
-				leg0.AddEntry( normal, "normal", 'L')
+				leg0.AddEntry( normal, "nominal", 'L')
 				leg0.AddEntry( up, "up", 'L')
 				leg0.AddEntry( down, "down", 'L')
 
@@ -710,7 +726,7 @@ for i in range(0, iterations):
 		QCDtagrate.SetLeftMargin(0.16)
 		QCDtagrate.SetRightMargin(0.05)
 		QCDtagrate.SetTopMargin(0.1)
-		QCDtagrate.SetBottomMargin(0.1)
+		QCDtagrate.SetBottomMargin(0.15)
 		QCDtagrate.Draw()
 		QCDtagrate.cd()
 	
@@ -732,6 +748,11 @@ for i in range(0, iterations):
 		DataBEh.SetMaximum(c2Max*1.1)
 		DataBEl.SetMaximum(c2Max*1.1)
 
+		DataBE.SetTitle("QCD - Fit uncertainty")
+		DataBE.GetXaxis().SetTitle('M_{tW} (GeV)')
+		DataBE.GetYaxis().SetTitle('Counts')
+		DataBE.GetXaxis().SetNdivisions(50504)
+
 		DataBE.Draw("samehist")
 		DataBEl.Draw("samehist")
 		DataBEh.Draw("samehist")
@@ -747,7 +768,7 @@ for i in range(0, iterations):
 		QCD2D.SetLeftMargin(0.16)
 		QCD2D.SetRightMargin(0.05)
 		QCD2D.SetTopMargin(0.1)
-		QCD2D.SetBottomMargin(0.1)
+		QCD2D.SetBottomMargin(0.15)
 		QCD2D.Draw()
 		QCD2D.cd()
 	
@@ -768,6 +789,11 @@ for i in range(0, iterations):
 		DataBE2d.SetMaximum(c3Max*1.1)
 		DataBE2dup.SetMaximum(c3Max*1.1)
 		DataBE2ddown.SetMaximum(c3Max*1.1)
+
+		DataBE2d.SetTitle("QCD - Parameterization")
+		DataBE2d.GetXaxis().SetTitle('M_{tW} (GeV)')
+		DataBE2d.GetYaxis().SetTitle('Counts')
+		DataBE2d.GetXaxis().SetNdivisions(50504)
 
 		DataBE2d.Draw("samehist")
 		DataBE2ddown.Draw("samehist")
@@ -793,7 +819,7 @@ for i in range(0, iterations):
 		QCDfit.SetLeftMargin(0.16)
 		QCDfit.SetRightMargin(0.05)
 		QCDfit.SetTopMargin(0.1)
-		QCDfit.SetBottomMargin(0.1)
+		QCDfit.SetBottomMargin(0.15)
 		QCDfit.Draw()
 		QCDfit.cd()
 	
@@ -813,6 +839,11 @@ for i in range(0, iterations):
 		QCDdown.SetMaximum(c4Max*1.1)
 		QCDup.SetMaximum(c4Max*1.1)
 
+		DataBE.SetTitle("QCD - Alternative fits")
+		# DataBE.GetXaxis().SetTitle('M_{tW} (GeV)')
+		# DataBE.GetYaxis().SetTitle('Counts')
+		# DataBE.GetXaxis().SetNdivisions(50504)
+
 		DataBE.Draw("samehist")
 		QCDdown.Draw("samehist")
 		QCDup.Draw("samehist")
@@ -827,7 +858,7 @@ for i in range(0, iterations):
 		QCDModMass.SetLeftMargin(0.16)
 		QCDModMass.SetRightMargin(0.05)
 		QCDModMass.SetTopMargin(0.1)
-		QCDModMass.SetBottomMargin(0.1)
+		QCDModMass.SetBottomMargin(0.15)
 		QCDModMass.Draw()
 		QCDModMass.cd()
 	
@@ -847,6 +878,8 @@ for i in range(0, iterations):
 		DataBEMmdown.SetMaximum(c5Max*1.1)
 		DataBEMmup.SetMaximum(c5Max*1.1)
 
+		DataBE.SetTitle('QCD - Top mass shape correction')
+
 		DataBE.Draw("samehist")
 		DataBEMmdown.Draw("samehist")
 		DataBEMmup.Draw("samehist")
@@ -861,6 +894,19 @@ for i in range(0, iterations):
 
 
 #---------------------- Resume -----------------------------------------------------
+
+	# How the error bars get plotted:
+	# The st1 stack gets drawn first and then the sigst stack gets drawn on top
+	# The sigst stack is the ttbar mc, the low QCD background estimate, and sigma (the error bars)
+	# which is derived by taking the difference between the high and low estiamates.
+	# In the generic applicaltion, this plotting method works because the ttbar mc looks
+	# identical at the bottom of both the st1 and sigst stacks.
+
+	# However, when ttbar is moved up a spot in the stacks, there's an issue because the 
+	# QCD estimates in the two different stacks are different. Thus, when plotting the Mt
+	# variable (whcih needs ttbar on top of the stack), the histograms added to the sigst
+	# stack need to be transparent. This maintains the position of the error bars while
+	# allowing the reader to see the nominal stack from st1.
 
 	main.cd()
 
@@ -898,13 +944,37 @@ for i in range(0, iterations):
 
 	sigma.Add(DataTOTALBEL,-1)
 	sigst.Add(singletop)
+
+
+	# ONLY WORKS WHEN RUN LOCALLY - I HAVE NO IDEA WHY
+	if kinVar[i] == 'Mt':
+		testHist = DataBE.Clone('testHist')
+		testHist.Add(TTmcFS[0])
+		testHist.Add(singletop)
+		for b in range(0,testHist.GetNbinsX()):
+			thisBinError = sigma.GetBinContent(b)/2
+			testHist.SetBinError(b, thisBinError)
+
+		myGraph = TGraphErrors(testHist)
+		print "bin width: " + str(testHist.GetBinWidth(1))
+		myGraph.SetFillStyle(3004)
+		myGraph.SetFillColor(1)
+
+
+		st1.Add(DataBE)
+		st1.Add(TTmcFS[0])
+	else:
+		st1.Add(TTmcFS[0])
+		st1.Add(DataBE)
+
 	sigst.Add(TTmcFS[0])
+	
 	sigst.Add(centerqcd)
 	sigst.Add(sigma)
 
 
-	st1.Add(TTmcFS[0])
-	st1.Add(DataBE)
+	
+	
 	#st1.Add(SR1200FS[0])
 	print "TT: " + str(TTmcFS[0].Integral())
 	print "Data: " + str(DataFS.Integral())
@@ -918,7 +988,11 @@ for i in range(0, iterations):
 	bkgline.SetFillStyle(0)
 
 	if options.blinded == 'off':
-		leg.AddEntry( DataFS, 'Data', 'P')
+		if options.set == 'data':
+			leg.AddEntry( DataFS, 'Data', 'P')
+		elif options.set == 'QCD':
+			leg.AddEntry( DataFS, 'QCD MC', 'P')
+
 	leg.AddEntry( DataBE, 'QCD background prediction', 'F')	
 	leg.AddEntry( TTmcFS[0], 't#bar{t} MC prediction', 'F')
 	leg.AddEntry( singletop, 'Single top quark MC prediction', 'F')
@@ -979,11 +1053,22 @@ for i in range(0, iterations):
 	st1.SetMaximum(DataTOTALBEH.GetMaximum() * 1.3)
 	st1.SetMinimum(0.1)
 	st1.SetTitle(st1_label[i])
+	if kinVar[i] == 'Mtw':
+		if options.set == 'data' and options.cuts == 'default':
+			st1.SetTitle('Data - Full Selection'+st1_label[i])
+		elif options.set == 'QCD' and options.cuts == 'default':
+			st1.SetTitle('QCD MC - Full Selection'+st1_label[i])
+		elif options.set == 'data' and options.cuts == 'sideband':
+			st1.SetTitle('Data - Sideband Selection'+st1_label[i])
 	st1.Draw("hist")
 	gPad.SetLeftMargin(.16)
 	st1.GetYaxis().SetTitleOffset(1)
 
-	sigst.Draw("samehist")
+	if kinVar[i] == 'Mt':
+		#testHist.Draw("same e2")
+		myGraph.Draw("Z2")
+	else:
+		sigst.Draw("samehist")
 	bkgline.Draw("samehist")
 
 
@@ -994,28 +1079,17 @@ for i in range(0, iterations):
 
 	DataFS1.SetBinErrorOption(DataFS1.kPoisson)
 	
-
+	DataFS1.SetMarkerStyle(20)
 
 	#Take out when using data
 	totalH = st1.GetStack().Last().Clone("totalH")
 	if options.set == "QCD":	
 		DataFS1=DataFS
-		if options.mcsf == 'on':
-			if options.cuts == 'sideband':
-				QCDMCsf = totalH.Integral()/DataFS1.Integral()
-				print '*****************************************'		
-				print 'QCDMCsf = ' + str(QCDMCsf)
-				print '*****************************************'
-				DataFS1.Scale(QCDMCsf)
-			if options.cuts == 'default':
-				QCDMCsf = 1.09343192259
-				print '*****************************************'		
-				print 'QCDMCsf = ' + str(QCDMCsf)
-				print '*****************************************'
-				DataFS1.Scale(QCDMCsf)
+		DataFS1.SetMarkerStyle(kFullSquare)
+		DataFS1.SetMarkerColor(9)
 
 	if options.blinded == 'off':
-		DataFS1.Draw("samepE")
+		DataFS1.Draw("samepEX0")
 	if options.bprime:
 		BPB1200FS[0].Draw("samehist")
 		#BPB1400FS[0].Draw("samehist")
@@ -1033,14 +1107,14 @@ for i in range(0, iterations):
 	prelim = TLatex()
 	prelim.SetNDC()
 	#4 is 5.0fb-1, 5 is 1.0fb-1, 6 is 10.0fb-1
-	if lumi == 1000:
-		insertlogo( main, 5, 11 )
-	elif lumi == 5000:
-		insertlogo( main, 4, 11)
-	elif lumi == 10000:
-		insertlogo( main, 6, 11)
-	elif lumi == 1221.951:
-		insertlogo( main, 8, 11)
+	# if lumi == 1000:
+	# 	insertlogo( main, 5, 11 )
+	# elif lumi == 5000:
+	# 	insertlogo( main, 4, 11)
+	# elif lumi == 10000:
+	# 	insertlogo( main, 6, 11)
+	# elif lumi == 1221.951:
+	# 	insertlogo( main, 8, 11)
 
 	if i == 0:
 		leg.Draw()
@@ -1068,7 +1142,7 @@ for i in range(0, iterations):
 
 		pull.GetYaxis().SetRangeUser(-2.9,2.9)
 		pull.GetXaxis().SetLabelSize(0.05)
-		pull.GetYaxis().SetLabelSize(0.05)
+		pull.GetYaxis().SetLabelSize(0.13)
 
 
 		LS = .13
@@ -1105,17 +1179,17 @@ for i in range(0, iterations):
 	else:
 		mcscale = ''
 
-	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+'.root', 'root')
-	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+'.pdf', 'pdf')
-	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+'.png', 'png')
+	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+ptString+'.root', 'root')
+	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+ptString+'.pdf', 'pdf')
+	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+ptString+'.png', 'png')
 	main.SetLogy()
 	st1.SetMaximum( DataBEh.GetMaximum() * 5000 )
 	st1.SetMinimum( 0.1)
 	main.RedrawAxis()
 
-	c1.Print('plots/' + kinVar[i] + 'vsBkgsemilog_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+'.root', 'root')
-	c1.Print('plots/' + kinVar[i] + 'vsBkgsemilog_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+'.pdf', 'pdf')
-	c1.Print('plots/' + kinVar[i] + 'vsBkgsemilog_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+'.png', 'png')
+	c1.Print('plots/' + kinVar[i] + 'vsBkgsemilog_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+ptString+'.root', 'root')
+	c1.Print('plots/' + kinVar[i] + 'vsBkgsemilog_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+ptString+'.pdf', 'pdf')
+	c1.Print('plots/' + kinVar[i] + 'vsBkgsemilog_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+ptString+'.png', 'png')
 
 
 
