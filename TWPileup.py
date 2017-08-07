@@ -68,22 +68,6 @@ gROOT.Macro("rootlogon.C")
 import Bstar_Functions	
 from Bstar_Functions import *
 
-#Load up cut values based on what selection we want to run 
-Cuts = LoadCuts("default")
-wpt = Cuts['wpt']
-tpt = Cuts['tpt']
-dy = Cuts['dy']
-tmass = Cuts['tmass']
-nsubjets = Cuts['nsubjets']
-tau32 = Cuts['tau32']
-minmass = Cuts['minmass']
-sjbtag = Cuts['sjbtag']
-wmass = Cuts['wmass']
-eta1 = Cuts['eta1']
-eta2 = Cuts['eta2']
-
-
-
 
 print "Options summary"
 print "=================="
@@ -117,78 +101,38 @@ jobiter = 0
 splitfiles = []
 # We select all the events:    
 if jobs != 1 and options.split=="file":
-    for ifile in range(1,len(files)+1):
-    	if (ifile-1) % jobs == 0:
-		jobiter+=1
-	count_index = ifile  - (jobiter-1)*jobs
-	if count_index==num:
-		splitfiles.append(files[ifile-1])
+	for ifile in range(1,len(files)+1):
+		if (ifile-1) % jobs == 0:
+			jobiter+=1
+		count_index = ifile  - (jobiter-1)*jobs
+		if count_index==num:
+			splitfiles.append(files[ifile-1])
 
-    events = Events(splitfiles)
+	events = Events(splitfiles)
+	runs = Runs(splitfiles)
+
 if options.split=="event" or jobs == 1:	  
 	events = Events(files)
+	runs = Runs(files)
+
+
+
+nevHandle 	= 	Handle (  "vector<int> "  )
+nevLabel  	= 	( "counter" , "nevr")
+
+totnev = 0
+for run in runs:
+		run.getByLabel (nevLabel,nevHandle )
+		nev 		= 	nevHandle.product() 
+		totnev+=nev[0]
+print "Total unfiltered events in selection: ",totnev
+
 print "Event array created"
 #Here we load up handles and labels.
 #These are used to grab entries from the Ntuples.
 #To see all the current types in an Ntuple use edmDumpEventContent /PathtoNtuple/Ntuple.root
 
 AK8HL = Initlv("jetsAK8")
-	
-BDiscHandle 	= 	Handle (  "vector<float>"  )
-BDiscLabel  	= 	( "jetsAK8" , "jetAK8PuppiCSV")
-
-TbitHandle 	= 	Handle (  "vector<float>"  )
-TbitLabel  	= 	( "TriggerUserData" , "triggerBitTree")
-
-
-TstrHandle 	= 	Handle (  "vector<string>"  )
-TstrLabel  	= 	( "TriggerUserData" , "triggerNameTree")
-
-TpsHandle 	= 	Handle (  "vector<int>"  )
-TpsLabel  	= 	( "TriggerUserData" , "triggerPrescaleTree")
-
-#minmassHandle 	= 	Handle (  "vector<float> "  )
-#minmassLabel  	= 	( "jetsAK8" , "jetAK8minmass")
-
-#nSubjetsHandle 	= 	Handle (  "vector<float> "  )
-#nSubjetsLabel  	= 	( "jetsAK8" , "jetAK8nSubJets")
-
-softDropPuppiMassHandle		=	Handle (  "vector<float> "  )
-softDropPuppiMassLabel		=	( "jetsAK8" , "jetAK8PuppiCorrectedsoftDropMass")
-
-vsubjets0indexHandle 	= 	Handle (  "vector<float> "  )
-vsubjets0indexLabel  	= 	( "jetsAK8" , "jetAK8PuppivSubjetIndex0")
-
-vsubjets1indexHandle 	= 	Handle (  "vector<float> "  )
-vsubjets1indexLabel  	= 	( "jetsAK8" , "jetAK8PuppivSubjetIndex1")
-
-subjetsAK8CSVHandle 	= 	Handle (  "vector<float> "  )
-subjetsAK8CSVLabel  	= 	( "subjetsAK8Puppi" , "subjetAK8PuppiCSVv2")
-
-tau1Handle 	= 	Handle (  "vector<float> "  )
-tau1Label  	= 	( "jetsAK8" , "jetAK8Puppitau1")
-
-tau2Handle 	= 	Handle (  "vector<float> "  )
-tau2Label  	= 	( "jetsAK8" , "jetAK8Puppitau2")
-
-tau3Handle 	= 	Handle (  "vector<float> "  )
-tau3Label  	= 	( "jetsAK8" , "jetAK8Puppitau3")
-
-#subjetsCSVHandle 	= 	Handle (  "vector<float> "  )
-#subjetsCSVLabel  	= 	( "subjetsCmsTopTag" , "subjetCmsTopTagCSV")
-
-#subjets0indexHandle 	= 	Handle (  "vector<float> "  )
-#subjets0indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex0")
-
-#subjets1indexHandle 	= 	Handle (  "vector<float> "  )
-#subjets1indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex1")
-
-#subjets2indexHandle 	= 	Handle (  "vector<float> "  )
-#subjets2indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex2")
-
-#subjets3indexHandle 	= 	Handle (  "vector<float> "  )
-#subjets3indexLabel  	= 	( "jetsAK8" , "jetAK8topSubjetIndex3")
-
 
 puHandle    	= 	Handle("int")
 puLabel     	= 	(  "eventUserData", "puNtrueInt" )
@@ -215,8 +159,6 @@ print "Creating histograms"
 f.cd()
 #---------------------------------------------------------------------------------------------------------------------#
 
-
-
 npvtruehistUW	    = ROOT.TH1F("npvtruehistUW",     "mass W' in b+1",     	  	      80, 0, 80 )
 npvtruehistUW.Sumw2()
 
@@ -225,15 +167,6 @@ npvhist	    = ROOT.TH1F("npvhist",     "mass W' in b+1",     	  	      80, 0, 80
 
 npvhistUW.Sumw2()
 npvhist.Sumw2()
-
-#npvVnsubjets 	    = ROOT.TH2F("npv vs nsubjets",     "npv vs nsubjets",     	  	      50, 0, 50 , 4 , 1 , 5)
-#npvVminmass 	    = ROOT.TH2F("npv vs minmass",     "npv vs minmass",     	  	      50, 0, 50 , 50 , 0 , 250)
-npvVtop 	    = ROOT.TH2F("npv vs top mass",     "npv vs top mass",     	  	      50, 0, 50 , 130 , 0 , 650)
-npvVbtag		    = ROOT.TH2F("npv vs b tag",     "npv vs b tag",     	  	      50, 0, 50 , 25 , 0 , 1)
-npv_SUB 	    = ROOT.TProfile("npv_sub",     "npv_sub",     	  	      50, 0, 50, 1, 5)
-npv_MIN 	    = ROOT.TProfile("npv_min",     "npv_min",    	  	      50, 0, 50, 0, 250)
-npv_TOP 	    = ROOT.TProfile("npv_top",     "npv_top",     	  	      50, 0, 50, 0, 650)
-npv_TAG 	    = ROOT.TProfile("npv_tag",     "npv_tag",     	  	      50, 0, 50, 0, 1)
 
 #---------------------------------------------------------------------------------------------------------------------#
 
@@ -244,14 +177,14 @@ count = 0
 
 print "Start looping"
 #initialize the ttree variables
-totevents = events.size()
-print str(totevents)  +  ' Events total'
-PFIRST = True
+# totevents = events.size()
+# print str(totevents)  +  ' Events total'
+# PFIRST = True
 for event in events:
     count	= 	count + 1
 
     if count % 100000 == 0 :
-      print  '--------- Processing Event ' + str(count) +'   -- percent complete ' + str(100*count/totevents) + '% -- '
+      print  '--------- Processing Event ' + str(count) #+'   -- percent complete ' + str(100*count/totevents) + '% -- '
 
    # if count > 100000 :
 	#break
@@ -268,25 +201,11 @@ for event in events:
 	
 
 
-
-    event.getByLabel (softDropPuppiMassLabel, softDropPuppiMassHandle)
-    topmass = softDropPuppiMassHandle.product()
-
-    event.getByLabel (BDiscLabel, BDiscHandle)
-    b = BDiscHandle.product()
-
     event.getByLabel (npvLabel, npvHandle)
     npv = npvHandle.product()
 
     event.getByLabel (puLabel, puHandle)
     npvtrue = puHandle.product()
-
-    #event.getByLabel (nSubjetsLabel, nSubjetsHandle)
-    #nsub = nSubjetsHandle.product()
-
-    #event.getByLabel (minmassLabel, minmassHandle)
-    #minm = minmassHandle.product()
-    
 
 
     npvhistUW.Fill(npv[0])  
@@ -294,18 +213,6 @@ for event in events:
     #npvhist.Fill(npv[0],weight)
 
 
-    if len(b) > 0 :
-	npvVbtag.Fill(npv[0], b[0])
-	npv_TAG.Fill(npv[0], b[0])
-    if len(topmass) > 0 :
-	npvVtop.Fill(npv[0], topmass[0])
-	npv_TOP.Fill(npv[0], topmass[0])
-    #if len(nsub) > 0 :
-	#npvVnsubjets.Fill(npv[0], nsub[0])
-	#npv_SUB.Fill(npv[0], nsub[0])
-    #if len(minm) > 0 :
-	#npvVminmass.Fill(npv[0], minm[0])
-	#npv_MIN.Fill(npv[0], minm[0])
 
 f.cd()
 f.Write()

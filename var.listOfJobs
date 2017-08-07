@@ -1,46 +1,123 @@
-python ./tardir/TWvariables.py -s data -j 5 -n 1 -g on -c default   
-python ./tardir/TWvariables.py -s data -j 5 -n 2 -g on -c default   
-python ./tardir/TWvariables.py -s data -j 5 -n 3 -g on -c default   
-python ./tardir/TWvariables.py -s data -j 5 -n 4 -g on -c default   
-python ./tardir/TWvariables.py -s data -j 5 -n 5 -g on -c default   
+python ./tardir/TWvariables.py -s data -g on -c default -n 1 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 2 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 3 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 4 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 5 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 6 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 7 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 8 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 9 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 10 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 11 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 12 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 13 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 14 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 15 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 16 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 17 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 18 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 19 -j 20
+python ./tardir/TWvariables.py -s data -g on -c default -n 20 -j 20
  
 
 python ./tardir/TWvariables.py -s ttbar  -g on -c default   
   
-python ./tardir/TWvariables.py -s singletop_tW -g on -c default   
-python ./tardir/TWvariables.py -s singletop_tWB -g on -c default   
+python ./tardir/TWvariables.py -s singletop_tW -g on -c default 
+python ./tardir/TWvariables.py -s singletop_tWB -g on -c default     
+python ./tardir/TWvariables.py -s singletop_tB -g on -c default   
+python ./tardir/TWvariables.py -s singletop_t -g on -c default   
 
-python ./tardir/TWvariables.py -s signalLH1200 -g on  -c default
-python ./tardir/TWvariables.py -s signalLH1400 -g on  -c default
-python ./tardir/TWvariables.py -s signalLH1600 -g on  -c default
-python ./tardir/TWvariables.py -s signalLH1800 -g on  -c default
-python ./tardir/TWvariables.py -s signalLH2000 -g on  -c default
-python ./tardir/TWvariables.py -s signalLH2200 -g on  -c default
-python ./tardir/TWvariables.py -s signalLH2400 -g on  -c default
-python ./tardir/TWvariables.py -s signalLH2600 -g on  -c default
-python ./tardir/TWvariables.py -s signalLH2800 -g on  -c default
-python ./tardir/TWvariables.py -s signalLH3000 -g on  -c default
+python ./tardir/TWvariables.py -s signalRH1200 -g on  -c default
+python ./tardir/TWvariables.py -s signalRH2000 -g on  -c default
+python ./tardir/TWvariables.py -s signalRH2800 -g on  -c default
 
-python ./tardir/TWvariables.py -s QCDHT500 -j 3 -n 1   -g on -c default   
-python ./tardir/TWvariables.py -s QCDHT700 -j 3 -n 1   -g on -c default   
-python ./tardir/TWvariables.py -s QCDHT1000 -j 3 -n 1   -g on -c default   
-python ./tardir/TWvariables.py -s QCDHT1500 -j 3 -n 1   -g on -c default   
-python ./tardir/TWvariables.py -s QCDHT2000 -j 3 -n 1   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT500 -g on -c default
 
+python ./tardir/TWvariables.py -s QCDHT700 -g on -c default
 
+python ./tardir/TWvariables.py -s QCDHT1000 -g on -c default -n 1 -j 5
+python ./tardir/TWvariables.py -s QCDHT1000 -g on -c default -n 2 -j 5
+python ./tardir/TWvariables.py -s QCDHT1000 -g on -c default -n 3 -j 5
+python ./tardir/TWvariables.py -s QCDHT1000 -g on -c default -n 4 -j 5
+python ./tardir/TWvariables.py -s QCDHT1000 -g on -c default -n 5 -j 5
 
-python ./tardir/TWvariables.py -s QCDHT500 -j 3 -n 2   -g on -c default   
-python ./tardir/TWvariables.py -s QCDHT700 -j 3 -n 2   -g on -c default   
-python ./tardir/TWvariables.py -s QCDHT1000 -j 3 -n 2   -g on -c default   
-python ./tardir/TWvariables.py -s QCDHT1500 -j 3 -n 2   -g on -c default   
-python ./tardir/TWvariables.py -s QCDHT2000 -j 3 -n 2   -g on -c default   
-
-
-
-python ./tardir/TWvariables.py -s QCDHT500 -j 3 -n 3   -g on -c default   
-python ./tardir/TWvariables.py -s QCDHT700 -j 3 -n 3   -g on -c default   
-python ./tardir/TWvariables.py -s QCDHT1000 -j 3 -n 3   -g on -c default   
-python ./tardir/TWvariables.py -s QCDHT1500 -j 3 -n 3   -g on -c default   
-python ./tardir/TWvariables.py -s QCDHT2000 -j 3 -n 3   -g on -c default   
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c default -n 1 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c default -n 2 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c default -n 3 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c default -n 4 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c default -n 5 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c default -n 6 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c default -n 7 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c default -n 8 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c default -n 9 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c default -n 10 -j 10
 
 
+python ./tardir/TWvariables.py -s QCDHT2000 -g on -c default -n 1 -j 5
+python ./tardir/TWvariables.py -s QCDHT2000 -g on -c default -n 2 -j 5
+python ./tardir/TWvariables.py -s QCDHT2000 -g on -c default -n 3 -j 5
+python ./tardir/TWvariables.py -s QCDHT2000 -g on -c default -n 4 -j 5
+python ./tardir/TWvariables.py -s QCDHT2000 -g on -c default -n 5 -j 5
+
+
+#--------------------sideband-----------------------------------------
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 1 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 2 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 3 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 4 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 5 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 6 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 7 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 8 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 9 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 10 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 11 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 12 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 13 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 14 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 15 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 16 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 17 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 18 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 19 -j 20
+python ./tardir/TWvariables.py -s data -g on -c sideband -n 20 -j 20
+ 
+
+python ./tardir/TWvariables.py -s ttbar  -g on -c sideband   
+  
+python ./tardir/TWvariables.py -s singletop_tWB -g on -c sideband   
+python ./tardir/TWvariables.py -s singletop_tW -g on -c sideband    
+python ./tardir/TWvariables.py -s singletop_tB -g on -c sideband   
+python ./tardir/TWvariables.py -s singletop_t -g on -c sideband   
+
+python ./tardir/TWvariables.py -s signalRH1200 -g on  -c sideband
+python ./tardir/TWvariables.py -s signalRH2000 -g on  -c sideband
+python ./tardir/TWvariables.py -s signalRH2800 -g on  -c sideband
+
+python ./tardir/TWvariables.py -s QCDHT500 -g on -c sideband
+
+python ./tardir/TWvariables.py -s QCDHT700 -g on -c sideband
+
+python ./tardir/TWvariables.py -s QCDHT1000 -g on -c sideband -n 1 -j 5
+python ./tardir/TWvariables.py -s QCDHT1000 -g on -c sideband -n 2 -j 5
+python ./tardir/TWvariables.py -s QCDHT1000 -g on -c sideband -n 3 -j 5
+python ./tardir/TWvariables.py -s QCDHT1000 -g on -c sideband -n 4 -j 5
+python ./tardir/TWvariables.py -s QCDHT1000 -g on -c sideband -n 5 -j 5
+
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c sideband -n 1 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c sideband -n 2 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c sideband -n 3 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c sideband -n 4 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c sideband -n 5 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c sideband -n 6 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c sideband -n 7 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c sideband -n 8 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c sideband -n 9 -j 10
+python ./tardir/TWvariables.py -s QCDHT1500 -g on -c sideband -n 10 -j 10
+
+
+python ./tardir/TWvariables.py -s QCDHT2000 -g on -c sideband -n 1 -j 5
+python ./tardir/TWvariables.py -s QCDHT2000 -g on -c sideband -n 2 -j 5
+python ./tardir/TWvariables.py -s QCDHT2000 -g on -c sideband -n 3 -j 5
+python ./tardir/TWvariables.py -s QCDHT2000 -g on -c sideband -n 4 -j 5
+python ./tardir/TWvariables.py -s QCDHT2000 -g on -c sideband -n 5 -j 5

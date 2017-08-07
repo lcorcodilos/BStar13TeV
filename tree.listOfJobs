@@ -1,0 +1,436 @@
+
+# #Data
+# python ./tardir/TWtree_Maker.py -s data -g on -n 1 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 2 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 3 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 4 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 5 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 6 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 7 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 8 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 9 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 10 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 11 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 12 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 13 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 14 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 15 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 16 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 17 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 18 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 19 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 20 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 21 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 22 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 23 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 24 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 25 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 26 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 27 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 28 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 29 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 30 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 31 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 32 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 33 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 34 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 35 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 36 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 37 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 38 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 39 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 40 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 41 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 42 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 43 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 44 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 45 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 46 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 47 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 48 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 49 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 50 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 51 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 52 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 53 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 54 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 55 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 56 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 57 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 58 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 59 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 60 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 61 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 62 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 63 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 64 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 65 -j 66
+# python ./tardir/TWtree_Maker.py -s data -g on -n 66 -j 66
+
+
+
+# #Signal
+# python ./tardir/TWtree_Maker.py -s signalLH1200 -g on
+# python ./tardir/TWtree_Maker.py -s signalLH1400 -g on
+# python ./tardir/TWtree_Maker.py -s signalLH1600 -g on
+# python ./tardir/TWtree_Maker.py -s signalLH1800 -g on
+# python ./tardir/TWtree_Maker.py -s signalLH2000 -g on
+# python ./tardir/TWtree_Maker.py -s signalLH2200 -g on
+# python ./tardir/TWtree_Maker.py -s signalLH2400 -g on
+# python ./tardir/TWtree_Maker.py -s signalLH2600 -g on
+# python ./tardir/TWtree_Maker.py -s signalLH2800 -g on
+# python ./tardir/TWtree_Maker.py -s signalLH3000 -g on
+
+# python ./tardir/TWtree_Maker.py -s signalRH1200 -g on
+# python ./tardir/TWtree_Maker.py -s signalRH1400 -g on
+# python ./tardir/TWtree_Maker.py -s signalRH1600 -g on
+# python ./tardir/TWtree_Maker.py -s signalRH1800 -g on
+# python ./tardir/TWtree_Maker.py -s signalRH2000 -g on
+# python ./tardir/TWtree_Maker.py -s signalRH2200 -g on
+# python ./tardir/TWtree_Maker.py -s signalRH2400 -g on
+# python ./tardir/TWtree_Maker.py -s signalRH2600 -g on
+# python ./tardir/TWtree_Maker.py -s signalRH2800 -g on
+# python ./tardir/TWtree_Maker.py -s signalRH3000 -g on
+
+#QCD
+python ./tardir/TWtree_Maker.py -s QCDHT500 -g on  
+python ./tardir/TWtree_Maker.py -s QCDHT700 -g on -n 1 -j 2
+python ./tardir/TWtree_Maker.py -s QCDHT700 -g on -n 2 -j 2
+python ./tardir/TWtree_Maker.py -s QCDHT1000 -g on -n 1 -j 5
+python ./tardir/TWtree_Maker.py -s QCDHT1000 -g on -n 2 -j 5
+python ./tardir/TWtree_Maker.py -s QCDHT1000 -g on -n 3 -j 5
+python ./tardir/TWtree_Maker.py -s QCDHT1000 -g on -n 4 -j 5
+python ./tardir/TWtree_Maker.py -s QCDHT1000 -g on -n 5 -j 5
+python ./tardir/TWtree_Maker.py -s QCDHT1500 -g on -n 1 -j 6
+python ./tardir/TWtree_Maker.py -s QCDHT1500 -g on -n 2 -j 6
+python ./tardir/TWtree_Maker.py -s QCDHT1500 -g on -n 3 -j 6
+python ./tardir/TWtree_Maker.py -s QCDHT1500 -g on -n 4 -j 6
+python ./tardir/TWtree_Maker.py -s QCDHT1500 -g on -n 5 -j 6
+python ./tardir/TWtree_Maker.py -s QCDHT1500 -g on -n 6 -j 6
+python ./tardir/TWtree_Maker.py -s QCDHT2000 -g on -n 1 -j 4
+python ./tardir/TWtree_Maker.py -s QCDHT2000 -g on -n 2 -j 4
+python ./tardir/TWtree_Maker.py -s QCDHT2000 -g on -n 3 -j 4
+python ./tardir/TWtree_Maker.py -s QCDHT2000 -g on -n 4 -j 4
+
+# #singltop
+# python ./tardir/TWtree_Maker.py -s singletop_tW -g on  
+# python ./tardir/TWtree_Maker.py -s singletop_tWB -g on  
+# python ./tardir/TWtree_Maker.py -s singletop_t -g on  
+# python ./tardir/TWtree_Maker.py -s singletop_tB -g on  
+
+# #ttbar
+# python ./tardir/TWtree_Maker.py -s ttbar -g on 
+# python ./tardir/TWtree_Maker.py -s ttbarscaleup -g on 
+# python ./tardir/TWtree_Maker.py -s ttbarscaledown -g on
+
+
+
+# #JES Up
+# python ./tardir/TWtree_Maker.py -s ttbar -g on -J up 
+
+# python ./tardir/TWtree_Maker.py -s singletop_tW -g on  -J up
+# python ./tardir/TWtree_Maker.py -s singletop_tWB -g on  -J up
+# python ./tardir/TWtree_Maker.py -s singletop_t -g on  -J up
+# python ./tardir/TWtree_Maker.py -s singletop_tB -g on  -J up
+
+# python ./tardir/TWtree_Maker.py -s signalLH1200 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalLH1400 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalLH1600 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalLH1800 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalLH2000 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalLH2200 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalLH2400 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalLH2600 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalLH2800 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalLH3000 -g on -J up
+
+# python ./tardir/TWtree_Maker.py -s signalRH1200 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalRH1400 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalRH1600 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalRH1800 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalRH2000 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalRH2200 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalRH2400 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalRH2600 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalRH2800 -g on -J up
+# python ./tardir/TWtree_Maker.py -s signalRH3000 -g on -J up
+
+
+# #JES Down
+# python ./tardir/TWtree_Maker.py -s ttbar -g on -J down 
+
+# python ./tardir/TWtree_Maker.py -s singletop_tW -g on  -J down
+# python ./tardir/TWtree_Maker.py -s singletop_tWB -g on  -J down
+# python ./tardir/TWtree_Maker.py -s singletop_t -g on  -J down
+# python ./tardir/TWtree_Maker.py -s singletop_tB -g on  -J down
+
+# python ./tardir/TWtree_Maker.py -s signalLH1200 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalLH1400 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalLH1600 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalLH1800 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalLH2000 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalLH2200 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalLH2400 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalLH2600 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalLH2800 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalLH3000 -g on -J down
+
+# python ./tardir/TWtree_Maker.py -s signalRH1200 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalRH1400 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalRH1600 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalRH1800 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalRH2000 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalRH2200 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalRH2400 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalRH2600 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalRH2800 -g on -J down
+# python ./tardir/TWtree_Maker.py -s signalRH3000 -g on -J down
+
+
+# #JER Up
+# python ./tardir/TWtree_Maker.py -s ttbar -g on -R up 
+
+# python ./tardir/TWtree_Maker.py -s singletop_tW -g on  -R up
+# python ./tardir/TWtree_Maker.py -s singletop_tWB -g on  -R up
+# python ./tardir/TWtree_Maker.py -s singletop_t -g on  -R up
+# python ./tardir/TWtree_Maker.py -s singletop_tB -g on  -R up
+
+# python ./tardir/TWtree_Maker.py -s signalLH1200 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalLH1400 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalLH1600 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalLH1800 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalLH2000 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalLH2200 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalLH2400 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalLH2600 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalLH2800 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalLH3000 -g on -R up
+
+# python ./tardir/TWtree_Maker.py -s signalRH1200 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalRH1400 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalRH1600 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalRH1800 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalRH2000 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalRH2200 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalRH2400 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalRH2600 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalRH2800 -g on -R up
+# python ./tardir/TWtree_Maker.py -s signalRH3000 -g on -R up
+
+
+# #JER Down
+# python ./tardir/TWtree_Maker.py -s ttbar -g on -R down 
+
+# python ./tardir/TWtree_Maker.py -s singletop_tW -g on  -R down
+# python ./tardir/TWtree_Maker.py -s singletop_tWB -g on  -R down
+# python ./tardir/TWtree_Maker.py -s singletop_t -g on  -R down
+# python ./tardir/TWtree_Maker.py -s singletop_tB -g on  -R down
+
+# python ./tardir/TWtree_Maker.py -s signalLH1200 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalLH1400 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalLH1600 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalLH1800 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalLH2000 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalLH2200 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalLH2400 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalLH2600 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalLH2800 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalLH3000 -g on -R down
+
+# python ./tardir/TWtree_Maker.py -s signalRH1200 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalRH1400 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalRH1600 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalRH1800 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalRH2000 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalRH2200 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalRH2400 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalRH2600 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalRH2800 -g on -R down
+# python ./tardir/TWtree_Maker.py -s signalRH3000 -g on -R down
+
+
+# #JMS Up
+# python ./tardir/TWtree_Maker.py -s ttbar -g on -a up 
+
+# python ./tardir/TWtree_Maker.py -s singletop_tW -g on  -a up
+# python ./tardir/TWtree_Maker.py -s singletop_tWB -g on  -a up
+# python ./tardir/TWtree_Maker.py -s singletop_t -g on  -a up
+# python ./tardir/TWtree_Maker.py -s singletop_tB -g on  -a up
+
+# python ./tardir/TWtree_Maker.py -s signalLH1200 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalLH1400 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalLH1600 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalLH1800 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalLH2000 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalLH2200 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalLH2400 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalLH2600 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalLH2800 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalLH3000 -g on -a up
+
+# python ./tardir/TWtree_Maker.py -s signalRH1200 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalRH1400 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalRH1600 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalRH1800 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalRH2000 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalRH2200 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalRH2400 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalRH2600 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalRH2800 -g on -a up
+# python ./tardir/TWtree_Maker.py -s signalRH3000 -g on -a up
+
+
+# #JMS Down
+# python ./tardir/TWtree_Maker.py -s ttbar -g on -a down 
+
+# python ./tardir/TWtree_Maker.py -s singletop_tW -g on  -a down
+# python ./tardir/TWtree_Maker.py -s singletop_tWB -g on  -a down
+# python ./tardir/TWtree_Maker.py -s singletop_t -g on  -a down
+# python ./tardir/TWtree_Maker.py -s singletop_tB -g on  -a down
+
+# python ./tardir/TWtree_Maker.py -s signalLH1200 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalLH1400 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalLH1600 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalLH1800 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalLH2000 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalLH2200 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalLH2400 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalLH2600 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalLH2800 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalLH3000 -g on -a down
+
+# python ./tardir/TWtree_Maker.py -s signalRH1200 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalRH1400 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalRH1600 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalRH1800 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalRH2000 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalRH2200 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalRH2400 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalRH2600 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalRH2800 -g on -a down
+# python ./tardir/TWtree_Maker.py -s signalRH3000 -g on -a down
+
+
+# #JMR Up
+# python ./tardir/TWtree_Maker.py -s ttbar -g on -b up 
+
+# python ./tardir/TWtree_Maker.py -s singletop_tW -g on  -b up
+# python ./tardir/TWtree_Maker.py -s singletop_tWB -g on  -b up
+# python ./tardir/TWtree_Maker.py -s singletop_t -g on  -b up
+# python ./tardir/TWtree_Maker.py -s singletop_tB -g on  -b up
+
+# python ./tardir/TWtree_Maker.py -s signalLH1200 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalLH1400 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalLH1600 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalLH1800 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalLH2000 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalLH2200 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalLH2400 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalLH2600 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalLH2800 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalLH3000 -g on -b up
+
+# python ./tardir/TWtree_Maker.py -s signalRH1200 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalRH1400 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalRH1600 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalRH1800 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalRH2000 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalRH2200 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalRH2400 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalRH2600 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalRH2800 -g on -b up
+# python ./tardir/TWtree_Maker.py -s signalRH3000 -g on -b up
+
+
+# #JMR Down
+# python ./tardir/TWtree_Maker.py -s ttbar -g on -b down 
+
+# python ./tardir/TWtree_Maker.py -s singletop_tW -g on  -b down
+# python ./tardir/TWtree_Maker.py -s singletop_tWB -g on  -b down
+# python ./tardir/TWtree_Maker.py -s singletop_t -g on  -b down
+# python ./tardir/TWtree_Maker.py -s singletop_tB -g on  -b down
+
+# python ./tardir/TWtree_Maker.py -s signalLH1200 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalLH1400 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalLH1600 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalLH1800 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalLH2000 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalLH2200 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalLH2400 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalLH2600 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalLH2800 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalLH3000 -g on -b down
+
+# python ./tardir/TWtree_Maker.py -s signalRH1200 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalRH1400 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalRH1600 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalRH1800 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalRH2000 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalRH2200 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalRH2400 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalRH2600 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalRH2800 -g on -b down
+# python ./tardir/TWtree_Maker.py -s signalRH3000 -g on -b down
+
+
+# #Pileup Up
+# python ./tardir/TWtree_Maker.py -s ttbar -g on -x up 
+
+# python ./tardir/TWtree_Maker.py -s singletop_tW -g on  -x up
+# python ./tardir/TWtree_Maker.py -s singletop_tWB -g on  -x up
+# python ./tardir/TWtree_Maker.py -s singletop_t -g on  -x up
+# python ./tardir/TWtree_Maker.py -s singletop_tB -g on  -x up
+
+# python ./tardir/TWtree_Maker.py -s signalLH1200 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalLH1400 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalLH1600 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalLH1800 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalLH2000 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalLH2200 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalLH2400 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalLH2600 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalLH2800 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalLH3000 -g on -x up
+
+# python ./tardir/TWtree_Maker.py -s signalRH1200 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalRH1400 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalRH1600 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalRH1800 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalRH2000 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalRH2200 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalRH2400 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalRH2600 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalRH2800 -g on -x up
+# python ./tardir/TWtree_Maker.py -s signalRH3000 -g on -x up
+
+# #Pileup Down
+# python ./tardir/TWtree_Maker.py -s ttbar -g on -x down 
+
+# python ./tardir/TWtree_Maker.py -s singletop_tW -g on  -x down
+# python ./tardir/TWtree_Maker.py -s singletop_tWB -g on  -x down
+# python ./tardir/TWtree_Maker.py -s singletop_t -g on  -x down
+# python ./tardir/TWtree_Maker.py -s singletop_tB -g on  -x down
+
+# python ./tardir/TWtree_Maker.py -s signalLH1200 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalLH1400 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalLH1600 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalLH1800 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalLH2000 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalLH2200 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalLH2400 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalLH2600 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalLH2800 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalLH3000 -g on -x down
+
+# python ./tardir/TWtree_Maker.py -s signalRH1200 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalRH1400 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalRH1600 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalRH1800 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalRH2000 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalRH2200 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalRH2400 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalRH2600 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalRH2800 -g on -x down
+# python ./tardir/TWtree_Maker.py -s signalRH3000 -g on -x down
+
+

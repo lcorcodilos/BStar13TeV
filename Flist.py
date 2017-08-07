@@ -24,7 +24,7 @@ from Bstar_Functions import Load_Ntuples
 
 saveout = sys.stdout
 #Based on what set we want to analyze, we find all Ntuple root files 
-arr = ['QCDHT500','QCDHT700','QCDHT1000','QCDHT1500','QCDHT2000','data','ttbar','singletop_s','singletop_t','singletop_tB']
+arr = ['QCDHT500','QCDHT700','QCDHT1000','QCDHT1500','QCDHT2000','data','ttbar','ttbarscaleup','ttbarscaledown','singletop_t','singletop_tB','singletop_tW','singletop_tWB']
 
 for jj in range(12,31):
 	if jj%2!=0:

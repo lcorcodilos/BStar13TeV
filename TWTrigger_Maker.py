@@ -31,7 +31,7 @@ parser.add_option('-s', '--set', metavar='F', type='string', action='store',
 parser.add_option('-d', '--disc', metavar='F', type='string', action='store',
                   default	=	'',
                   dest		=	'disc',
-                  help		=	'   ')
+                  help		=	'empty, untrig, or ttags')
 
 parser.add_option('-b', '--bx', metavar='F', type='string', action='store',
                   default	=	'25ns',
@@ -50,7 +50,8 @@ leg.SetBorderSize(0)
 
 trigs = [
 #"HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV0p41_v1ORHLT_PFHT900_v1"
-"HLT_PFHT800_v2"
+#"HLT_PFHT800_v2",
+'HLT_PFHT900ORHLT_AK8PFJet450_pre_HLT_PFHT475_v3'
 ]
 fvec = []
 TR = []
@@ -65,8 +66,8 @@ for ifile in range(0,len(trigs)) :
 	HTpre.Rebin(5)
 	
 	print trigs[ifile]
-	print HT.Integral()/HTpre.Integral()
-	print HT.Integral(HT.FindBin(550),HT.FindBin(2000))/HTpre.Integral(HT.FindBin(550),HT.FindBin(2000))
+	print 'Full integral: ' + str(HT.Integral()/HTpre.Integral())
+	print 'Partial integral: ' + str(HT.Integral(HT.FindBin(550),HT.FindBin(2000))/HTpre.Integral(HT.FindBin(550),HT.FindBin(2000)))
 	TR.append(HT.Clone())
 	TR[ifile].Divide(TR[ifile],HTpre,1.0,1.0,'B')
 
@@ -100,7 +101,7 @@ for ifile in range(0,len(trigs)) :
 
         Trigfile.cd()
 	TR[ifile].Write("TriggerWeight_"+trigs[ifile])
-	c3 = TCanvas('c3', 'Data Full selection vs b pt tagging background', 700, 500)
+	c3 = TCanvas('c3', 'Data Full selection vs t pt tagging background', 700, 500)
 	TR[ifile].Draw("")
 	c3.Print('plots/Trigger_'+trigs[ifile]+options.disc+'.root', 'root')
 	c3.Print('plots/Trigger_'+trigs[ifile]+options.disc+'.pdf', 'pdf')
@@ -108,7 +109,7 @@ for ifile in range(0,len(trigs)) :
 c1.Print('plots/Trigger_TEMP'+options.disc+'.root', 'root')
 c1.Print('plots/Trigger_TEMP'+options.disc+'.pdf', 'pdf')
 
-c2 = TCanvas('c2', 'Data Full selection vs b pt tagging background', 700, 200)
+c2 = TCanvas('c2', 'Data Full selection vs t pt tagging background', 700, 200)
 leg.Draw()
 c2.Print('plots/Trigger_TEMP_legend.pdf'+options.disc, 'pdf')
 

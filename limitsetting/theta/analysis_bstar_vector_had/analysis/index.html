@@ -1,0 +1,189 @@
+<?xml version="1.0" ?>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head><title>theta-auto Report</title>
+    <script type="text/javascript" src="js/prototype.js"></script>
+    <script type="text/javascript" src="js/scriptaculous.js?load=effects,builder"></script>
+    <script type="text/javascript" src="js/lightbox.js"></script>
+    <link rel="stylesheet" href="css/lightbox.css" type="text/css" media="screen" />
+    <style type="text/css">
+    body {margin: 30px; font-family: Verdana, Arial, sans-serif; font-size: 12px; background:#eee;}
+    h1, h2, h3 { padding: 0.2ex; padding-left:.8ex;}
+    h1 {font-size: 150%%; background: #d44;}
+    h2 {font-size: 110%%; background: #f88; padding-left:1.3ex;}
+    h3 {font-size: 100%%; background: #aaa; padding-left:1.3ex;}
+    .inner {padding-left: 3ex;}
+    a img{ border: none;}
+    p {margin:0 0 0 0; margin-top: 1.3ex;}
+    ul {margin:0 0 0 0;}
+    </style>
+    </head><body>
+    <p>Hint: click on top-level headers to toggle visibility of that section.</p>
+    <h1 onclick=$('div1').toggle()>1. General Model Info</h1><div class="inner" id="div1">
+<p>Observables (xmin, xmax, nbins):</p>
+<ul>
+<li>mtw_allhad (500, 4000, 70)</li>
+</ul>
+<p>Background processes:</p>
+<ul>
+<li>qcd</li>
+<li>stt</li>
+<li>sttB</li>
+<li>sttW</li>
+<li>sttWB</li>
+<li>ttbar</li>
+</ul>
+<p>Signal processes:</p><ul>
+<li>bs1200</li>
+<li>bs1400</li>
+<li>bs1600</li>
+<li>bs1800</li>
+<li>bs2000</li>
+<li>bs2200</li>
+<li>bs2400</li>
+<li>bs2600</li>
+<li>bs2800</li>
+<li>bs3000</li>
+</ul>
+<p>Nuisance parameters (includes only those which apply to the background-only model):</p>
+<ul>
+<li>Alt (morph only)</li>
+<li>Fit (morph only)</li>
+<li>jer (morph only)</li>
+<li>jes (morph only)</li>
+<li>modm (morph only)</li>
+<li>pdf (morph only)</li>
+<li>pile (morph only)</li>
+<li>q2 (morph only)</li>
+<li>toppt (morph only)</li>
+<li>trig (morph only)</li>
+</ul>
+
+</div>
+<h1 onclick=$('div2').toggle()>2. Rate Summary</h1><div class="inner" id="div2">
+<p>Rates for all observables and processes as given by the 'nominal' templates. If errors are given, they are MC stat. uncertainties.</p>
+<table cellpadding="2" border="1">
+<tr><th>process / observable</th><th>mtw_allhad</th></tr>
+<tr><td>qcd</td><td>25539 +/- 53.148</td></tr>
+<tr><td>stt</td><td>55.863 +/- 7.1315</td></tr>
+<tr><td>sttB</td><td>18.274 +/- 3.9325</td></tr>
+<tr><td>sttW</td><td>396.34 +/- 23.91</td></tr>
+<tr><td>sttWB</td><td>383.95 +/- 23.602</td></tr>
+<tr><td>ttbar</td><td>5534.9 +/- 54.098</td></tr>
+<tr><td><b>total background</b></td><td>31928 +/- 83.344</td></tr>
+<tr><td>bs1200</td><td>8706.7 +/- 83.066</td></tr>
+<tr><td>bs1400</td><td>4249.4 +/- 37.023</td></tr>
+<tr><td>bs1600</td><td>1905.1 +/- 16.411</td></tr>
+<tr><td>bs1800</td><td>902.49 +/- 7.7217</td></tr>
+<tr><td>bs2000</td><td>422.84 +/- 3.6589</td></tr>
+<tr><td>bs2200</td><td>211.73 +/- 1.8952</td></tr>
+<tr><td>bs2400</td><td>103.95 +/- 0.92814</td></tr>
+<tr><td>bs2600</td><td>54.043 +/- 0.48823</td></tr>
+<tr><td>bs2800</td><td>28.122 +/- 0.25971</td></tr>
+<tr><td>bs3000</td><td>15.17 +/- 0.1422</td></tr>
+<tr><td><b>DATA</b></td><td>31171</td></tr>
+</table>
+
+
+</div>
+<h1 onclick=$('div3').toggle()>3. Rate Impact of Systematic Uncertainties</h1><div class="inner" id="div3">
+<p>The table below summarises the impact of an nuisance parameter on the rate prediction of a process.</p>
+    <p>For a nuisance parameter, (gauss) indicates that this nuisance parameter has a gaussian prior, (gamma) that it has a gamma prior.</p>
+    <p>For the individual cells, (r) indicates the 'rate only' part of the uncertainty, (s) indicates the effect on the rate of an uncertainty
+    treated via template morphing (i.e., the <em>rate</em> effect of an uncertainty treated as part of the
+    template morphing; even if this is zero, the shape effect is still taken into account). Note that both effects are applied seperatly, so
+    the total rate change is about the linear sum of these two.<br/>
+    The rate change in 'plus' direction of the uncertainty is written as superscript,
+    the 'minus' direction as subscript.<br/>All numbers are in percent.</p>
+<h2>Observable 'mtw_allhad'</h2>
+<table cellpadding="2" border="1">
+<tr><th>process / nuisance parameter</th><th>Alt (gauss)</th><th>Fit (gauss)</th><th>jer (gauss)</th><th>jes (gauss)</th><th>lumi (gauss)</th><th>modm (gauss)</th><th>pdf (gauss)</th><th>pile (gauss)</th><th>q2 (gauss)</th><th>toppt (gauss)</th><th>topsf (gauss)</th><th>trig (gauss)</th><th>wtag (gauss)</th></tr>
+<tr><td>bs1200</td><td>---</td><td>---</td><td><sup>-0.07</sup><sub>+0.00</sub> (s) </td><td><sup>+0.75</sup><sub>-0.83</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>-0.24</sup><sub>+0.22</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+0.54</sup><sub>-0.54</sub> (s) </td><td>---</td></tr>
+<tr><td>bs1400</td><td>---</td><td>---</td><td><sup>-0.04</sup><sub>-0.01</sub> (s) </td><td><sup>+0.24</sup><sub>-0.38</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>-0.31</sup><sub>+0.33</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+0.13</sup><sub>-0.13</sub> (s) </td><td>---</td></tr>
+<tr><td>bs1600</td><td>---</td><td>---</td><td><sup>-0.01</sup><sub>-0.02</sub> (s) </td><td><sup>+0.11</sup><sub>-0.10</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>-0.01</sup><sub>+0.02</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+0.04</sup><sub>-0.04</sub> (s) </td><td>---</td></tr>
+<tr><td>bs1800</td><td>---</td><td>---</td><td><sup>+0.00</sup><sub>-0.02</sub> (s) </td><td><sup>+0.06</sup><sub>-0.11</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+0.12</sup><sub>-0.10</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+0.02</sup><sub>-0.02</sub> (s) </td><td>---</td></tr>
+<tr><td>bs2000</td><td>---</td><td>---</td><td><sup>-0.01</sup><sub>-0.02</sub> (s) </td><td><sup>+0.06</sup><sub>-0.08</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+0.05</sup><sub>-0.07</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+0.01</sup><sub>-0.01</sub> (s) </td><td>---</td></tr>
+<tr><td>bs2200</td><td>---</td><td>---</td><td><sup>+0.03</sup><sub>+0.01</sub> (s) </td><td><sup>+0.05</sup><sub>+0.00</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>-0.05</sup><sub>+0.05</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+0.01</sup><sub>-0.01</sub> (s) </td><td>---</td></tr>
+<tr><td>bs2400</td><td>---</td><td>---</td><td><sup>-0.00</sup><sub>+0.00</sub> (s) </td><td><sup>+0.03</sup><sub>-0.03</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>-0.09</sup><sub>+0.11</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+0.02</sup><sub>-0.02</sub> (s) </td><td>---</td></tr>
+<tr><td>bs2600</td><td>---</td><td>---</td><td><sup>-0.01</sup><sub>-0.02</sub> (s) </td><td><sup>+0.02</sup><sub>-0.05</sub> (s) </td><td>&#xb1;2.60 (r)</td><td>---</td><td>---</td><td><sup>-0.18</sup><sub>+0.21</sub> (s) </td><td>---</td><td>---</td><td><sup>+5.60</sup><sub>-14.00</sub> (r) </td><td><sup>+0.02</sup><sub>-0.02</sub> (s) </td><td>&#xb1;6.00 (r)</td></tr>
+<tr><td>bs2800</td><td>---</td><td>---</td><td><sup>+0.00</sup><sub>-0.01</sub> (s) </td><td><sup>+0.03</sup><sub>-0.04</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>-0.15</sup><sub>+0.15</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+0.01</sup><sub>-0.01</sub> (s) </td><td>---</td></tr>
+<tr><td>bs3000</td><td>---</td><td>---</td><td><sup>-0.03</sup><sub>-0.02</sub> (s) </td><td><sup>+0.01</sup><sub>-0.03</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>-0.38</sup><sub>+0.34</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+0.03</sup><sub>-0.03</sub> (s) </td><td>---</td></tr>
+<tr><td>qcd</td><td><sup>+1.81</sup><sub>-1.81</sub> (s) </td><td><sup>+1.09</sup><sub>-1.09</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>-0.31</sup><sub>+0.31</sub> (s) </td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td></tr>
+<tr><td>stt</td><td>---</td><td>---</td><td><sup>-1.25</sup><sub>-0.18</sub> (s) </td><td><sup>+1.04</sup><sub>-3.49</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>-3.94</sup><sub>+3.57</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+3.64</sup><sub>-3.64</sub> (s) </td><td>---</td></tr>
+<tr><td>sttB</td><td>---</td><td>---</td><td><sup>-0.11</sup><sub>-0.00</sub> (s) </td><td><sup>+2.95</sup><sub>-6.66</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>-3.91</sup><sub>+4.35</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+1.63</sup><sub>-1.63</sub> (s) </td><td>---</td></tr>
+<tr><td>sttW</td><td>---</td><td>---</td><td><sup>-0.28</sup><sub>-0.00</sub> (s) </td><td><sup>+2.30</sup><sub>-0.97</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>-0.30</sup><sub>+0.60</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+1.86</sup><sub>-1.86</sub> (s) </td><td>---</td></tr>
+<tr><td>sttWB</td><td>---</td><td>---</td><td><sup>-0.63</sup><sub>-0.42</sub> (s) </td><td><sup>+2.35</sup><sub>-2.26</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>-1.06</sup><sub>+0.74</sub> (s) </td><td>---</td><td>---</td><td>---</td><td><sup>+1.83</sup><sub>-1.83</sub> (s) </td><td>---</td></tr>
+<tr><td>ttbar</td><td>---</td><td>---</td><td><sup>-0.08</sup><sub>-0.12</sub> (s) </td><td><sup>+3.00</sup><sub>-3.02</sub> (s) </td><td>---</td><td>---</td><td><sup>+4.52</sup><sub>-4.52</sub> (s) </td><td><sup>-0.32</sup><sub>+0.35</sub> (s) </td><td><sup>+30.28</sup><sub>-14.04</sub> (s) </td><td><sup>+21.51</sup><sub>-21.50</sub> (s) </td><td>---</td><td><sup>+2.81</sup><sub>-2.81</sub> (s) </td><td>---</td></tr>
+</table>
+
+
+</div>
+<h1 onclick=$('div4').toggle()>4. Nuisance Parameter Priors</h1><div class="inner" id="div4">
+
+    <p>The priors for the nuisance parameters are either Gaussian or gamma distributions. As limit cases, these can have with=0 or width=inf
+    which makes them delta or flat distributions, respectively.</p>
+    <div class="inner"><h3>Prior Parameters</h3>
+<table cellpadding="2" border="1">
+<tr><th>parameter</th><th>distribution type</th><th>distribution parameters</th></tr>
+<tr><td>jer</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>jes</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>q2</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>Fit</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>trig</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>toppt</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>pile</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>wtag</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>lumi</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>pdf</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>Alt</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>topsf</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>modm</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+</table>
+
+</div>
+    </div>
+</div>
+<h1 onclick=$('div5').toggle()>5. Basic Model Plots</h1><div class="inner" id="div5">
+<h2>Stackplots</h2>
+<p>Everything normalized to expectation, i.e., to the normalization in the template input file, possibly scaled via the python script file.</p>
+<p>Color Code:</p><ul>
+<li><span style="background: #ef2929;">&nbsp;&nbsp;&nbsp;</span> bs1200</li>
+<li><span style="background: #cc0000;">&nbsp;&nbsp;&nbsp;</span> bs1400</li>
+<li><span style="background: #a40000;">&nbsp;&nbsp;&nbsp;</span> bs1600</li>
+<li><span style="background: #ef2929;">&nbsp;&nbsp;&nbsp;</span> bs1800</li>
+<li><span style="background: #cc0000;">&nbsp;&nbsp;&nbsp;</span> bs2000</li>
+<li><span style="background: #a40000;">&nbsp;&nbsp;&nbsp;</span> bs2200</li>
+<li><span style="background: #ef2929;">&nbsp;&nbsp;&nbsp;</span> bs2400</li>
+<li><span style="background: #cc0000;">&nbsp;&nbsp;&nbsp;</span> bs2600</li>
+<li><span style="background: #a40000;">&nbsp;&nbsp;&nbsp;</span> bs2800</li>
+<li><span style="background: #ef2929;">&nbsp;&nbsp;&nbsp;</span> bs3000</li>
+<li><span style="background: #edd400;">&nbsp;&nbsp;&nbsp;</span> qcd</li>
+<li><span style="background: #f57900;">&nbsp;&nbsp;&nbsp;</span> stt</li>
+<li><span style="background: #c17d11;">&nbsp;&nbsp;&nbsp;</span> sttB</li>
+<li><span style="background: #73d216;">&nbsp;&nbsp;&nbsp;</span> sttW</li>
+<li><span style="background: #3465a4;">&nbsp;&nbsp;&nbsp;</span> sttWB</li>
+<li><span style="background: #75507b;">&nbsp;&nbsp;&nbsp;</span> ttbar</li>
+</ul>
+<p>Observable 'mtw_allhad':<br /><img src="plots/mtw_allhad_stack.png" /></p>
+
+</div>
+<h1 onclick=$('div6').toggle()>6. Limits Bayesian</h1><div class="inner" id="div6">
+<p><table cellpadding="2" border="1">
+<tr><th>signal process</th><th>expected limit</th><th>expected limit (central 1sigma)</th><th>expected limit (central 2sigma)</th><th>observed limit</th></tr>
+<tr><td>1200</td><td>0.06</td><td>0.0428--0.084</td><td>0.0318--0.115</td><td>0.0553 +- 0.000868</td></tr>
+<tr><td>1400</td><td>0.0803</td><td>0.0565--0.112</td><td>0.0419--0.154</td><td>0.11 +- 0.00172</td></tr>
+<tr><td>1600</td><td>0.125</td><td>0.0873--0.172</td><td>0.0655--0.224</td><td>0.0671 +- 0.000694</td></tr>
+<tr><td>1800</td><td>0.15</td><td>0.107--0.214</td><td>0.0774--0.274</td><td>0.116 +- 0.000855</td></tr>
+<tr><td>2000</td><td>0.196</td><td>0.141--0.281</td><td>0.104--0.374</td><td>0.288 +- 0.00192</td></tr>
+<tr><td>2200</td><td>0.266</td><td>0.189--0.38</td><td>0.134--0.513</td><td>0.456 +- 0.00435</td></tr>
+<tr><td>2400</td><td>0.393</td><td>0.285--0.552</td><td>0.21--0.771</td><td>0.448 +- 0.00238</td></tr>
+<tr><td>2600</td><td>0.591</td><td>0.419--0.851</td><td>0.314--1.18</td><td>0.611 +- 0.00501</td></tr>
+<tr><td>2800</td><td>0.788</td><td>0.563--1.14</td><td>0.425--1.51</td><td>0.976 +- 0.00687</td></tr>
+<tr><td>3000</td><td>1.18</td><td>0.84--1.66</td><td>0.65--2.46</td><td>1.44 +- 0.0196</td></tr>
+</table>
+</p>
+<p><p><img src="plots/limit_band_plot-bayesian.png" /></p></p>
+<p><p><img src="plots/limit_band_plot-log-bayesian.png" /></p></p>
+
+</div>
+<hr /><p>This page was generated at 2017-07-27 02:32:37.909761 for workdir '/uscms_data/d3/lcorcodi/BStar13TeV/CMSSW_7_4_1/src/BStar13TeV/limitsetting/theta/analysis_bstar_vector_had/analysis'.</p></body></html>

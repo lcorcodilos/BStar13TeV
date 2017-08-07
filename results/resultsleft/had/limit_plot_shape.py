@@ -1,5 +1,7 @@
 import array, math
 
+# TURN OFF BLINDING BUT UNCOMMENTING g_limit.Draw()'s'
+
 def Inter(g1,g2):
 	xaxisrange = g1.GetXaxis().GetXmax()-g1.GetXaxis().GetXmin()
 	xaxismin = g1.GetXaxis().GetXmin()
@@ -81,7 +83,7 @@ parser.add_option('--noTheory', metavar='T', action='store_true',
                   dest='noTheory',
                   help='do not plot theory curves')
 parser.add_option('-l', '--lumi', metavar='F', type='string', action='store',
-                  default       =       '27203',
+                  default       =       '35851',
                   dest          =       'lumi',
                   help          =       'Luminosity option')
 
@@ -104,11 +106,11 @@ xsec_bsl = Cons['xsec_bsl']
 xsec_ttbar = Cons['xsec_ttbar']
 xsec_qcd = Cons['xsec_qcd']
 xsec_st = Cons['xsec_st']
-#nev_bsr = Cons['nev_bsr']
-nev_bsl = Cons['nev_bsl']
-nev_ttbar = Cons['nev_ttbar']
-nev_qcd = Cons['nev_qcd']
-nev_st = Cons['nev_st']
+# nev_bsr = Cons['nev_bsr']
+# nev_bsl = Cons['nev_bsl']
+# nev_ttbar = Cons['nev_ttbar']
+# nev_qcd = Cons['nev_qcd']
+# nev_st = Cons['nev_st']
 
 Lumi = options.lumi
 
@@ -533,6 +535,7 @@ if __name__ == "__main__":
     #expup = Inter(g_mclimit,graphWPup)
     #expdown = Inter(g_mclimit,graphWPdown)
 
+    print "intersection of expected - " + str(exp)
 
     #print "intersections:"
     #print "Observed"

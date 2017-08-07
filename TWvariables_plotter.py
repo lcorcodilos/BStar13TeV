@@ -11,8 +11,8 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 from ROOT import *
 from array import *
 from optparse import OptionParser
-gROOT.Macro("rootlogon.C")
-gROOT.LoadMacro("insertlogo.C+")
+#gROOT.Macro("rootlogon.C")
+#gROOT.LoadMacro("insertlogo.C+")
 parser = OptionParser()
 
 
@@ -21,7 +21,7 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
                   dest		=	'cuts',
                   help		=	'Cuts type (ie default, rate, etc)')
 parser.add_option('-l', '--lumi', metavar='F', type='string', action='store',
-                  default	=	'27203pb',
+                  default	=	'35851pb',
                   dest		=	'lumi',
                   help		=	'Lumi folder to look in')
 parser.add_option('-y', '--modmass', metavar='F', type='string', action='store',
@@ -33,8 +33,8 @@ parser.add_option('-y', '--modmass', metavar='F', type='string', action='store',
 cuts = options.cuts
 
 
-import Bstar_Functions	
-from Bstar_Functions import *
+#import Bstar_Functions	
+#from Bstar_Functions import *
 
 #Consts = LoadConstants()
 #lumi = Consts['lumi']
@@ -43,7 +43,7 @@ Lumi = options.lumi
 
 pie = TMath.Pi()
 
-kinVar = ['Tau_21',  	'Mt', 		'Tau_32', 	'MaxSJCSV', 	'dyfull', 	'dysemi', 	'Mw',	'MtStack'	]
+kinVar = ['Tau_21',  	'Mt', 		'Tau_32', 	'MaxSJCSV', 	'dyfull', 	'dysemi', 	'Mw',	'MwStack'	]
 kinBin = [10, 		 20, 		  10, 		  20,		  12,		   12,		 30,	    30		]
 kinLow = [0, 		   0, 		   0, 		   0,		   0,		    0,		  0,	     0		]
 kinHigh= [1.0, 		 500, 		 1.0, 		   1,		   5,		    5,		 300,	    300		]
@@ -60,9 +60,9 @@ if options.modmass!="nominal":
 	print "using modm uncertainty"
 	mmstr = "_modm_"+options.modmass
 
-SR1200 = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesweightedsignalLH1200_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
-SR2800 = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesweightedsignalLH2800_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
-SR2000 = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesweightedsignalLH2000_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
+SR1200 = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesweightedsignalRH1200_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
+SR2800 = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesweightedsignalRH2800_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
+SR2000 = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesweightedsignalRH2000_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
 
 Data = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesdata_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
 QCDmc = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesQCD_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
@@ -70,59 +70,145 @@ TTmc = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesweightedttbar_Trigger_nominal_n
 
 ST = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesweightedsingletop_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
 
-#---------For ttbar closure test, using MtStack-----------------------------------
+#---------For ttbar closure test, using MwStack-----------------------------------
+# Commented out since I wasn't using it - LC 5/30/17
+# st2 = ROOT.THStack('st2','st2')
+# MwStackData = Data.Get('MwStack')
+# MwStackBE = Data.Get('QCDbkgMwStack')
+# MwStackTTmc = TTmc.Get('MwStack')
+# MwStackTTmcBE = TTmc.Get('QCDbkgMwStack')
 
-st2 = ROOT.THStack('st2','st2')
-MtStackData = Data.Get('MtStack')
-MtStackBE = Data.Get('QCDbkgMtStack')
-MtStackTTmc = TTmc.Get('MtStack')
-MtStackTTmcBE = TTmc.Get('QCDbkgMtStack')
-
-#MtStackData.GetXaxis().SetTitle("M_{t}")
-#MtStackBE.GetXaxis().SetTitle("M_{t}")
-#MtStackTTmc.GetXaxis().SetTitle("M_{t}")
-
-cMtStack = TCanvas('MtStack', 'Top mass with Full selection', 700, 700)
-legend = TLegend(0.7, 0.6, 0.93, 0.9)
-
-cMtStack.SetLeftMargin(0.16)
-cMtStack.SetRightMargin(0.05)
-cMtStack.SetTopMargin(0.13)
-cMtStack.SetBottomMargin(0.15)
+# MwStackData.Rebin(5)
+# MwStackBE.Rebin(5)
+# MwStackTTmc.Rebin(5)
+# MwStackTTmcBE.Rebin(5)
 
 
-MtStackBE.Add(MtStackTTmcBE,-1)
+# MwStackData.GetXaxis().SetTitle("Mass candidate W jet")
+# MwStackBE.GetXaxis().SetTitle("Mass candidate W jet")
+# MwStackTTmc.GetXaxis().SetTitle("Mass candidate W jet")
 
-MtStackBE.SetFillColor(kYellow)
-MtStackTTmc.SetFillColor(kRed)
+# cMwStack = TCanvas('MwStack', 'W mass with Full selection', 700, 700)
+# legend = TLegend(0.7, 0.6, 0.93, 0.9)
 
-st2.Add(MtStackBE)
-st2.Add(MtStackTTmc)
+# cMwStack.SetLeftMargin(0.16)
+# cMwStack.SetRightMargin(0.05)
+# cMwStack.SetTopMargin(0.13)
+# cMwStack.SetBottomMargin(0.15)
 
-legend.AddEntry( MtStackData, 'Data', 'P')
-legend.AddEntry( MtStackBE, 'QCD background prediction', 'F')	
-legend.AddEntry( MtStackTTmc, 't#bar{t} MC prediction', 'F')
 
-st2.SetMaximum(MtStackData.GetMaximum() * 1.3)
-st2.SetMinimum(0.1)
-st2.SetTitle(";M_{t} (GeV);Counts")
-st2.Draw("hist")
+# MwStackBE.Add(MwStackTTmcBE,-1)
 
-MtStackData.SetMaximum(MtStackData.GetMaximum() * 1.3)
-MtStackData.Draw("same")
+# MwStackBE.SetFillColor(kYellow)
+# MwStackTTmc.SetFillColor(kRed)
 
-cMtStack.cd()
+# st2.Add(MwStackBE)
+# st2.Add(MwStackTTmc)
 
-legend.Draw()
+# legend.AddEntry( MwStackData, 'Data', 'P')
+# legend.AddEntry( MwStackBE, 'QCD background prediction', 'F')	
+# legend.AddEntry( MwStackTTmc, 't#bar{t} MC prediction', 'F')
 
-cMtStack.Print('MtStack_'+Lumi+'_'+options.cuts+'.root')
-cMtStack.Print('MtStack_'+Lumi+'_'+options.cuts+'.pdf')
+# st2.SetMaximum(MwStackData.GetMaximum() * 1.3)
+# st2.SetMinimum(0.1)
+# st2.SetTitle(";Mass candidate W jet (GeV);Counts")
+# st2.Draw("hist")
+
+# MwStackData.SetMaximum(MwStackData.GetMaximum() * 1.3)
+# MwStackData.Draw("same")
+
+# cMwStack.cd()
+
+# legend.Draw()
+
+# cMwStack.Print('MwStack_'+Lumi+'_'+options.cuts+'.root')
+# cMwStack.Print('MwStack_'+Lumi+'_'+options.cuts+'.pdf')
+
+#-----------------Now plot 2D distributions---------------------------------------
+
+cTaus = TCanvas("Taus","Taus", 1700, 1000)
+cTausPfx = TCanvas("TausPfx","TausPfx", 1700, 1000)
+cTausPfy = TCanvas("TausPfy","TausPfy", 1700, 1000)
+cWspace = TCanvas("Wspace", "Wspace", 1700, 1000)
+
+cTaus.Divide(3,2, 0.005, 0.005)
+cTausPfx.Divide(3,2, 0.005, 0.005)
+cTausPfy.Divide(3,2, 0.005, 0.005)
+cWspace.Divide(3,2, 0.005, 0.005)
+
+TTmcTaus = TTmc.Get("Tau32vsTau21")
+QCDmcTaus = QCDmc.Get("Tau32vsTau21")
+SR1200Taus = SR1200.Get("Tau32vsTau21")
+SR2800Taus = SR2800.Get("Tau32vsTau21")
+SR2000Taus = SR2000.Get("Tau32vsTau21")
+STTaus = ST.Get("Tau32vsTau21")
+
+TTmcWspace = TTmc.Get("Tau21vWmass")
+QCDmcWspace = QCDmc.Get("Tau21vWmass")
+SR1200Wspace = SR1200.Get("Tau21vWmass")
+SR2800Wspace = SR2800.Get("Tau21vWmass")
+SR2000Wspace = SR2000.Get("Tau21vWmass")
+STWspace = ST.Get("Tau21vWmass")
+
+histList = [	[QCDmcTaus,QCDmcWspace],
+			[TTmcTaus,TTmcWspace],
+			[STTaus,STWspace],
+			[SR1200Taus,SR1200Wspace],
+			[SR2000Taus,SR2000Wspace],
+			[SR2800Taus,SR2800Wspace]	]
+titleList = ["QCD MC","TTbar MC","Single top MC","b*_{R} 1200 GeV","b*_{R} 2000 GeV","b*_{R} 2800 GeV"]
+title2List = ["QCD", "TT", "ST", "SR1200", "SR2000", "SR28000"]
+
+gStyle.SetOptStat(0)
+
+for i in range(len(titleList)):
+	cTaus.cd(i+1)
+	cTaus.GetPad(i+1).SetRightMargin(0.15)
+	histList[i][0].SetTitle(titleList[i])
+	histList[i][0].GetXaxis().SetTitle("#tau_{21}")
+	histList[i][0].GetYaxis().SetTitle("#tau_{32}")
+	histList[i][0].GetYaxis().SetTitleOffset(0.7)
+	histList[i][0].Draw("COLZ")
+	# palette = histList[i][0].GetListOfFunctions().FindObject("palette")
+	# palette.SetX1NDC(0.85)
+	# palette.SetX2NDC(0.89)
+	cTausPfx.cd(i+1)
+	profilex = histList[i][0].ProfileX(titleList[i]+"_pfx",1,-1,"o")
+	#profilex.SetMinimum(0)
+	#profilex.SetMaximum(1)
+	profilex.Draw()
+	cTausPfy.cd(i+1)
+	profiley = histList[i][0].ProfileY(titleList[i]+"_pfy",1,-1,"o")
+	#profiley.SetMinimum(0)
+	#profiley.SetMaximum(1)
+	profiley.Draw()
+
+	
+cTausPfx.Print("Tau32vsTau21_pfx.png","png")
+cTausPfy.Print("Tau32vsTau21_pfy.png","png")
+cTaus.Print("Tau32vsTau21.png","png")
+
+for i in range(len(titleList)):
+	cWspace.cd(i+1)
+	cWspace.GetPad(i+1).SetRightMargin(0.15)
+	histList[i][1].SetTitle(titleList[i])
+	histList[i][1].GetXaxis().SetTitle("M_{W}")
+	histList[i][1].GetYaxis().SetTitle("#tau_{21}")
+	histList[i][1].GetYaxis().SetTitleOffset(0.7)
+	histList[i][1].Draw("COLZ")
+	# palette = histList[i][0].GetListOfFunctions().FindObject("palette")
+	# palette.SetX1NDC(0.85)
+	# palette.SetX2NDC(0.89)
+
+cWspace.Print("Tau21vsWmass.png","png")
+
 
 #------------------Resume---------------------------------------------------------
 
 for i in range(0, iterations-1):
 	print "kinVar = " + "'" + kinVar[i] + "'"
 
+	QCDmc = ROOT.TFile("rootfiles/"+Lumi+"/TWvariablesQCD_Trigger_nominal_none"+mmstr+"_PSET_"+options.cuts+kin+".root")
 
 
 	c1 = TCanvas(kinVar[i], 'TBD', 700, 700)
@@ -145,11 +231,6 @@ for i in range(0, iterations-1):
 
 
 	Mult = 1.0
-
-
-
-
-	print "Root files opened"
 
 	DataFS = Data.Get(kinVar[i])
 	TTmcFS = TTmc.Get(kinVar[i])
@@ -193,19 +274,23 @@ for i in range(0, iterations-1):
 	TTmcFS.SetLineColor(kRed)
 	TTmcFS.SetLineWidth(2)
 	QCDmcFS.SetLineColor(kBlack)
+	QCDmcFS.SetFillColor(5)
 	QCDmcFS.SetLineWidth(2)
 	SR1200FS.SetLineColor(kBlue)
-	SR1200FS.SetLineWidth(1)
-	SR2800FS.SetLineColor(kBlue+1)
-	SR2800FS.SetLineWidth(1)
-	SR2000FS.SetLineColor(kBlue+2)
-	SR2000FS.SetLineWidth(1)
-	STFS.SetLineColor(kBlue)
-	STFS.SetLineWidth(1)
+	SR1200FS.SetLineWidth(2)
+	SR1200FS.SetLineStyle(5)
+	SR2800FS.SetLineColor(kBlue-3)
+	SR2800FS.SetLineWidth(2)
+	SR2800FS.SetLineStyle(5)
+	SR2000FS.SetLineColor(kBlue+3)
+	SR2000FS.SetLineWidth(2)
+	SR2000FS.SetLineStyle(5)
+	STFS.SetLineColor(kGreen-3)
+	STFS.SetLineWidth(2)
 
 
 
-	histList = [DataFS, TTmcFS, QCDmcFS, SR1200FS, SR2800FS, SR2000FS, STFS]
+	histList = [TTmcFS, QCDmcFS, SR1200FS, SR2800FS, SR2000FS, STFS, DataFS]
 
 	yMax = histList[0].GetMaximum()
 	maxHist = histList[0]
@@ -216,26 +301,34 @@ for i in range(0, iterations-1):
 	for h in histList:
 		h.SetMaximum(yMax*1.3)
 		h.SetTitle("")
+		axis = h.GetXaxis()
+
 		if kinVar[i] == 'Mw' or kinVar[i] == 'Mt':
-			h.GetXaxis().SetTitle(xTitle[i]+'(GeV)')
+			axis.SetTitle(xTitle[i]+'(GeV)')
 		else:
-			h.GetXaxis().SetTitle(xTitle[i])
+			axis.SetTitle(xTitle[i])
 
-	#leg.AddEntry( DataFS, 'Data', 'P')
-	leg.AddEntry( QCDmcFS, 'QCD MC', 'L')	
-	leg.AddEntry( TTmcFS, 't#bar{t} MC prediction', 'L')
-	leg.AddEntry( STFS, 'Single top quark MC prediction', 'L')
-	leg.AddEntry( SR1200FS, 'b*_{L} at 1200 GeV', 'L')
-	leg.AddEntry( SR2800FS, 'b*_{L} at 2800 GeV', 'L')
-	leg.AddEntry( SR2000FS, 'b*_{L} at 2000 GeV', 'L')
+		if kinVar[i] == "Mt" or kinVar[i] == 'Mw':
+			axis.SetNdivisions(-1005)
+		if kinVar[i] == "Tau_21" or kinVar[i] == "Tau_32":
+			axis.SetRangeUser(0,1)
 
-	#DataFS.Draw("same")
-	TTmcFS.Draw("samehist")
+#	leg.AddEntry( DataFS, 'Data', 'P')
+	leg.AddEntry( QCDmcFS, 'QCD MC', 'F')	
+	leg.AddEntry( TTmcFS, 't#bar{t} MC', 'L')
+	leg.AddEntry( STFS, 'Single top quark MC', 'L')
+	leg.AddEntry( SR1200FS, 'b*_{R} at 1200 GeV', 'L')
+	leg.AddEntry( SR2800FS, 'b*_{R} at 2800 GeV', 'L')
+	leg.AddEntry( SR2000FS, 'b*_{R} at 2000 GeV', 'L')
+
+#	DataFS.Draw("same")
 	QCDmcFS.Draw("samehist")
+	STFS.Draw("samehist")
+	TTmcFS.Draw("samehist")
 	SR1200FS.Draw("samehist")
 	SR2800FS.Draw("samehist")
 	SR2000FS.Draw("samehist")
-	STFS.Draw("samehist")
+	
 
 	#out.SetTitle(st1_label[i])
 	gPad.SetLeftMargin(.16)
@@ -250,14 +343,15 @@ for i in range(0, iterations-1):
 	prelim = TLatex()
 	prelim.SetNDC()
 	#4 is 5.0fb-1, 5 is 1.0fb-1, 6 is 10.0fb-1
-	if lumi == 1000:
-		insertlogo( main, 5, 11 )
-	elif lumi == 5000:
-		insertlogo( main, 4, 11)
-	elif lumi == 10000:
-		insertlogo( main, 6, 11)
-	elif lumi == 2553.0:
-		insertlogo( main, 8, 11)
+	# if lumi == 1000:
+	# 	insertlogo( main, 5, 11 )
+	# elif lumi == 5000:
+	# 	insertlogo( main, 4, 11)
+	# elif lumi == 10000:
+	# 	insertlogo( main, 6, 11)
+	# elif lumi == 2553.0:
+	# 	insertlogo( main, 8, 11)
+	#insertlogo( main, 8, 11)
 
 
 
@@ -280,7 +374,8 @@ for i in range(0, iterations-1):
 	c1.Print('plots/' + kinVar[i] + '_'+Lumi+'_PSET_'+options.cuts+'.pdf', 'pdf')
 	c1.Print('plots/' + kinVar[i] + '_'+Lumi+'_PSET_'+options.cuts+'.png', 'png')
 
-# Just for MtStack
+	c1.Close()
+# Just for MwStack
 '''c2 = TCanvas(kinVar[7], 'TBD', 700, 700)
 main = ROOT.TPad("main", "main", 0, 0, 1, 1)
 st1 = ROOT.THStack('st1', 'st1')

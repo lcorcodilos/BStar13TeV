@@ -1,5 +1,7 @@
 import array, math
 
+# TURN OFF BLINDING BUT UNCOMMENTING g_limit.Draw()'s'
+
 def Inter(g1,g2):
 	xaxisrange = g1.GetXaxis().GetXmax()-g1.GetXaxis().GetXmin()
 	xaxismin = g1.GetXaxis().GetXmin()
@@ -81,7 +83,7 @@ parser.add_option('--noTheory', metavar='T', action='store_true',
                   dest='noTheory',
                   help='do not plot theory curves')
 parser.add_option('-l', '--lumi', metavar='F', type='string', action='store',
-                  default       =       '2530',
+                  default       =       '35851',
                   dest          =       'lumi',
                   help          =       'Luminosity option')
 
@@ -103,11 +105,11 @@ xsec_bsr = Cons['xsec_bsr']
 xsec_ttbar = Cons['xsec_ttbar']
 xsec_qcd = Cons['xsec_qcd']
 xsec_st = Cons['xsec_st']
-nev_bsr = Cons['nev_bsr']
-#nev_bsl = Cons['nev_bsl']
-nev_ttbar = Cons['nev_ttbar']
-nev_qcd = Cons['nev_qcd']
-nev_st = Cons['nev_st']
+# nev_bsr = Cons['nev_bsr']
+# nev_bsl = Cons['nev_bsl']
+# nev_ttbar = Cons['nev_ttbar']
+# nev_qcd = Cons['nev_qcd']
+# nev_st = Cons['nev_st']
 
 Lumi = options.lumi
 
@@ -231,8 +233,8 @@ if __name__ == "__main__":
     g_limit = TGraph(len(x_mass), x_mass, y_limit)
     g_limit.SetTitle("")
     g_limit.SetMarkerStyle(0)
-    g_limit.SetMarkerColor(1)
-    g_limit.SetLineColor(1)
+    g_limit.SetMarkerColorAlpha(1,0)
+    g_limit.SetLineColorAlpha(1,0)
     g_limit.SetLineWidth(3)
     g_limit.SetMarkerSize(0.5) #0.5
     g_limit.GetXaxis().SetTitle("M_{b*_{"+cstr+"}} (TeV)")
@@ -259,7 +261,7 @@ if __name__ == "__main__":
     g_mclimit.SetLineStyle(2)
     g_mclimit.SetLineWidth(3)
     g_mclimit.SetMarkerSize(0.)
-    g_mclimit.GetXaxis().SetTitle("m_{Z'} (TeV/c^{2})")
+    g_mclimit.GetXaxis().SetTitle("m_{b*} (TeV/c^{2})")
     g_mclimit.GetYaxis().SetTitle("Upper Limit #sigma_{b*_{"+cstr+"}} #times b (pb)")
     g_mclimit.GetYaxis().SetTitleSize(0.03)
     g_mclimit.Draw("l")
@@ -287,7 +289,7 @@ if __name__ == "__main__":
     graphWP.SetTitle("")
     graphWP.SetMarkerStyle(23)
     graphWP.SetMarkerColor(4)
-    graphWP.SetLineColor(4)
+    graphWP.SetLineColorAlpha(4,0.5)
     graphWP.SetLineWidth(2)
     graphWP.SetMarkerSize(0.5)
     q = 0
@@ -416,7 +418,7 @@ if __name__ == "__main__":
 	  legend = TLegend(0.42, 0.35, 0.86, 0.75, legLabel)
     
     #legend.SetTextFont(42)
-    legend.AddEntry(g_limit, "Observed (95% CL)","l")
+    #legend.AddEntry(g_limit, "Observed (95% CL)","l")
     legend.AddEntry(g_mclimit, "Expected (95% CL)","l")
     legend.AddEntry(g_error, "#pm 1 #sigma Expected", "f")
     legend.AddEntry(g_error95, "#pm 2 #sigma Expected", "f")
@@ -530,6 +532,7 @@ if __name__ == "__main__":
     #expup = Inter(g_mclimit,graphWPup)
     #expdown = Inter(g_mclimit,graphWPdown)
 
+    print "intersection of expected - " + str(exp)
 
     #print "intersections:"
     #print "Observed"

@@ -1,5 +1,7 @@
 import array, math
 
+# TURN OFF BLINDING BUT UNCOMMENTING g_limit.Draw()'s'
+
 def Inter(g1,g2):
 	xaxisrange = g1.GetXaxis().GetXmax()-g1.GetXaxis().GetXmin()
 	xaxismin = g1.GetXaxis().GetXmin()
@@ -80,6 +82,10 @@ parser.add_option('--noTheory', metavar='T', action='store_true',
                   default=False,
                   dest='noTheory',
                   help='do not plot theory curves')
+parser.add_option('-l', '--lumi', metavar='F', type='string', action='store',
+                  default       =       '35851',
+                  dest          =       'lumi',
+                  help          =       'Luminosity option')
 
 (options, args) = parser.parse_args()
 
@@ -88,6 +94,26 @@ argv = []
 from ROOT import *
 import ROOT
     
+import Bstar_Functions  
+from Bstar_Functions import *
+
+#Default lumi removed from constant pull so that it can be defined in options instead
+Cons = LoadConstants()
+#lumi = Cons['lumi']
+#ttagsf = Cons['ttagsf']
+xsec_bsr = Cons['xsec_bsr']
+xsec_bsl = Cons['xsec_bsl']
+xsec_ttbar = Cons['xsec_ttbar']
+xsec_qcd = Cons['xsec_qcd']
+xsec_st = Cons['xsec_st']
+# nev_bsr = Cons['nev_bsr']
+# nev_bsl = Cons['nev_bsl']
+# nev_ttbar = Cons['nev_ttbar']
+# nev_qcd = Cons['nev_qcd']
+# nev_st = Cons['nev_st']
+
+Lumi = options.lumi
+
 def make_smooth_graph(h2,h3):
     h2 = TGraph(h2)
     h3 = TGraph(h3)
@@ -118,9 +144,9 @@ if __name__ == "__main__":
     TPT.SetFillColor(0)
     TPT.SetBorderSize(0)
     TPT.SetTextAlign(12)
-    xsec = {'800':2.981,'900':1.449,'1000':0.7361,'1100':0.3886,'1200':0.2113,'1300':0.1182,'1400':0.0678,'1500':0.03964,'1600':0.0236,'1700':0.01427,'1800':0.008739,'1900':0.005439,'2000':0.003422}
-    xsecup = {'800':3.396,'900':1.661,'1000':0.8488,'1100':0.4507,'1200':0.2462,'1300':0.1384,'1400':0.07952,'1500':0.04662,'1600':0.02785,'1700':0.01687,'1800':0.01038,'1900':0.006462,'2000':0.004071}
-    xsecdown = {'800':2.626,'900':1.267,'1000':0.6413,'1100':0.3365,'1200':0.1828,'1300':0.1019,'1400':0.05813,'1500':0.03386,'1600':0.02014,'1700':0.01214,'1800':0.00744,'1900':0.004607,'2000':0.002896}
+    xsec = {}
+    for key in xsec_bsr:
+        xsec[key] = xsec_bsr[key]+xsec_bsl[key]
     mult=0.0
     if options.coupling == "right":
 	mult = 1.0
@@ -132,15 +158,15 @@ if __name__ == "__main__":
 	mult = 2.0
 	cstr = "LR"
 
-    masses = [800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600,1700,1800,1900,2000] 
-    x_mass = array.array('d')
+    masses = [1200, 1400, 1600, 1800, 2000, 2200, 2400, 2600, 2800, 3000] 
+    x_mass = array('d')
 
-    y_limit = array.array('d')
-    y_mclimit  = array.array('d')
-    y_mclimitlow68 = array.array('d')
-    y_mclimitup68 = array.array('d')
-    y_mclimitup95 = array.array('d')
-    y_mclimitlow95 = array.array('d')
+    y_limit = array('d')
+    y_mclimit  = array('d')
+    y_mclimitlow68 = array('d')
+    y_mclimitup68 = array('d')
+    y_mclimitup95 = array('d')
+    y_mclimitlow95 = array('d')
     
     #logScale = False
     logScale = options.useLog
@@ -209,16 +235,16 @@ if __name__ == "__main__":
     g_limit = TGraph(len(x_mass), x_mass, y_limit)
     g_limit.SetTitle("")
     g_limit.SetMarkerStyle(0)
-    g_limit.SetMarkerColor(1)
-    g_limit.SetLineColor(1)
+    g_limit.SetMarkerColorAlpha(1,0)
+    g_limit.SetLineColorAlpha(1,0)
     g_limit.SetLineWidth(3)
     g_limit.SetMarkerSize(0.5) #0.5
-    g_limit.GetXaxis().SetTitle("M_{B*_{"+cstr+"}} (TeV)")
-    g_limit.GetYaxis().SetTitle("Upper Limit #sigma_{B*_{"+cstr+"}} #times B(B*_{"+cstr+"}#rightarrowtW) [pb]")
+    g_limit.GetXaxis().SetTitle("M_{b*_{"+cstr+"}} (TeV)")
+    g_limit.GetYaxis().SetTitle("Upper Limit #sigma_{b*_{"+cstr+"}} #times B(b*_{"+cstr+"}#rightarrowtW) [pb]")
 
     g_limit.Draw("alp")
     g_limit.GetYaxis().SetRangeUser(0., 80.)
-    g_limit.GetXaxis().SetRangeUser(0.8, 2.0)
+    g_limit.GetXaxis().SetRangeUser(1, 3.2)
     if logScale:
         g_limit.SetMinimum(3.0e-3) #0.005
         g_limit.SetMaximum(7000.) #10000
@@ -227,6 +253,7 @@ if __name__ == "__main__":
         g_limit.SetMaximum(0.5)#20.)
 
     g_limit.Draw("al")
+
     
     g_mclimit = TGraph(len(x_mass), x_mass, y_mclimit)
     g_mclimit.SetTitle("")
@@ -236,8 +263,8 @@ if __name__ == "__main__":
     g_mclimit.SetLineStyle(2)
     g_mclimit.SetLineWidth(3)
     g_mclimit.SetMarkerSize(0.)
-    g_mclimit.GetXaxis().SetTitle("m_{Z'} (TeV/c^{2})")
-    g_mclimit.GetYaxis().SetTitle("Upper Limit #sigma_{B*_{"+cstr+"}} #times B (pb)")
+    g_mclimit.GetXaxis().SetTitle("m_{b*} (TeV/c^{2})")
+    g_mclimit.GetYaxis().SetTitle("Upper Limit #sigma_{b*_{"+cstr+"}} #times b (pb)")
     g_mclimit.GetYaxis().SetTitleSize(0.03)
     g_mclimit.Draw("l")
     g_mclimit.GetYaxis().SetRangeUser(0., 80.)
@@ -248,23 +275,23 @@ if __name__ == "__main__":
     g_mc2plus = TGraph(len(x_mass), x_mass, y_mclimitup95)
     g_mc2minus = TGraph(len(x_mass), x_mass, y_mclimitlow95)
 
-    x_mass2 = array.array('d', [750, 1000, 1250, 1500, 2000, 3000] )
-    #x_mass_fixed = array.array('d', [1, 2,3] )
+    x_mass2 = array('d', [750, 1000, 1250, 1500, 2000, 3000] )
+    #x_mass_fixed = array('d', [1, 2,3] )
 
 
-#    x_mass_fixed = array.array('d', [1.0, 1.3, 1.6, 1.9, 2.2, 2.5, 2.8, 3.1, 3.5]) 
-#    y_kkg        = array.array('d', [4.451, 1.203, 0.395, 0.150, 0.065, 0.032, 0.018, 0.011, 0.006]) 
+#    x_mass_fixed = array('d', [1.0, 1.3, 1.6, 1.9, 2.2, 2.5, 2.8, 3.1, 3.5]) 
+#    y_kkg        = array('d', [4.451, 1.203, 0.395, 0.150, 0.065, 0.032, 0.018, 0.011, 0.006]) 
 
 
     
-    x_mass_fixed = array.array('d', [ 1.0, 1.3, 1.6, 1.9, 2.2, 2.5, 2.8, 3.1, 3.5
+    x_mass_fixed = array('d', [ 1.0, 1.3, 1.6, 1.9, 2.2, 2.5, 2.8, 3.1, 3.5
                                       ] )
 
     graphWP = ROOT.TGraph()
     graphWP.SetTitle("")
     graphWP.SetMarkerStyle(23)
     graphWP.SetMarkerColor(4)
-    graphWP.SetLineColor(4)
+    graphWP.SetLineColorAlpha(4,0.5)
     graphWP.SetLineWidth(2)
     graphWP.SetMarkerSize(0.5)
     q = 0
@@ -275,55 +302,55 @@ if __name__ == "__main__":
     graphWP.SetLineWidth(3)
     graphWP.SetLineColor(4 )
 
-    graphWPup = ROOT.TGraph()
-    graphWPup.SetTitle("")
-    graphWPup.SetMarkerStyle(23)
-    graphWPup.SetMarkerColor(4)
-    graphWPup.SetLineColor(4)
-    graphWPup.SetLineWidth(2)
-    graphWPup.SetMarkerSize(0.5)
+    # graphWPup = ROOT.TGraph()
+    # graphWPup.SetTitle("")
+    # graphWPup.SetMarkerStyle(23)
+    # graphWPup.SetMarkerColor(4)
+    # graphWPup.SetLineColor(4)
+    # graphWPup.SetLineWidth(2)
+    # graphWPup.SetMarkerSize(0.5)
 
     q = 0
-    for bsmass in masses:
-        rt_xsec = mult*xsecup[str(int(bsmass))]
-    	graphWPup.SetPoint(q,    bsmass/1000. ,   rt_xsec    )
-	q+=1
+ #    for bsmass in masses:
+ #        rt_xsec = mult*xsecup[str(int(bsmass))]
+ #    	graphWPup.SetPoint(q,    bsmass/1000. ,   rt_xsec    )
+	# q+=1
 
-    graphWPdown = ROOT.TGraph()
-    graphWPdown.SetTitle("")
-    graphWPdown.SetMarkerStyle(23)
-    graphWPdown.SetMarkerColor(4)
-    graphWPdown.SetLineColor(4)
-    graphWPdown.SetLineWidth(2)
-    graphWPdown.SetMarkerSize(0.5)
+    # graphWPdown = ROOT.TGraph()
+    # graphWPdown.SetTitle("")
+    # graphWPdown.SetMarkerStyle(23)
+    # graphWPdown.SetMarkerColor(4)
+    # graphWPdown.SetLineColor(4)
+    # graphWPdown.SetLineWidth(2)
+    # graphWPdown.SetMarkerSize(0.5)
 
     q = 0
-    for bsmass in masses:
-        rt_xsec = mult*xsecdown[str(int(bsmass))]
-    	graphWPdown.SetPoint(q,    bsmass/1000. ,   rt_xsec    )
-	q+=1
+ #    for bsmass in masses:
+ #        rt_xsec = mult*xsecdown[str(int(bsmass))]
+ #    	graphWPdown.SetPoint(q,    bsmass/1000. ,   rt_xsec    )
+	# q+=1
 
-    graphWPup.SetLineStyle(2 )
-    graphWPdown.SetLineStyle(2 )
+    # graphWPup.SetLineStyle(2 )
+    # graphWPdown.SetLineStyle(2 )
 
-    WPunc = make_smooth_graph(graphWPdown, graphWPup)
-    WPunc.SetFillColor(4)
-    WPunc.SetFillStyle(3004)
-    WPunc.SetLineColor(0)
+    # WPunc = make_smooth_graph(graphWPdown, graphWPup)
+    # WPunc.SetFillColor(4)
+    # WPunc.SetFillStyle(3004)
+    # WPunc.SetLineColor(0)
 
     g_error95 = make_smooth_graph(g_mc2minus, g_mc2plus)
-    g_error95.SetFillColor(TROOT.kYellow)
+    g_error95.SetFillColor(kYellow)
     g_error95.SetLineColor(0)
     g_error95.Draw("lf")
     g_error95.Draw("lf")
     
     g_error = make_smooth_graph(g_mcminus, g_mcplus)
-    g_error.SetFillColor( TROOT.kGreen)
+    g_error.SetFillColor( kGreen)
     g_error.SetLineColor(0)
     g_error.Draw("lf")
     g_error.Draw("lf")
     
-    WPunc.Draw("lf")
+    #WPunc.Draw("lf")
 
   #  g2_kkg = g_kkg.Clone()
   #  h_kkg = g_kkg.GetHistogram()
@@ -335,8 +362,8 @@ if __name__ == "__main__":
     g_mclimit.Draw("l")
     g_limit.Draw("l")
     graphWP.Draw("l")
-    graphWPup.Draw("l")
-    graphWPdown.Draw("l")
+    # graphWPup.Draw("l")
+    # graphWPdown.Draw("l")
     #h_kkg.Draw("LP")
 
     #g_error95.SetName("g_error95");
@@ -393,11 +420,11 @@ if __name__ == "__main__":
 	  legend = TLegend(0.42, 0.35, 0.86, 0.75, legLabel)
     
     #legend.SetTextFont(42)
-    legend.AddEntry(g_limit, "Observed (95% CL)","l")
+    #legend.AddEntry(g_limit, "Observed (95% CL)","l")
     legend.AddEntry(g_mclimit, "Expected (95% CL)","l")
     legend.AddEntry(g_error, "#pm 1 #sigma Expected", "f")
     legend.AddEntry(g_error95, "#pm 2 #sigma Expected", "f")
-    legend.AddEntry(graphWP, "Theory B*_{"+cstr+"}", "l")
+    legend.AddEntry(graphWP, "Theory b*_{"+cstr+"}", "l")
   #  legend.AddEntry(graphWPup, "Theory B*_{"+cstr+"} 1 #sigma uncertainty", "l")
     g_limit.GetYaxis().SetTitleOffset(1.4)
     if not options.noTheory :
@@ -425,7 +452,7 @@ if __name__ == "__main__":
     text1.SetTextFont(42)
     #text1.SetTextSizePixels(24)
     #text1.SetTextSizePixels(17)
-    text1.DrawLatex(0.2,0.84, "#scale[1.0]{CMS, L = 19.7 fb^{-1} at  #sqrt{s} = 8 TeV}")
+    text1.DrawLatex(0.2,0.84, "#scale[1.0]{CMS, L = "+Lumi+" pb^{-1} at  #sqrt{s} = 8 TeV}")
     
     text11 = ROOT.TLatex()
     text11.SetTextFont(42)
@@ -495,27 +522,28 @@ if __name__ == "__main__":
         postpend = postpend + "_notheory"
     TPT.Draw()		
     cv.RedrawAxis()
-    cv.SaveAs("limits_theta_"+postpend+".pdf")
-    cv.SaveAs("limits_theta_"+postpend+".gif")
-    cv.SaveAs("limits_theta_"+postpend+".png")
-    cv.SaveAs("limits_theta_"+postpend+".root")
+    cv.SaveAs("limits_theta_"+postpend+Lumi+".pdf")
+    cv.SaveAs("limits_theta_"+postpend+Lumi+".gif")
+    cv.SaveAs("limits_theta_"+postpend+Lumi+".png")
+    cv.SaveAs("limits_theta_"+postpend+Lumi+".root")
 
     obs = Inter(g_limit,graphWP)
     exp = Inter(g_mclimit,graphWP)
-    obsup = Inter(g_limit,graphWPup)
-    obsdown = Inter(g_limit,graphWPdown)
-    expup = Inter(g_mclimit,graphWPup)
-    expdown = Inter(g_mclimit,graphWPdown)
+    # obsup = Inter(g_limit,graphWPup)
+    # obsdown = Inter(g_limit,graphWPdown)
+    # expup = Inter(g_mclimit,graphWPup)
+    # expdown = Inter(g_mclimit,graphWPdown)
 
+    print "intersection of expected - " + str(exp)
 
-    print "intersections:"
-    print "Observed"
-    for i in range(0,len(obs)): 
-	if len(obsup)>i and len(obsdown)>i:
-    		print str(obs[i]) + " +" + str(abs(obsup[i]-obs[i])) + " -" + str(abs(obsdown[i]-obs[i]))
-    print "Experimental"
-    for i in range(0,len(exp)): 
-	if len(expup)>i and len(expdown)>i:
-    		print str(exp[i]) + " +" + str(abs(expup[i]-exp[i])) + " -" + str(abs(expdown[i]-exp[i]))
+ #    print "intersections:"
+ #    print "Observed"
+ #    for i in range(0,len(obs)): 
+	# if len(obsup)>i and len(obsdown)>i:
+ #    		print str(obs[i]) + " +" + str(abs(obsup[i]-obs[i])) + " -" + str(abs(obsdown[i]-obs[i]))
+ #    print "Experimental"
+ #    for i in range(0,len(exp)): 
+	# if len(expup)>i and len(expdown)>i:
+ #    		print str(exp[i]) + " +" + str(abs(expup[i]-exp[i])) + " -" + str(abs(expdown[i]-exp[i]))
 
    

@@ -1,6 +1,6 @@
 #! /bin/sh
 python Flist.py
-tar czvf tarball.tgz Files*.txt Alphabet/fn_bstar*.txt rootlogon.C TWanalyzer.py TWsequencer.py Bstar_Functions.py Triggerweight_data80X.root PileUp_Ratio_ttbar.root PileUp_Ratio_signalLH*.root PileUp_Ratio_signalRH*.root
+tar czvf tarball.tgz Files*.txt TWTopPtSF.root plots/TWrate_Maker*.root Alphabet/fn_bstar*.txt fitdata/*.txt Tagrate*2D*.root rootlogon.C TWanalyzer.py ModMassFile_*.root TWsequencer.py Bstar_Functions.py Triggerweight_2jethack_data.root PileUp_Ratio_ttbar.root
 mv Files*.txt txt_temp
 ./development/runManySections.py --createCommandFile --cmssw --addLog --setTarball=tarball.tgz \ana.listOfJobs commands.cmd
 ./runManySections.py --submitCondor commands.cmd

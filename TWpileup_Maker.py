@@ -31,6 +31,8 @@ ndata = fdata.Get("pileup")
 ndataup = fdataup.Get("pileup")
 ndatadown = fdatadown.Get("pileup")
 
+myData = ndata.Clone("myData")
+
 ndata.Sumw2()
 ndataup.Sumw2()
 ndatadown.Sumw2()
@@ -39,7 +41,7 @@ ndata.Scale(1./ndata.Integral())
 ndataup.Scale(1./ndataup.Integral())
 ndatadown.Scale(1./ndatadown.Integral())
 
-dttbar = fttbar.Get("npvtruehistUW")
+dttbar = fttbar.Get("npvhistUW")
 dttbar.Scale(1./dttbar.Integral())
 
 ttbar_pileup_reweight = ndata.Clone("Pileup_Ratio")
@@ -55,92 +57,118 @@ ttbar_pileup_reweight_down.Divide(dttbar)
 ttbar_pileup_reweight_down.Write()
 
 
-files = [
-#ROOT.TFile("TWPileupsignalLH1200.root"),
-ROOT.TFile("TWPileupsignalRH1200.root"),
-ROOT.TFile("TWPileupsignalLH1400.root"),
-ROOT.TFile("TWPileupsignalRH1400.root"),
-ROOT.TFile("TWPileupsignalLH1600.root"),
-ROOT.TFile("TWPileupsignalRH1600.root"),
-ROOT.TFile("TWPileupsignalLH1800.root"),
-ROOT.TFile("TWPileupsignalRH1800.root"),
-ROOT.TFile("TWPileupsignalLH2000.root"),
-ROOT.TFile("TWPileupsignalRH2000.root"),
-ROOT.TFile("TWPileupsignalLH2200.root"),
-ROOT.TFile("TWPileupsignalRH2200.root"),
-ROOT.TFile("TWPileupsignalLH2400.root"),
-ROOT.TFile("TWPileupsignalRH2400.root"),
-ROOT.TFile("TWPileupsignalLH2600.root"),
-ROOT.TFile("TWPileupsignalRH2600.root"),
-ROOT.TFile("TWPileupsignalLH2800.root"),
-ROOT.TFile("TWPileupsignalRH2800.root"),
-ROOT.TFile("TWPileupsignalLH3000.root"),
-ROOT.TFile("TWPileupsignalRH3000.root")
-#ROOT.TFile("TWPileupBprimeBToTW1200.root"),
-#ROOT.TFile("TWPileupBprimeBToTW1400.root"),
-#ROOT.TFile("TWPileupBprimeBToTW1600.root"),
-#ROOT.TFile("TWPileupBprimeBToTW1800.root"),
-#ROOT.TFile("TWPileupBprimeTToTW1200.root"),
-#ROOT.TFile("TWPileupBprimeTToTW1400.root"),
-#ROOT.TFile("TWPileupBprimeTToTW1600.root"),
-#ROOT.TFile("TWPileupBprimeTToTW1800.root")
 
-]
 
-names = [
-#"PileUp_Ratio_signalLH1200.root",
-"PileUp_Ratio_signalRH1200.root",
-"PileUp_Ratio_signalLH1400.root",
-"PileUp_Ratio_signalRH1400.root",
-"PileUp_Ratio_signalLH1600.root",
-"PileUp_Ratio_signalRH1600.root",
-"PileUp_Ratio_signalLH1800.root",
-"PileUp_Ratio_signalRH1800.root",
-"PileUp_Ratio_signalLH2000.root",
-"PileUp_Ratio_signalRH2000.root",
-"PileUp_Ratio_signalLH2200.root",
-"PileUp_Ratio_signalRH2200.root",
-"PileUp_Ratio_signalLH2400.root",
-"PileUp_Ratio_signalRH2400.root",
-"PileUp_Ratio_signalLH2600.root",
-"PileUp_Ratio_signalRH2600.root",
-"PileUp_Ratio_signalLH2800.root",
-"PileUp_Ratio_signalRH2800.root",
-"PileUp_Ratio_signalLH3000.root",
-"PileUp_Ratio_signalRH3000.root"
-#"PileUp_Ratio_BprimeBToTW1200.root",
-#"PileUp_Ratio_BprimeBToTW1400.root",
-#"PileUp_Ratio_BprimeBToTW1600.root",
-#"PileUp_Ratio_BprimeBToTW1800.root",
-#"PileUp_Ratio_BprimeTToTW1200.root",
-#"PileUp_Ratio_BprimeTToTW1400.root",
-#"PileUp_Ratio_BprimeTToTW1600.root",
-#"PileUp_Ratio_BprimeTToTW1800.root",
-]
+# c1 = TCanvas('c1','c1',700,700)
+# myttbarUW = fttbar.Get("npvhistUW")
+# myttbar = myttbarUW.Clone("myttbar")
+# myttbar.Multiply(ttbar_pileup_reweight)
 
-dhists = []
-dhistsalt = []
-for ifile in range(0,len(files)):
-	outputsig = ROOT.TFile(names[ifile] , "recreate" )
-	outputsig.cd()
+
+# myttbarUW.SetMarkerColor(kRed)
+# myttbar.SetMarkerColor(kBlue)
+# myData.SetMarkerColor(kBlack)
+# myttbarUW.SetMarkerStyle(20)
+# myttbar.SetMarkerStyle(20)
+# myData.SetMarkerStyle(31)
+
+
+# myttbar.Draw('samepE')
+# myData.Draw('samepE')
+# myttbarUW.Draw('samepE')
+
+# raw_input('waiting')
+
+# c1.Print('PU_comparison.pdf','pdf')
 
 
 
-	dhists.append(files[ifile].Get("npvtruehistUW"))
-	dhists[ifile].Scale(1./dhists[ifile].Integral())
+# files = [
+# ROOT.TFile("TWPileupsignalLH1200.root"),
+# ROOT.TFile("TWPileupsignalRH1200.root"),
+# ROOT.TFile("TWPileupsignalLH1400.root"),
+# ROOT.TFile("TWPileupsignalRH1400.root"),
+# ROOT.TFile("TWPileupsignalLH1600.root"),
+# ROOT.TFile("TWPileupsignalRH1600.root"),
+# ROOT.TFile("TWPileupsignalLH1800.root"),
+# ROOT.TFile("TWPileupsignalRH1800.root"),
+# ROOT.TFile("TWPileupsignalLH2000.root"),
+# ROOT.TFile("TWPileupsignalRH2000.root"),
+# ROOT.TFile("TWPileupsignalLH2200.root"),
+# ROOT.TFile("TWPileupsignalRH2200.root"),
+# ROOT.TFile("TWPileupsignalLH2400.root"),
+# ROOT.TFile("TWPileupsignalRH2400.root"),
+# ROOT.TFile("TWPileupsignalLH2600.root"),
+# ROOT.TFile("TWPileupsignalRH2600.root"),
+# ROOT.TFile("TWPileupsignalLH2800.root"),
+# ROOT.TFile("TWPileupsignalRH2800.root"),
+# ROOT.TFile("TWPileupsignalLH3000.root"),
+# ROOT.TFile("TWPileupsignalRH3000.root")
+# #ROOT.TFile("TWPileupBprimeBToTW1200.root"),
+# #ROOT.TFile("TWPileupBprimeBToTW1400.root"),
+# #ROOT.TFile("TWPileupBprimeBToTW1600.root"),
+# #ROOT.TFile("TWPileupBprimeBToTW1800.root"),
+# #ROOT.TFile("TWPileupBprimeTToTW1200.root"),
+# #ROOT.TFile("TWPileupBprimeTToTW1400.root"),
+# #ROOT.TFile("TWPileupBprimeTToTW1600.root"),
+# #ROOT.TFile("TWPileupBprimeTToTW1800.root")
 
-	Pileup_Ratio = ndata.Clone("Pileup_Ratio")
-	Pileup_Ratio_up = ndataup.Clone("Pileup_Ratio_up")
-	Pileup_Ratio_down = ndatadown.Clone("Pileup_Ratio_down")
+# ]
 
-	Pileup_Ratio.Divide(dhists[ifile])
-	Pileup_Ratio_up.Divide(dhists[ifile])
-	Pileup_Ratio_down.Divide(dhists[ifile])
+# names = [
+# "PileUp_Ratio_signalLH1200.root",
+# "PileUp_Ratio_signalRH1200.root",
+# "PileUp_Ratio_signalLH1400.root",
+# "PileUp_Ratio_signalRH1400.root",
+# "PileUp_Ratio_signalLH1600.root",
+# "PileUp_Ratio_signalRH1600.root",
+# "PileUp_Ratio_signalLH1800.root",
+# "PileUp_Ratio_signalRH1800.root",
+# "PileUp_Ratio_signalLH2000.root",
+# "PileUp_Ratio_signalRH2000.root",
+# "PileUp_Ratio_signalLH2200.root",
+# "PileUp_Ratio_signalRH2200.root",
+# "PileUp_Ratio_signalLH2400.root",
+# "PileUp_Ratio_signalRH2400.root",
+# "PileUp_Ratio_signalLH2600.root",
+# "PileUp_Ratio_signalRH2600.root",
+# "PileUp_Ratio_signalLH2800.root",
+# "PileUp_Ratio_signalRH2800.root",
+# "PileUp_Ratio_signalLH3000.root",
+# "PileUp_Ratio_signalRH3000.root"
+# #"PileUp_Ratio_BprimeBToTW1200.root",
+# #"PileUp_Ratio_BprimeBToTW1400.root",
+# #"PileUp_Ratio_BprimeBToTW1600.root",
+# #"PileUp_Ratio_BprimeBToTW1800.root",
+# #"PileUp_Ratio_BprimeTToTW1200.root",
+# #"PileUp_Ratio_BprimeTToTW1400.root",
+# #"PileUp_Ratio_BprimeTToTW1600.root",
+# #"PileUp_Ratio_BprimeTToTW1800.root",
+# ]
 
-	Pileup_Ratio.Write()
-	Pileup_Ratio_up.Write()
-	Pileup_Ratio_down.Write()
+# dhists = []
+# dhistsalt = []
+# for ifile in range(0,len(files)):
+# 	outputsig = ROOT.TFile(names[ifile] , "recreate" )
+# 	outputsig.cd()
 
-	#outputsig.Write()
-	outputsig.Close()
+
+
+# 	dhists.append(files[ifile].Get("npvtruehistUW"))
+# 	dhists[ifile].Scale(1./dhists[ifile].Integral())
+
+# 	Pileup_Ratio = ndata.Clone("Pileup_Ratio")
+# 	Pileup_Ratio_up = ndataup.Clone("Pileup_Ratio_up")
+# 	Pileup_Ratio_down = ndatadown.Clone("Pileup_Ratio_down")
+
+# 	Pileup_Ratio.Divide(dhists[ifile])
+# 	Pileup_Ratio_up.Divide(dhists[ifile])
+# 	Pileup_Ratio_down.Divide(dhists[ifile])
+
+# 	Pileup_Ratio.Write()
+# 	Pileup_Ratio_up.Write()
+# 	Pileup_Ratio_down.Write()
+
+# 	#outputsig.Write()
+# 	outputsig.Close()
 
