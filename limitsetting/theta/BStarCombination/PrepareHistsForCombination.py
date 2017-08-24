@@ -15,7 +15,7 @@ Lumi = options.lumi
 xsec_bsl = {'1200': 1.944,'1400': 0.7848,'1600': 0.3431,'1800': 0.1588,'2000': 0.07711,'2200': 0.03881,'2400': 0.02015,'2600': 0.01073,'2800': 0.005829,'3000': 0.003234}
 xsec_bsr = {'1200': 1.936,'1400': 0.7816,'1600': 0.3416,'1800': 0.1583,'2000': 0.07675,'2200': 0.03864,'2400': 0.02008,'2600': 0.01068,'2800': 0.005814,'3000': 0.003224}
 
-ListBstarMass_had = ['bs1200','bs1400','bs1000','bs1600','bs1800','bs2000','bs200','bs2400','bs2600','bs2800','bs3000']
+ListBstarMass_had = ['bs1200','bs1400','bs1600','bs1800','bs2000','bs2200','bs2400','bs2600','bs2800','bs3000']
 ListBstarMass_lepR = ['BstarRight800','BstarRight900','BstarRight1000','BstarRight1100','BstarRight1200','BstarRight1300','BstarRight1400','BstarRight1500','BstarRight1600','BstarRight1700','BstarRight1800','BstarRight1900','BstarRight2000']
 ListBstarMass_lepL = ['BstarLeft800','BstarLeft900','BstarLeft1000','BstarLeft1100','BstarLeft1200','BstarLeft1300','BstarLeft1400','BstarLeft1500','BstarLeft1600','BstarLeft1700','BstarLeft1800','BstarLeft1900','BstarLeft2000']
 ListBstarMass_lepV = ['BstarVector800','BstarVector900','BstarVector1000','BstarVector1100','BstarVector1200','BstarVector1300','BstarVector1400','BstarVector1500','BstarVector1600','BstarVector1700','BstarVector1800','BstarVector1900','BstarVector2000']

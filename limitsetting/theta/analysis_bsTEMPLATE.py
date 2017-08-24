@@ -52,37 +52,38 @@ def get_model_hadronic():
 	for p in model.processes:
 		if p=='qcd': continue
 		
+
+		# Rule for asymmetric uncertainties - minus, plus
 		if p=='ttbar':
 			model.add_lognormal_uncertainty('lumi', math.log(1.026), p)
-			model.add_asymmetric_lognormal_uncertainty('ttbar_xsec',math.log(1.055),math.log(1.048), p)
-			model.add_asymmetric_lognormal_uncertainty('topsf', math.log(1.14), math.log(1.056), p)
+			model.add_asymmetric_lognormal_uncertainty('ttbar_xsec',math.log(1.035),math.log(1.024), p)
+			model.add_asymmetric_lognormal_uncertainty('topsf', math.log(1.056), math.log(1.14), p)
 
 		if p=='sttW':
 			model.add_lognormal_uncertainty('lumi', math.log(1.026), p)
 			model.add_lognormal_uncertainty('st_tW_xsec', math.log(1.0385), p)
-			model.add_asymmetric_lognormal_uncertainty('topsf', math.log(1.14), math.log(1.056), p)
+			model.add_asymmetric_lognormal_uncertainty('topsf', math.log(1.056), math.log(1.14), p)
 			# model.add_lognormal_uncertainty('wtag', math.log(1.060), p)
-			# model.add_lognormal_uncertainty('AK8btag', math.log(1.03), p)
 		
 		if p=='sttWB':
 			model.add_lognormal_uncertainty('lumi', math.log(1.026), p)
 			model.add_lognormal_uncertainty('st_tWB_xsec', math.log(1.0385), p)
-			model.add_asymmetric_lognormal_uncertainty('topsf', math.log(1.14), math.log(1.056), p)
+			model.add_asymmetric_lognormal_uncertainty('topsf', math.log(1.056), math.log(1.14), p)
 			# model.add_lognormal_uncertainty('wtag', math.log(1.060), p)
 
 		if p=='stt':
 			model.add_lognormal_uncertainty('lumi', math.log(1.026), p)
 			model.add_asymmetric_lognormal_uncertainty('st_t_xsec', math.log(1.034), math.log(1.040), p)
-			model.add_asymmetric_lognormal_uncertainty('topsf', math.log(1.14), math.log(1.056), p)
+			model.add_asymmetric_lognormal_uncertainty('topsf', math.log(1.056), math.log(1.14), p)
 
 		if p=='sttB':
 			model.add_lognormal_uncertainty('lumi', math.log(1.026), p)
 			model.add_asymmetric_lognormal_uncertainty('st_tB_xsec', math.log(1.045), math.log(1.050), p)
-			model.add_asymmetric_lognormal_uncertainty('topsf', math.log(1.14), math.log(1.056), p)
+			model.add_asymmetric_lognormal_uncertainty('topsf', math.log(1.056), math.log(1.14), p)
 
 		if p.find('bs') != -1:
 			model.add_lognormal_uncertainty('lumi', math.log(1.026), p)
-			model.add_asymmetric_lognormal_uncertainty('topsf', math.log(1.14), math.log(1.056), p)
+			model.add_asymmetric_lognormal_uncertainty('topsf', math.log(1.056), math.log(1.14), p)
 			# model.add_lognormal_uncertainty('wtag', math.log(1.060), p)
 
 		return model

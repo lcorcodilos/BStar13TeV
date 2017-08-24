@@ -32,17 +32,17 @@ from DataFormats.FWLite import Events, Handle
 #If I wanted to access the left handed W' cross section at 1900 GeV I could do Xsecl1900 = LoadConstants()['xsec_wpl']['1900']
 def LoadConstants():
 	 return  {
-		'lumi':36420.0,#12367.583,
-		'wtagsf':0.997,
-		'wtagsfsig':1.07,
+		'lumi':35867.0,#12367.583,
+		'wtagsf':1.0,#0.997,
+		'wtagsfsig':1.0,#1.07,
 		'xsec_bsl':{'1200': 1.944,'1400': 0.7848,'1600': 0.3431,'1800': 0.1588,'2000': 0.07711,'2200': 0.03881,'2400': 0.02015,'2600': 0.01073,'2800': 0.005829,'3000': 0.003234},
-		#'xsec_bsr':{'1200': 1.936,'1400': 0.7816,'1600': 0.3416,'1800': 0.1583,'2000': 0.07675,'2200': 0.03864,'2400': 0.02008,'2600': 0.01068,'2800': 0.005814,'3000': 0.003224},
+		'xsec_bsr':{'1200': 1.936,'1400': 0.7816,'1600': 0.3416,'1800': 0.1583,'2000': 0.07675,'2200': 0.03864,'2400': 0.02008,'2600': 0.01068,'2800': 0.005814,'3000': 0.003224},
 		'xsec_bpl':{'B1200': 0.0016852,'B1400': 0.0007134,'B1600': 0.0003220,'B1800': 0.0001523,'T1200': 0.0016852,'T1400': 0.0007134,'T1600': 0.0003220,'T1800': 0.0001523},
 		'xsec_ttbar':{'MG':831.76,'PH':831.76,'PHscaleup':831.76,'PHscaledown':831.76},
 		'xsec_qcd':{'PT300':7823,'PT470':648.2,'PT600':186.9,'PT800':32.293,'PT1000':9.4183,'PT1400':0.84265,'PT1800':0.114943,'PT2400':0.00683,'PT3200':0.000165,'800_BROKEN':32.293,'FLAT7000':2022100000,'HT500':31630,'HT700':6802,'HT1000':1206,'HT1500':120.4,'HT2000':25.25},
 		'xsec_st':{'S':11.36,'T':216.97,'TB':80.95,'TW':35.85,'TWB':35.85},
 		'nev_bsl':{'1200':99600,'1400':100000,'1600':100000,'1800':100000,'2000':100000,'2200':97000,'2400':100000,'2600':100000,'2800':98000,'3000':100000},
-		#'nev_bsr':{'1200':100000,'1400':98200,'1600':100000,'1800':97600,'2000':99200,'2200':100000,'2400':97800,'2600':99200,'2800':99200,'3000':100000},
+		'nev_bsr':{'1200':100000,'1400':98200,'1600':100000,'1800':97600,'2000':99200,'2200':100000,'2400':97800,'2600':99200,'2800':99200,'3000':100000},
 		'nev_bpl':{'B1200': 100000,'B1400': 99200,'B1600': 99200,'B1800': 97600, 'T1200': 299200, 'T1400': 300000,'T1600': 293400,'T1800': 299600},
 		'nev_ttbar':{'MG':11339232, 'PH':180037820,'PHscaleup':9933327,'PHscaledown':9942427},
 		'nev_qcd':{'HT500':44058594,'HT700':15020802,'HT1000':4980387,'HT1500':1648549,'HT2000':1680210},
@@ -53,97 +53,132 @@ def LoadConstants():
 #These each load a cut profile.  For instance 'default' is the standard selection used to set limits
 def LoadCuts(TYPE):
 	if TYPE=='default':
- 		return  {
+		return  {
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
 			'tmass':[105.0,210.0],
-			'nsubjets':[1,10],
-			'tau32':[0.0,0.54],
+			'tau32':[0.0,0.65],
 			'tau21':[0.0,0.4],
-			'minmass':[-float("inf"),float("inf")],
-			'sjbtag':[0.80,1.0],
-			'wmass':[65.0,95.0],
+			'sjbtag':[0.46,1.0],
+			'wmass':[65.0,105.0],
 			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4]
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
 			}
 	if TYPE=='rate_default':
- 		return  {
+		return  {
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
 			'tmass':[105.0,210.0],
-			'nsubjets':[1,10],
-			'tau32':[0.0,0.54],
+			'tau32':[0.0,0.65],
 			'tau21':[0.0,0.4],
-			'minmass':[-float("inf"),float("inf")],
-			'sjbtag':[0.80,1.0],
-			'wmass':[[30.0,65.0],[95,float("inf")]],
+			'sjbtag':[0.46,1.0],
+			'wmass':[[30.0,65.0],[105.0,130.0]],
 			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4]
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
 			}
 	# Used for ttbar validation
 	if TYPE=='sideband1':
- 		return  {
+		return  {
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
 			'tmass':[105.0,210.0],
-			'nsubjets':[1,10],
-			'tau32':[0.0,0.54],
+			'tau32':[0.0,0.65],
 			'tau21':[0.4,1.0],
-			'minmass':[-float("inf"),float("inf")],
-			'sjbtag':[0.80,1.0],
+			'sjbtag':[0.46,1.0],
 			'wmass':[130.0,float("inf")],
 			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4]
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
 			}
 	if TYPE=='rate_sideband1':
- 		return  {
+		return  {
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
 			'tmass':[105.0,210.0],
-			'nsubjets':[1,10],
-			'tau32':[0.0,0.54],
+			'tau32':[0.0,0.65],
 			'tau21':[0.0,0.4],
-			'minmass':[-float("inf"),float("inf")],
-			'sjbtag':[0.80,1.0],
+			'sjbtag':[0.46,1.0],
 			'wmass':[[30.0,65.0],[95.0,130.0]],
 			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4]
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
 			}
 	# Sideband closure test
 	if TYPE=='sideband':
- 		return  {
+		return  {
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
 			'tmass':[105.0,210.0],
-			'nsubjets':[1,10],
-			'tau32':[0.0,0.54],
+			'tau32':[0.0,0.65],
 			'tau21':[0.4,1.0],
-			'minmass':[-float("inf"),float("inf")],
-			'sjbtag':[0.80,1.0],
-			'wmass':[[30.0,65.0],[95.0,130.0]],
+			'sjbtag':[0.46,1.0],
+			'wmass':[65.0,105.0],
 			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4]
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
 			}
 	if TYPE=='rate_sideband':
- 		return  {
+		return  {
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
 			'tmass':[105.0,210.0],
-			'nsubjets':[1,10],
-			'tau32':[0.0,0.54],
-			'tau21':[0.0,0.4],
-			'minmass':[-float("inf"),float("inf")],
-			'sjbtag':[0.80,1.0],
-			'wmass':[[30.0,65.0],[95.0,130.0]],
+			'tau32':[0.0,0.65],
+			'tau21':[0.4,1.0],
+			'sjbtag':[0.46,1.0],
+			'wmass':[[30.0,65.0],[105.0,130.0]],
 			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4]
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
 			}
+
+	if TYPE=='rate_lowWmass':
+		return  {
+			'wpt':[400.0,float("inf")],
+			'tpt':[400.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[105.0,210.0],
+			'tau32':[0.0,0.65],
+			'tau21':[0.0,0.4],
+			'sjbtag':[0.46,1.0],
+			'wmass':[30.0,65.0],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
+			}
+	if TYPE=='rate_highWmass':
+		return  {
+			'wpt':[400.0,float("inf")],
+			'tpt':[400.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[105.0,210.0],
+			'tau32':[0.0,0.65],
+			'tau21':[0.0,0.4],
+			'sjbtag':[0.46,1.0],
+			'wmass':[105.0,130.0],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
+			}
+	if TYPE=='alphabet':
+		return  {
+			'wpt':[400.0,float("inf")],
+			'tpt':[400.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[105.0,210.0],
+			'tau32':[0.0,0.65],
+			'tau21':[0.6,1.0],
+			'sjbtag':[0.46,1.0],
+			'wmass':[65.0,95.0],
+			'eta':[0.0,2.4]
+			}			
 
 #This function loads up Ntuples based on what type of set you want to analyze.  
 #This needs to be updated whenever new Ntuples are produced (unless the file locations are the same).
@@ -163,23 +198,23 @@ def Load_Ntuples(string,di=''):
 
 
 	if string == 'ttbar':
- 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
 	#if string == 'ttbarscaleup':
- 	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224514/0000/*.root")
+	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224514/0000/*.root")
 	#if string == 'ttbarscaledown':
- 	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaledown-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224307/0000/*.root")
+	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaledown-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224307/0000/*.root")
 
 	#80X 2.4
 	if string == 'QCDHT500':
- 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
- 	if string == 'QCDHT700':
- 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
- 	if string == 'QCDHT1000':
- 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
- 	if string == 'QCDHT1500':
- 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+	if string == 'QCDHT700':
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+	if string == 'QCDHT1000':
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+	if string == 'QCDHT1500':
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
 	if string == 'QCDHT2000':
- 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
 
 	#80X 1.1
 	if string == 'QCDPT300':
@@ -265,6 +300,10 @@ def Load_Ntuples(string,di=''):
 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_ST_t-channel_top_4f_inclusiveDecays_TuneCUETP8M2T4_13TeV-powhegV2-madspin_B2GAnaFW_V2p4_80x_Slim_V7/170215_084815/0000/*.root")
 	if string == 'singletop_tB':
 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_ST_t-channel_antitop_4f_inclusiveDecays_TuneCUETP8M2T4_13TeV-powhegV2-madspin_B2G_V2p4_80x_Slim_V7/170215_085241/0000/*.root")
+	if string == 'singletop_tWB':
+		files = glob.glob('root://cmsxrootd.fnal.gov//store/group/phys_b2g/B2GAnaFW_80X_V2p4/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/RunIISummer16MiniAODv2/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/170124_204058/0000/*.root')
+	if string == 'singletop_tW':
+		files = glob.glob('root://cmsxrootd.fnal.gov//store/group/phys_b2g/B2GAnaFW_80X_V2p4/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/RunIISummer16MiniAODv2/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/170124_204154/0000/B2GEDMNtuple_1.root')
 	#if string == 'singletop_tW':
 	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples//*/0000/*.root")
 	#if string == 'singletop_tWB':
@@ -290,7 +329,7 @@ def Load_Ntuples(string,di=''):
 def BTR_Init(ST,CUT,di,setval):
 
 	if setval.find("QCD")==-1:
-		setval = "Data"
+		setval = "data"
 
 
 	if ST == 'Bifpoly':
@@ -368,98 +407,128 @@ def BTR_Init(ST,CUT,di,setval):
 
 #This is a poorly written function, but I cant think of a better way to do this 
 #It works, but you should be able to just have one input
-def TTR_Init(ST,CUT,SET,di):
+def TTR_Init(ST,CUT,SET,RATE,di):
+	rateFolder = ''
+	if RATE != 'tpt':
+		rateFolder = RATE + '/'
 	if ST == 'Bifpoly':
-		TRBPE1 = open(di+"fitdata/bpinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"bpinput"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/bpinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"bpinput"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",BifPoly,0,2000,5)
 		eta2fit = TF1("eta2fit",BifPoly,0,2000,5)
 		Params = 5
 	if ST == 'Bifpoly_err':
-		TRBPE1 = open(di+"fitdata/bperrorinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"bperrorinput"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/bperrorinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"bperrorinput"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit=TF1("eta1fit",BifPolyErr,0,2000,10)
 		eta2fit=TF1("eta2fit",BifPolyErr,0,2000,10)
 		Params = 10
 
 	if ST == 'pol0':
-		TRBPE1 = open(di+"fitdata/pol0input"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol0input"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/pol0input"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol0input"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'pol0',0,2000)
 		eta2fit = TF1("eta2fit",'pol0',0,2000)
 		Params = 1
 
 	if ST == 'pol2':
-		TRBPE1 = open(di+"fitdata/pol2input"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol2input"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/pol2input"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol2input"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'pol2',0,2000)
 		eta2fit = TF1("eta2fit",'pol2',0,2000)
 		Params = 3
 
 	if ST == 'pol3':
-		TRBPE1 = open(di+"fitdata/pol3input"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol3input"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/pol3input"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol3input"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'pol3',0,2000)
 		eta2fit = TF1("eta2fit",'pol3',0,2000)
 		Params = 4
 	if ST == 'FIT':
-		TRBPE1 = open(di+"fitdata/newfitinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"newfitinput"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/newfitinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"newfitinput"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,2000)
 		eta2fit = TF1("eta2fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,2000)
 		Params = 4
 	if ST == 'expofit':
-		TRBPE1 = open(di+"fitdata/expoconinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"expoconinput"+SET+"eta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/expoconinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"expoconinput"+SET+"eta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'expo(0) + pol0(2)',0,2000)
 		eta2fit = TF1("eta2fit",'expo(0) + pol0(2)',0,2000)
 		Params = 3
-
-	TBP1 = TRBPE1.read()
-	TBP2 = TRBPE2.read()
+	if ST == 'QUAD':
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+		TRBP.seek(0)
+		fit = TF1("fit",'pol2',0,300)
+		Params = 3
+	if ST == 'QUAD_errUp':
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+		TRBP.seek(0)
+		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
+	if ST == 'QUAD_errDown':
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+		TRBP.seek(0)
+		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
+	try:
+		TBP1 = TRBPE1.read()
+		TBP2 = TRBPE2.read()
+	except:
+		TBP = TRBP.read()
 	
 	for i in range(0,Params):
+		try:
+			eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
+			eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
+		except:
+			fit.SetParameter(i,float(TBP.split('\n')[i]) )
 
-		eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
-		eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
+	try:
+		return [eta1fit.Clone(),eta2fit.Clone()] 
+	except:
+		return [fit.Clone()]
 
-
-	return [eta1fit.Clone(),eta2fit.Clone()] 
-
-#This takes the average b tagging rates that are initialized in the above function and produces 
+#This takes the average t tagging rates that are initialized in the above function and produces 
 #A QCD background estimate based on them 
-def bkg_weight(blv, funcs, etabins):
+def bkg_weight_pt(vector, funcs, etabins):
 	for ibin in range(0,len(etabins)):
-		if (etabins[ibin][0] <= abs(blv.Eta()) < etabins[ibin][1]) :
-			tagratept = funcs[ibin].Eval(blv.Perp())		
+		if (etabins[ibin][0] <= abs(vector.Eta()) < etabins[ibin][1]) :
+			tagratept = funcs[ibin].Eval(vector.Perp())		
 	return tagratept
+
+def bkg_weight_mass(event, funcs, etabins):
+	if (etabins[0] <= abs(vector.Eta()) < etabins[1]) :
+		tagratetmass = funcs[0].Eval(vector.M())		
+	return tagratetmass
+
 
 #This is the bifurcated polynomial function and its associated uncertainty 
 def BifPoly( x, p ):
 	xx=x[0]
 	if xx<p[4]:
-      		return p[0]+p[1]*xx+p[2]*(xx-p[4])**2
-        else:
+		return p[0]+p[1]*xx+p[2]*(xx-p[4])**2
+	else:
 		return p[0]+p[1]*xx+p[3]*(xx-p[4])**2
 def BifPolyErr( x, p ):
 	xx=x[0]
 	if xx<p[9]:
-      		return p[0]+p[1]*xx**2+p[2]*(xx-p[9])**4+p[3]*xx+p[4]*(xx-p[9])**2+p[5]*xx*(xx-p[9])**2
-        else:
+		return p[0]+p[1]*xx**2+p[2]*(xx-p[9])**4+p[3]*xx+p[4]*(xx-p[9])**2+p[5]*xx*(xx-p[9])**2
+	else:
 		return p[0]+p[1]*xx**2+p[6]*(xx-p[9])**4+p[3]*xx+p[7]*(xx-p[9])**2+p[8]*xx*(xx-p[9])**2
 
 #This looks up the PDF uncertainty
@@ -470,25 +539,25 @@ def PDF_Lookup( pdfs , pdfOP ):
 	ave =  pdfs
 	ave =  reduce(lambda x, y: x + y, pdfs) / len(pdfs)
 	#print ave
-       	for pdf in pdfs :
-             	iweight = iweight + (pdf-ave)*(pdf-ave)
+	for pdf in pdfs :
+		iweight = iweight + (pdf-ave)*(pdf-ave)
 
-        if pdfOP == "up" :
-        	return 1+sqrt((iweight) / (len(pdfs)))
-        else :
-          	return 1-sqrt((iweight) / (len(pdfs)))
+	if pdfOP == "up" :
+		return 1+sqrt((iweight) / (len(pdfs)))
+	else :
+		return 1-sqrt((iweight) / (len(pdfs)))
 #This looks up the b tagging scale factor or uncertainty
 def Trigger_Lookup( H , TRP ):
-        Weight = 1.0
+	Weight = 1.0
 	Weightup = 1.0
 	Weightdown = 1.0
-        if H < 1200.0:
-                bin0 = TRP.FindBin(H) 
-                jetTriggerWeight = TRP.GetBinContent(bin0)
-                Weight = jetTriggerWeight
+	if H < 1200.0:
+		bin0 = TRP.FindBin(H) 
+		jetTriggerWeight = TRP.GetBinContent(bin0)
+		Weight = jetTriggerWeight
 		deltaTriggerEff  = 0.5*(1.0-jetTriggerWeight)
-                Weightup  =   min(1.0,jetTriggerWeight + deltaTriggerEff)
-                Weightdown  =   max(0.0,jetTriggerWeight - deltaTriggerEff)
+		Weightup  =   min(1.0,jetTriggerWeight + deltaTriggerEff)
+		Weightdown  =   max(0.0,jetTriggerWeight - deltaTriggerEff)
 		
 	return [Weight,Weightup,Weightdown]
 
@@ -527,9 +596,9 @@ def PTW_Lookup( GP ):
 		if (genTpt<0) or (genTBpt<0):
 			print "ERROR"
 
-      		wTPt = exp(0.156-0.00137*genTpt)
-      		wTbarPt = exp(0.156-0.00137*genTBpt)
-      		return sqrt(wTPt*wTbarPt)
+		wTPt = exp(0.156-0.00137*genTpt)
+		wTbarPt = exp(0.156-0.00137*genTBpt)
+		return sqrt(wTPt*wTbarPt)
 
 def Initlv(string,post=''):
 	PtHandle 	= 	Handle (  "vector<float> "  )
@@ -545,53 +614,52 @@ def Initlv(string,post=''):
 	MassLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiMass")
 
 	return [[PtHandle,PtLabel],[EtaHandle,EtaLabel],[PhiHandle,PhiLabel],[MassHandle,MassLabel]]
- 
+
 def Makelv(vector,event):
+	event.getByLabel (vector[0][1], vector[0][0])
+	Pt 		= 	vector[0][0].product()
+
+	event.getByLabel (vector[1][1], vector[1][0])
+	Eta 		= 	vector[1][0].product()
+
+	event.getByLabel (vector[2][1], vector[2][0])
+	Phi 		= 	vector[2][0].product()
+
+	event.getByLabel (vector[3][1], vector[3][0])
+	Mass 		= 	vector[3][0].product()
  
-     	event.getByLabel (vector[0][1], vector[0][0])
-     	Pt 		= 	vector[0][0].product()
+	lvs = []
+	for i in range(0,len(Pt)):
  
-     	event.getByLabel (vector[1][1], vector[1][0])
-     	Eta 		= 	vector[1][0].product()
- 
-     	event.getByLabel (vector[2][1], vector[2][0])
-     	Phi 		= 	vector[2][0].product()
- 
-     	event.getByLabel (vector[3][1], vector[3][0])
-     	Mass 		= 	vector[3][0].product()
- 
- 	lvs = []
- 	for i in range(0,len(Pt)):
- 
- 		#lvs.append(ROOT.Math.LorentzVector('ROOT::Math::PtEtaPhiM4D<double>')(Pt[i],Eta[i],Phi[i],Mass[i]))
- 
- 		lvs.append(TLorentzVector())
- 		lvs[i].SetPtEtaPhiM(Pt[i],Eta[i],Phi[i],Mass[i])
- 	return lvs
+		#lvs.append(ROOT.Math.LorentzVector('ROOT::Math::PtEtaPhiM4D<double>')(Pt[i],Eta[i],Phi[i],Mass[i]))
+		lvs.append(TLorentzVector())
+		lvs[i].SetPtEtaPhiM(Pt[i],Eta[i],Phi[i],Mass[i])
+
+	return lvs
  
  
 def Hemispherize(LV1,LV2):
- 	tjets = [[],[]]
- 	wjets = [[],[]]
- 	for iLV1 in range(0,len(LV1)):
- 		if abs(Math.VectorUtil.DeltaPhi(LV1[0],LV1[iLV1]))> TMath.Pi()/2:
- 			tjets[1].append(iLV1)
- 		else:
- 			tjets[0].append(iLV1)
- 	for iLV2 in range(0,len(LV2)):
- 		if abs(Math.VectorUtil.DeltaPhi(LV1[0],LV2[iLV2]))> TMath.Pi()/2:
- 			wjets[1].append(iLV2)
- 		else:
- 			wjets[0].append(iLV2)
- 	return tjets,wjets
+	tjets = [[],[]]
+	wjets = [[],[]]
+	for iLV1 in range(0,len(LV1)):
+		if abs(Math.VectorUtil.DeltaPhi(LV1[0],LV1[iLV1]))> TMath.Pi()/2.0:
+			tjets[1].append(iLV1)
+		else:
+			tjets[0].append(iLV1)
+	for iLV2 in range(0,len(LV2)):
+		if abs(Math.VectorUtil.DeltaPhi(LV1[0],LV2[iLV2]))> TMath.Pi()/2.0:
+			wjets[1].append(iLV2)
+		else:
+			wjets[0].append(iLV2)
+	return tjets,wjets
 
 #This is just a quick function to automatically make a tree
 #This is used right now to automatically output branches used to validate the cuts used in a run
 def Make_Trees(Floats):
-        t = TTree("Tree", "Tree");
+	t = TTree("Tree", "Tree");
 	print "Booking trees"
 	for F in Floats.keys():
-    		t.Branch(F, Floats[F], F+"/D")
+		t.Branch(F, Floats[F], F+"/D")
 	return t
 
 #This takes all of the alternative fit forms for the average b tagging rate and 

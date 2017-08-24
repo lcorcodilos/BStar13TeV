@@ -19,9 +19,11 @@ import os
 import array
 import glob
 import math
-from math import sqrt, exp
+from math import sqrt, exp, log
 import ROOT
 import sys
+import time
+import subprocess
 import cppyy
 from array import *
 from ROOT import *
@@ -89,7 +91,7 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,210.0],
+			'tmass':[105.0,400.0],
 			'tau32':[0.0,0.65],
 			'tau21':[0.0,0.4],
 			'sjbtag':[0.5426,1.0],
@@ -104,6 +106,35 @@ def LoadCuts(TYPE):
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
 			'tmass':[105.0,210.0],
+			'tau32':[0.0,0.65],
+			'tau21':[0.4,1.0],
+			'sjbtag':[0.5426,1.0],
+			'wmass':[130.0,float("inf")],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
+			}
+	# Used for testing
+	if TYPE=='toy':
+		return  {
+			'wpt':[400.0,float("inf")],
+			'tpt':[400.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[140.0,170.0],
+			'tau32':[0.0,0.65],
+			'tau21':[0.0,0.4],
+			'sjbtag':[0.5426,1.0],
+			'wmass':[130.0,float("inf")],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
+			}
+	if TYPE=='rate_toy':
+		return  {
+			'wpt':[400.0,float("inf")],
+			'tpt':[400.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[140.0,170.0],
 			'tau32':[0.0,0.65],
 			'tau21':[0.4,1.0],
 			'sjbtag':[0.5426,1.0],
@@ -268,14 +299,14 @@ def Load_Ntuples(string,di=''):
 
 	#80X V2.4 36420 pb-1
 	if string == 'data':
-		files = glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016B-23Sep2016-v3_B2GAnaFW_80X_V2p3_Slim_V11/170611_183123/0000/*.root")
-		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016C-23Sep2016-v1_B2GAnaFW_80X_V2p3_Slim_V11/170611_190801/0000/*.root")
-		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016D-23Sep2016-v1_B2GAnaFW_80X_V2p3_Slim_V11/170616_154147/0000/*.root")
-		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016E-23Sep2016-v1_B2GAnaFW_80X_V2p3_Slim_V11/170611_194831/0000/*.root")
-		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016F-23Sep2016-v1_B2GAnaFW_80X_V2p3_Slim_V11/170611_194922/0000/*.root")
-		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016G-23Sep2016-v1_B2GAnaFW_80X_V2p3_Slim_V11/170611_195021/0000/*.root")
-		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016H-PromptReco-v2_B2GAnaFW_80X_V2p3_Slim_V11/170611_195055/0000/*.root")
-		files += glob.glob("/eos/uscms/store/user/lcorcodi/JetHT/crab_JetHT_Run2016H-PromptReco-v3_B2GAnaFW_80X_V2p3_Slim_V11/170611_200625/0000/*.root")
+		files = glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016B-03Feb2017-v3_B2GAnaFW_80X_V2p3_Slim_V12/170726_202146/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016C-03Feb2017-v1_B2GAnaFW_80X_V2p3_Slim_V12/170726_202209/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016D-03Feb2017-v1_B2GAnaFW_80X_V2p3_Slim_V12/170726_202107/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016E-03Feb2017-v1_B2GAnaFW_80X_V2p3_Slim_V12/170727_200439/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016F-03Feb2017-v1_B2GAnaFW_80X_V2p3_Slim_V12/170726_194657/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016G-03Feb2017-v1_B2GAnaFW_80X_V2p3_Slim_V12/170726_200042/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016H-03Feb2017_ver2-v1_B2GAnaFW_80X_V2p3_Slim_V12/170726_200119/0000/*.root")
+		files += glob.glob("/eos/uscms/store/group/lpcrutgers/knash/JetHT/crab_JetHT_Run2016H-03Feb2017_ver3-v1_B2GAnaFW_80X_V2p3_Slim_V12/170726_201018/0000/*.root")
 
 	#80X V2.4
 	if string == 'signalRH1200':
@@ -302,6 +333,8 @@ def Load_Ntuples(string,di=''):
 	#80X V2.4
 	if string == 'signalLH1200':
 		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-1200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p5_80x_Slim_V11/*/0000/*.root")
+	if string == 'signalLH1200_3p2':
+		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-1200_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V3p2_80x_Slim_V12/*/0000/*.root")
 	if string == 'signalLH1400':
 		files = glob.glob("/eos/uscms/store/user/lcorcodi/BstarToTW_M-1400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8/crab_BstarToTW_M-1400_LH_TuneCUETP8M1_13TeV-madgraph-pythia8_B2GAnaFW_V2p4_80x_Slim_V11/*/0000/*.root")
 	if string == 'signalLH1600':
@@ -564,20 +597,40 @@ def BifPolyErr( x, p ):
 		return p[0]+p[1]*xx**2+p[6]*(xx-p[9])**4+p[3]*xx+p[7]*(xx-p[9])**2+p[8]*xx*(xx-p[9])**2
 
 #This looks up the PDF uncertainty
-def PDF_Lookup( pdfs , pdfOP ):
-	iweight = 0.0
-	#print "LEN"
-	#print len(pdfs)
-	ave =  pdfs
-	ave =  reduce(lambda x, y: x + y, pdfs) / len(pdfs)
+# def PDF_Lookup( pdfs , pdfOP ):
+# 	iweight = 0.0
+# 	#print "LEN"
+# 	#print len(pdfs)
+# 	ave =  pdfs
+# 	ave =  reduce(lambda x, y: x + y, pdfs) / len(pdfs)
+# 	#print ave
+# 	for pdf in pdfs :
+# 		iweight = iweight + (pdf-ave)*(pdf-ave)
+
+# 	if pdfOP == "up" :
+# 		return 1+sqrt((iweight) / (len(pdfs)))
+# 	else :
+# 		return 1-sqrt((iweight) / (len(pdfs)))
+
+def PDF_Lookup(pdfs , pdfOP ):
+	ilimweight = 0.0
+
+	limitedpdf = []
+	for curpdf in pdfs:
+		if abs(curpdf)<1000.0:
+			limitedpdf.append(curpdf)
+
+
+	limave =  limitedpdf
+	limave =  reduce(lambda x, y: x + y, limitedpdf) / len(limitedpdf)
 	#print ave
-	for pdf in pdfs :
-		iweight = iweight + (pdf-ave)*(pdf-ave)
+	for limpdf in limitedpdf :
+		ilimweight = ilimweight + (limpdf-limave)*(limpdf-limave)
 
 	if pdfOP == "up" :
-		return 1+sqrt((iweight) / (len(pdfs)))
+		return min(13.0,1.0+sqrt((ilimweight) / (len(limitedpdf))))
 	else :
-		return 1-sqrt((iweight) / (len(pdfs)))
+	  	return max(-12.0,1.0-sqrt((ilimweight) / (len(limitedpdf))))
 #This looks up the b tagging scale factor or uncertainty
 def Trigger_Lookup( H , TRP ):
 	Weight = 1.0
@@ -635,6 +688,37 @@ def PTW_Lookup( GP ):
 		wTbarPt = exp(0.0615-0.0005*genTBpt)
 		return sqrt(wTPt*wTbarPt)
 
+# This does the W jet matching requirement by looking up the deltaR separation
+# of the daughter particle from the W axis. If passes, return 1.
+def WJetMatching(GP):
+	passed = 0
+	failedDaughters = 0
+	for ig in GP:
+		isWp = ig.pdgId() == 24 and ig.status() == 22
+		isWm = ig.pdgId() == -24 and ig.status() == 22
+		if isWp or isWm:
+			Wvect = TVector3()
+			Wvect.SetPtEtaPhi(ig.pt(),ig.eta(),ig.phi())
+
+			genDaughters = []
+			daughterVects = []
+			for d in range(ig.numberOfDaughters()):
+				genDaughters.append(ig.daughter(d))
+				thisDaughter = genDaughters[d]
+				daughterVects.append(TVector3())
+				daughterVects[d].SetPtEtaPhi(thisDaughter.pt(),thisDaughter.eta(),thisDaughter.phi())
+
+			for daughter in daughterVects:
+				if Wvect.DeltaR(daughter) > 0.8:
+					failedDaughters += 1
+
+	if failedDaughters == 0:
+		passed = 1
+
+	return passed
+
+			
+
  
  
 def Hemispherize(LV1,LV2):
@@ -660,6 +744,15 @@ def Make_Trees(Floats):
 	for F in Floats.keys():
 		t.Branch(F, Floats[F], F+"/D")
 	return t
+
+# Quick way to get extrapolation uncertainty
+def ExtrapUncert_Lookup(pt,purity):
+	if purity == 'HP':
+		x = 0.085
+	elif purity == 'LP':
+		x = 0.039
+	extrap_uncert = x*log(pt/200)
+	return extrap_uncert
 
 #This takes all of the alternative fit forms for the average b tagging rate and 
 #Compares them to the chosen nominal fit (bifpoly).  It outputs the mean squared error uncertainty from this comparison 
@@ -817,3 +910,69 @@ def strf( x ):
 def strf1( x ):
 	return '%.0f' % x
 
+# Built to wait for condor jobs to finish and then check that they didn't fail
+# The script that calls this function will quit if there are any job failures
+# listOfJobs input should be whatever comes before '.listOfJobs' for the set of jobs you submitted
+def WaitForJobs( listOfJobs ):
+	# Runs grep to count the number of jobs - output will have non-digit characters b/c of wc
+	preNumberOfJobs = subprocess.check_output('grep "python" '+listOfJobs+'.listOfJobs | wc -l', shell=True)
+	commentedNumberOfJobs = subprocess.check_output('grep "# python" '+listOfJobs+'.listOfJobs | wc -l', shell=True)
+
+	# Get rid of non-digits and convert to an int
+	preNumberOfJobs = int(filter(lambda x: x.isdigit(), preNumberOfJobs))
+	commentedNumberOfJobs = int(filter(lambda x: x.isdigit(), commentedNumberOfJobs))
+	numberOfJobs = preNumberOfJobs - commentedNumberOfJobs
+
+	finishedJobs = 0
+	# Rudementary progress bar
+	while finishedJobs < numberOfJobs:
+		# Count how many output files there are to see how many jobs finished
+		# the `2> null.txt` writes the stderr to null.txt instead of printing it which means
+		# you don't have to look at `ls: output_*.log: No such file or directory`
+		finishedJobs = subprocess.check_output('ls output_*.log 2> null.txt | wc -l', shell=True)
+		finishedJobs = int(filter(lambda x: x.isdigit(), finishedJobs))
+		# Print the count out as a 'progress bar' that refreshes (via \r)
+		sys.stdout.write("\r%i / %i finished..." % (finishedJobs,numberOfJobs))
+		# Clear the buffer
+		sys.stdout.flush()
+		# Sleep for one second
+		time.sleep(1)
+
+
+	print 'Jobs completed. Checking for errors...'
+	numberOfTracebacks = subprocess.check_output('grep -i "Traceback" output*.log | wc -l', shell=True)
+	numberOfSyntax = subprocess.check_output('grep -i "Syntax" output*.log | wc -l', shell=True)
+
+	numberOfTracebacks = int(filter(lambda x: x.isdigit(), numberOfTracebacks))
+	numberOfSyntax = int(filter(lambda x: x.isdigit(), numberOfSyntax))
+
+	# Check there are no syntax or traceback errors
+	# Future idea - check output file sizes
+	if numberOfTracebacks > 0:
+		print numberOfTracebacks + ' job(s) failed with traceback error'
+		quit()
+	elif numberOfSyntax > 0:
+		print numberOfSyntax + ' job(s) failed with syntax error'
+		quit()
+	else:
+		print 'No errors!'
+
+# Scales the up and down pdf uncertainty distributions to the nominal value to isolate the shape uncertainty
+def PDFShapeUncert(nominal, up, down):
+	upShape = up.Clone("Mtw")
+	downShape = down.Clone("Mtw")
+	upShape.Scale(nominal.Integral()/up.Integral())
+	downShape.Scale(nominal.Integral()/down.Integral())
+
+	return upShape, downShape
+
+# Creates ratios between the events in up/down PDF distributions to nominal distribution and
+# used the ratio to derive up/down xsec values for the given mass point
+def PDFNormUncert(nominal, up, down, xsec_nominal):
+	ratio_up = up.Integral()/nominal.Integral()
+	ratio_down = down.Integral()/nominal.Integral()
+
+	xsec_up = ratio_up*xsec_nominal
+	xsec_down = ratio_down*xsec_nominal
+
+	return xsec_up, xsec_down

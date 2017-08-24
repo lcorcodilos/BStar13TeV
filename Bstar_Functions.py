@@ -23,6 +23,8 @@ import math
 from math import sqrt, exp, log
 import ROOT
 import sys
+import time
+import subprocess
 import cppyy
 from array import *
 from ROOT import *
@@ -91,7 +93,7 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,210.0],
+			'tmass':[105.0,400.0],
 			'tau32':[0.0,0.65],
 			'tau21':[0.0,0.4],
 			'sjbtag':[0.5426,1.0],
@@ -105,7 +107,36 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,210.0],
+			'tmass':[105.0,400.0],
+			'tau32':[0.0,0.65],
+			'tau21':[0.4,1.0],
+			'sjbtag':[0.5426,1.0],
+			'wmass':[130.0,float("inf")],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
+			}
+	# Used for testing
+	if TYPE=='toy':
+		return  {
+			'wpt':[400.0,float("inf")],
+			'tpt':[400.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[140.0,170.0],
+			'tau32':[0.0,0.65],
+			'tau21':[0.0,0.4],
+			'sjbtag':[0.5426,1.0],
+			'wmass':[130.0,float("inf")],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4],
+			'eta':[0.0,2.4]
+			}
+	if TYPE=='rate_toy':
+		return  {
+			'wpt':[400.0,float("inf")],
+			'tpt':[400.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[140.0,170.0],
 			'tau32':[0.0,0.65],
 			'tau21':[0.4,1.0],
 			'sjbtag':[0.5426,1.0],
@@ -568,20 +599,40 @@ def BifPolyErr( x, p ):
 		return p[0]+p[1]*xx**2+p[6]*(xx-p[9])**4+p[3]*xx+p[7]*(xx-p[9])**2+p[8]*xx*(xx-p[9])**2
 
 #This looks up the PDF uncertainty
-def PDF_Lookup( pdfs , pdfOP ):
-	iweight = 0.0
-	#print "LEN"
-	#print len(pdfs)
-	ave =  pdfs
-	ave =  reduce(lambda x, y: x + y, pdfs) / len(pdfs)
+# def PDF_Lookup( pdfs , pdfOP ):
+# 	iweight = 0.0
+# 	#print "LEN"
+# 	#print len(pdfs)
+# 	ave =  pdfs
+# 	ave =  reduce(lambda x, y: x + y, pdfs) / len(pdfs)
+# 	#print ave
+# 	for pdf in pdfs :
+# 		iweight = iweight + (pdf-ave)*(pdf-ave)
+
+# 	if pdfOP == "up" :
+# 		return 1+sqrt((iweight) / (len(pdfs)))
+# 	else :
+# 		return 1-sqrt((iweight) / (len(pdfs)))
+
+def PDF_Lookup(pdfs , pdfOP ):
+	ilimweight = 0.0
+
+	limitedpdf = []
+	for curpdf in pdfs:
+		if abs(curpdf)<1000.0:
+			limitedpdf.append(curpdf)
+
+
+	limave =  limitedpdf
+	limave =  reduce(lambda x, y: x + y, limitedpdf) / len(limitedpdf)
 	#print ave
-	for pdf in pdfs :
-		iweight = iweight + (pdf-ave)*(pdf-ave)
+	for limpdf in limitedpdf :
+		ilimweight = ilimweight + (limpdf-limave)*(limpdf-limave)
 
 	if pdfOP == "up" :
-		return 1+sqrt((iweight) / (len(pdfs)))
+		return min(13.0,1.0+sqrt((ilimweight) / (len(limitedpdf))))
 	else :
-		return 1-sqrt((iweight) / (len(pdfs)))
+	  	return max(-12.0,1.0-sqrt((ilimweight) / (len(limitedpdf))))
 #This looks up the b tagging scale factor or uncertainty
 def Trigger_Lookup( H , TRP ):
 	Weight = 1.0
@@ -897,3 +948,69 @@ def strf( x ):
 def strf1( x ):
 	return '%.0f' % x
 
+# Built to wait for condor jobs to finish and then check that they didn't fail
+# The script that calls this function will quit if there are any job failures
+# listOfJobs input should be whatever comes before '.listOfJobs' for the set of jobs you submitted
+def WaitForJobs( listOfJobs ):
+	# Runs grep to count the number of jobs - output will have non-digit characters b/c of wc
+	preNumberOfJobs = subprocess.check_output('grep "python" '+listOfJobs+'.listOfJobs | wc -l', shell=True)
+	commentedNumberOfJobs = subprocess.check_output('grep "# python" '+listOfJobs+'.listOfJobs | wc -l', shell=True)
+
+	# Get rid of non-digits and convert to an int
+	preNumberOfJobs = int(filter(lambda x: x.isdigit(), preNumberOfJobs))
+	commentedNumberOfJobs = int(filter(lambda x: x.isdigit(), commentedNumberOfJobs))
+	numberOfJobs = preNumberOfJobs - commentedNumberOfJobs
+
+	finishedJobs = 0
+	# Rudementary progress bar
+	while finishedJobs < numberOfJobs:
+		# Count how many output files there are to see how many jobs finished
+		# the `2> null.txt` writes the stderr to null.txt instead of printing it which means
+		# you don't have to look at `ls: output_*.log: No such file or directory`
+		finishedJobs = subprocess.check_output('ls output_*.log 2> null.txt | wc -l', shell=True)
+		finishedJobs = int(filter(lambda x: x.isdigit(), finishedJobs))
+		# Print the count out as a 'progress bar' that refreshes (via \r)
+		sys.stdout.write("\r%i / %i finished..." % (finishedJobs,numberOfJobs))
+		# Clear the buffer
+		sys.stdout.flush()
+		# Sleep for one second
+		time.sleep(1)
+
+
+	print 'Jobs completed. Checking for errors...'
+	numberOfTracebacks = subprocess.check_output('grep -i "Traceback" output*.log | wc -l', shell=True)
+	numberOfSyntax = subprocess.check_output('grep -i "Syntax" output*.log | wc -l', shell=True)
+
+	numberOfTracebacks = int(filter(lambda x: x.isdigit(), numberOfTracebacks))
+	numberOfSyntax = int(filter(lambda x: x.isdigit(), numberOfSyntax))
+
+	# Check there are no syntax or traceback errors
+	# Future idea - check output file sizes
+	if numberOfTracebacks > 0:
+		print numberOfTracebacks + ' job(s) failed with traceback error'
+		quit()
+	elif numberOfSyntax > 0:
+		print numberOfSyntax + ' job(s) failed with syntax error'
+		quit()
+	else:
+		print 'No errors!'
+
+# Scales the up and down pdf uncertainty distributions to the nominal value to isolate the shape uncertainty
+def PDFShapeUncert(nominal, up, down):
+	upShape = up.Clone("Mtw")
+	downShape = down.Clone("Mtw")
+	upShape.Scale(nominal.Integral()/up.Integral())
+	downShape.Scale(nominal.Integral()/down.Integral())
+
+	return upShape, downShape
+
+# Creates ratios between the events in up/down PDF distributions to nominal distribution and
+# used the ratio to derive up/down xsec values for the given mass point
+def PDFNormUncert(nominal, up, down, xsec_nominal):
+	ratio_up = up.Integral()/nominal.Integral()
+	ratio_down = down.Integral()/nominal.Integral()
+
+	xsec_up = ratio_up*xsec_nominal
+	xsec_down = ratio_down*xsec_nominal
+
+	return xsec_up, xsec_down

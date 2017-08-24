@@ -18,7 +18,7 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
                   dest		=	'cuts',
                   help		=	'Cuts type (ie default, rate, etc)')
 parser.add_option('-v', '--var', metavar='F', type='string', action='store',
-                  default	=	'',
+                  default	=	'on',
                   dest		=	'var',
                   help		=	'blank or kinematics')
 parser.add_option('-x', '--pileup', metavar='F', type='string', action='store',
@@ -31,16 +31,16 @@ parser.add_option('-x', '--pileup', metavar='F', type='string', action='store',
 
 cuts = options.cuts
 var = ''
-if options.var=='kinematics':
-	var = '_kin'
+if options.var=='off':
+	var = '_extraPtCorrection_off'
 
 mmstrList = ['',"_modm_up","_modm_down"]
 
 pustr = ""
-if options.pileup == "off":
-	pustr = "pileup_unweighted"
-elif options.pileup == "on":
-	pustr = "none"
+# if options.pileup == "off":
+# 	pustr = "pileup_unweighted"
+# elif options.pileup == "on":
+	# pustr = "none"
 
 import Bstar_Functions	
 from Bstar_Functions import *
@@ -76,10 +76,10 @@ xsec_bpl = Cons['xsec_bpl']
 
 files = sorted(glob.glob("*job*of*.root"))
 
-filestr = ['none','pileup_up','pileup_down','JES_up','JES_down','JER_up','JER_down','JMS_up','JMS_down','JMR_up','JMR_down']
+filestr = ['none','JES_up','JES_down','JER_up','JER_down','JMS_up','JMS_down','JMR_up','JMR_down']
 
 pdfstr = ['pdf_up','pdf_down']
-
+pilestr = ['pileup_up','pileup_down']
 
 j = []
 for f in files:
@@ -101,15 +101,15 @@ for f in files_to_sum:
 for l in range(len(lumiList)):
 	lumi = lumiList[l]
 	for mmstr in mmstrList:
-		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerQCD_Trigger_nominal_'+pustr+mmstr+'_PSET_rate_default.root')
-		commands.append('python HistoWeight.py -i TWanalyzerQCDHT500_Trigger_nominal_'+pustr+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWanalyzerQCDHT500_Trigger_nominal_'+pustr+mmstr+'_PSET_'+cuts+'weighted.root -n auto -w ' + str(lumi*xsec_qcd['HT500']))
-		commands.append('python HistoWeight.py -i TWanalyzerQCDHT700_Trigger_nominal_'+pustr+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWanalyzerQCDHT700_Trigger_nominal_'+pustr+mmstr+'_PSET_'+cuts+'weighted.root -n auto -w ' + str(lumi*xsec_qcd['HT700']))
-		commands.append('python HistoWeight.py -i TWanalyzerQCDHT1000_Trigger_nominal_'+pustr+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWanalyzerQCDHT1000_Trigger_nominal_'+pustr+mmstr+'_PSET_'+cuts+'weighted.root -n auto -w ' + str(lumi*xsec_qcd['HT1000']))
-		commands.append('python HistoWeight.py -i TWanalyzerQCDHT1500_Trigger_nominal_'+pustr+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWanalyzerQCDHT1500_Trigger_nominal_'+pustr+mmstr+'_PSET_'+cuts+'weighted.root -n auto -w ' + str(lumi*xsec_qcd['HT1500']))
-		commands.append('python HistoWeight.py -i TWanalyzerQCDHT2000_Trigger_nominal_'+pustr+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWanalyzerQCDHT2000_Trigger_nominal_'+pustr+mmstr+'_PSET_'+cuts+'weighted.root -n auto -w ' + str(lumi*xsec_qcd['HT2000']))
+		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerQCD_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_rate_default.root')
+		commands.append('python HistoWeight.py -i TWanalyzerQCDHT500_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWanalyzerQCDHT500_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+'weighted.root -n auto -w ' + str(lumi*xsec_qcd['HT500']))
+		commands.append('python HistoWeight.py -i TWanalyzerQCDHT700_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWanalyzerQCDHT700_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+'weighted.root -n auto -w ' + str(lumi*xsec_qcd['HT700']))
+		commands.append('python HistoWeight.py -i TWanalyzerQCDHT1000_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWanalyzerQCDHT1000_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+'weighted.root -n auto -w ' + str(lumi*xsec_qcd['HT1000']))
+		commands.append('python HistoWeight.py -i TWanalyzerQCDHT1500_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWanalyzerQCDHT1500_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+'weighted.root -n auto -w ' + str(lumi*xsec_qcd['HT1500']))
+		commands.append('python HistoWeight.py -i TWanalyzerQCDHT2000_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWanalyzerQCDHT2000_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+'weighted.root -n auto -w ' + str(lumi*xsec_qcd['HT2000']))
 
-		commands.append('hadd TWanalyzerQCD_Trigger_nominal_'+pustr+mmstr+'_PSET_'+cuts+var+'.root temprootfiles/TWanalyzerQCDHT*_Trigger_nominal_'+pustr+mmstr+'_PSET_'+cuts+'weighted.root')
-		commands.append('mv TWanalyzerQCD_Trigger_nominal_'+pustr+mmstr+'_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
+		commands.append('hadd TWanalyzerQCD_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+var+'.root temprootfiles/TWanalyzerQCDHT*_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+'weighted.root')
+		commands.append('mv TWanalyzerQCD_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
 
 commands.append('mv TWanalyzerQCDHT*_Trigger_nominal_*_PSET_'+cuts+var+'.root temprootfiles/')
 
@@ -136,9 +136,9 @@ commands.append('mv TWanalyzerQCDHT*_Trigger_nominal_*_PSET_'+cuts+var+'.root te
 for l in range(len(lumiList)):
 	lumi = lumiList[l]
 	for scale in ['scaleup','scaledown']:
-		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root')
-		commands.append('python HistoWeight.py -i TWanalyzerttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root -n auto -w ' + str(lumi*xsec_ttbar['PH'+scale]))
-		commands.append('mv TWanalyzerttbar'+scale+'_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root temprootfiles/')
+		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar'+scale+'_Trigger_nominal_'+filestr[0]+'_PSET_'+cuts+var+'.root')
+		commands.append('python HistoWeight.py -i TWanalyzerttbar'+scale+'_Trigger_nominal_'+filestr[0]+'_PSET_'+cuts+var+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar'+scale+'_Trigger_nominal_'+filestr[0]+'_PSET_'+cuts+var+'.root -n auto -w ' + str(lumi*xsec_ttbar['PH'+scale]))
+		commands.append('mv TWanalyzerttbar'+scale+'_Trigger_nominal_'+filestr[0]+'_PSET_'+cuts+var+'.root temprootfiles/')
 
 for l in range(len(lumiList)):
 	lumi = lumiList[l]
@@ -151,13 +151,20 @@ for l in range(len(lumiList)):
 		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root') #removes old file with same name in /rootfiles/
 		commands.append('python HistoWeight.py -i TWanalyzerttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root -n auto -w ' + str(lumi*xsec_ttbar['PH']))
 		commands.append('mv TWanalyzerttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root temprootfiles/')
+	for p in pilestr:
+		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root') #removes old file with same name in /rootfiles/
+		commands.append('python HistoWeight.py -i TWanalyzerttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root -n auto -w ' + str(lumi*xsec_ttbar['PH']))
+		commands.append('mv TWanalyzerttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root temprootfiles/')
+	commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_PSET_'+cuts+'_extraPtCorrection_off.root')
+	commands.append('python HistoWeight.py -i TWanalyzerttbar_Trigger_nominal_none_PSET_'+cuts+'_extraPtCorrection_off.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_PSET_'+cuts+'_extraPtCorrection_off.root -n auto -w ' + str(lumi*xsec_ttbar['PH']))
+	commands.append('mv TWanalyzerttbar_Trigger_nominal_none_PSET_'+cuts+'_extraPtCorrection_off.root temprootfiles/')
 
 for l in range(len(lumiList)):
 	lumi = lumiList[l]
-	commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerdata_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root')
-	commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
-	commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_modm_down_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
-	commands.append('mv TWanalyzerdata_Trigger_nominal_'+pustr+'_modm_up_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
+	commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerdata_Trigger_nominal_'+filestr[0]+'_PSET_'+cuts+var+'.root')
+	commands.append('mv TWanalyzerdata_Trigger_nominal_'+filestr[0]+'_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
+	commands.append('mv TWanalyzerdata_Trigger_nominal_'+filestr[0]+'_modm_down_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
+	commands.append('mv TWanalyzerdata_Trigger_nominal_'+filestr[0]+'_modm_up_PSET_'+cuts+var+'.root rootfiles/'+Lumi[l]+'/')
 	
 
 #primeSigs = ['1200','1400','1600','1800']

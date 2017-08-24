@@ -1,4 +1,5 @@
 import os
+import pickle
 import array
 import glob
 import math
@@ -34,6 +35,9 @@ gROOT.Macro("rootlogon.C")
 
 Lumi = options.lumi
 
+Cons = LoadConstants()
+
+
 rebin=2
 
 def Zero(hist):
@@ -46,10 +50,15 @@ mass = [1200,1400,1600,1800,2000,2200,2400,2600,2800,3000]
 for hand in ["RH","LH","vector"]:
 	if hand == "RH":
 		coup = "right"
+		xsecs = Cons['xsec_bsr']
 	elif hand == "LH":
 		coup = "left"
+		xsecs = Cons['xsec_bsl']
 	elif hand == 'vector':
 		coup = 'vector'
+		for key in Cons['xsec_bsr']:
+			xsecs[key] = Cons['xsec_bsr'][key]+Cons['xsec_bsl'][key]
+
 	
 	output = ROOT.TFile( "limitsetting/theta/BStarCombination/allhadronic"+coup+Lumi+"_mtw.root", "recreate" )
 	output.cd()
@@ -76,11 +85,12 @@ for hand in ["RH","LH","vector"]:
 	TTmcPtSmearUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_JER_up_PSET_"+options.cuts+".root")
 	TTmcPtSmearDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_JER_down_PSET_"+options.cuts+".root")
 
-	TTmcQ2ScaleUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbarscaleup_Trigger_nominal_none_PSET_"+options.cuts+".root")
-	TTmcQ2ScaleDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbarscaledown_Trigger_nominal_none_PSET_"+options.cuts+".root")
+	# Now included in ttbar xsec uncertainty
+	# TTmcQ2ScaleUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbarscaleup_Trigger_nominal_none_PSET_"+options.cuts+".root")
+	# TTmcQ2ScaleDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbarscaledown_Trigger_nominal_none_PSET_"+options.cuts+".root")
 
-	TTmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_pileup_up_PSET_"+options.cuts+".root")
-	TTmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_pileup_down_PSET_"+options.cuts+".root")
+	TTmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_none_pileup_up_PSET_"+options.cuts+".root")
+	TTmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_none_pileup_down_PSET_"+options.cuts+".root")
 
 	TTmcPDFUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_none_pdf_up_PSET_"+options.cuts+".root")
 	TTmcPDFDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_none_pdf_down_PSET_"+options.cuts+".root")
@@ -94,8 +104,8 @@ for hand in ["RH","LH","vector"]:
 	STtmcPtSmearUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_JER_up_PSET_'+options.cuts+'.root')
 	STtmcPtSmearDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_JER_down_PSET_'+options.cuts+'.root')
 
-	STtmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_pileup_up_PSET_'+options.cuts+'.root')
-	STtmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_pileup_down_PSET_'+options.cuts+'.root')
+	STtmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_none_pileup_up_PSET_'+options.cuts+'.root')
+	STtmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_none_pileup_down_PSET_'+options.cuts+'.root')
 	# tB
 	STtBmcPtScaleUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_JES_up_PSET_'+options.cuts+'.root')
 	STtBmcPtScaleDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_JES_down_PSET_'+options.cuts+'.root')
@@ -103,8 +113,8 @@ for hand in ["RH","LH","vector"]:
 	STtBmcPtSmearUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_JER_up_PSET_'+options.cuts+'.root')
 	STtBmcPtSmearDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_JER_down_PSET_'+options.cuts+'.root')
 
-	STtBmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_pileup_up_PSET_'+options.cuts+'.root')
-	STtBmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_pileup_down_PSET_'+options.cuts+'.root')
+	STtBmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_none_pileup_up_PSET_'+options.cuts+'.root')
+	STtBmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_none_pileup_down_PSET_'+options.cuts+'.root')
 	# tW
 	STtWmcPtScaleUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_JES_up_PSET_'+options.cuts+'.root')
 	STtWmcPtScaleDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_JES_down_PSET_'+options.cuts+'.root')
@@ -112,8 +122,8 @@ for hand in ["RH","LH","vector"]:
 	STtWmcPtSmearUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_JER_up_PSET_'+options.cuts+'.root')
 	STtWmcPtSmearDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_JER_down_PSET_'+options.cuts+'.root')
 
-	STtWmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_pileup_up_PSET_'+options.cuts+'.root')
-	STtWmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_pileup_down_PSET_'+options.cuts+'.root')
+	STtWmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_none_pileup_up_PSET_'+options.cuts+'.root')
+	STtWmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_none_pileup_down_PSET_'+options.cuts+'.root')
 
 	# tWB
 	STtWBmcPtScaleUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_JES_up_PSET_'+options.cuts+'.root')
@@ -122,8 +132,8 @@ for hand in ["RH","LH","vector"]:
 	STtWBmcPtSmearUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_JER_up_PSET_'+options.cuts+'.root')
 	STtWBmcPtSmearDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_JER_down_PSET_'+options.cuts+'.root')
 
-	STtWBmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_pileup_up_PSET_'+options.cuts+'.root')
-	STtWBmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_pileup_down_PSET_'+options.cuts+'.root')
+	STtWBmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_none_pileup_up_PSET_'+options.cuts+'.root')
+	STtWBmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_none_pileup_down_PSET_'+options.cuts+'.root')
 
 
 #------------Grab histos --------------------------------------
@@ -150,8 +160,8 @@ for hand in ["RH","LH","vector"]:
 	TTmcFSPtSmearUp = TTmcPtSmearUp.Get("Mtw")
 	TTmcFSPtSmearDown = TTmcPtSmearDown.Get("Mtw")
 
-	TTmcFSQ2ScaleUp = TTmcQ2ScaleUp.Get("Mtw")
-	TTmcFSQ2ScaleDown = TTmcQ2ScaleDown.Get("Mtw")
+	# TTmcFSQ2ScaleUp = TTmcQ2ScaleUp.Get("Mtw")
+	# TTmcFSQ2ScaleDown = TTmcQ2ScaleDown.Get("Mtw")
 
 	TTmcFSPileUp = TTmcPileUp.Get("Mtw")
 	TTmcFSPileDown = TTmcPileDown.Get("Mtw")
@@ -212,6 +222,9 @@ for hand in ["RH","LH","vector"]:
 	STtWmcFSWSFup = STtWmc.Get('MtwWup')
 	STtWmcFSWSFdown = STtWmc.Get('MtwWdown')
 
+	STtWmcFSExtrapUp = STtWmc.Get('MtwExtrapUp')
+	STtWmcFSExtrapDown = STtWmc.Get('MtwExtrapDown')
+
 	# tWB
 	STtWBmcFSPtScaleUp = STtWBmcPtScaleUp.Get("Mtw")
 	STtWBmcFSPtScaleDown = STtWBmcPtScaleDown.Get("Mtw")
@@ -227,6 +240,9 @@ for hand in ["RH","LH","vector"]:
 
 	STtWBmcFSWSFup = STtWBmc.Get('MtwWup')
 	STtWBmcFSWSFdown = STtWBmc.Get('MtwWdown')
+
+	STtWBmcFSExtrapUp = STtWBmc.Get('MtwExtrapUp')
+	STtWBmcFSExtrapDown = STtWBmc.Get('MtwExtrapDown')
 
 
 	# Grab data stuff
@@ -286,8 +302,8 @@ for hand in ["RH","LH","vector"]:
 	STmcFS.Rebin(rebin)
 
 	# ttbar
-	TTmcFSQ2ScaleUp.Rebin(rebin)
-	TTmcFSQ2ScaleDown.Rebin(rebin)
+	# TTmcFSQ2ScaleUp.Rebin(rebin)
+	# TTmcFSQ2ScaleDown.Rebin(rebin)
 
 	TTmcFSPtScaleUp.Rebin(rebin)
 	TTmcFSPtScaleDown.Rebin(rebin)
@@ -356,6 +372,9 @@ for hand in ["RH","LH","vector"]:
 	STtWmcFSWSFup.Rebin(rebin)
 	STtWmcFSWSFdown.Rebin(rebin)
 
+	STtWmcFSExtrapUp.Rebin(rebin)
+	STtWmcFSExtrapDown.Rebin(rebin)
+
 	# tWB
 	STtWBmcFS.Rebin(rebin)
 
@@ -374,7 +393,8 @@ for hand in ["RH","LH","vector"]:
 	STtWBmcFSWSFup.Rebin(rebin)
 	STtWBmcFSWSFdown.Rebin(rebin)
 
-
+	STtWBmcFSExtrapUp.Rebin(rebin)
+	STtWBmcFSExtrapDown.Rebin(rebin)
 
 	# DataQCDE1Up = DataQCD.Clone()	
 	DataQCDE2Up = DataQCD.Clone()	
@@ -412,8 +432,8 @@ for hand in ["RH","LH","vector"]:
 	TTmcFSPtSmearUp.SetName("mtw_allhad__ttbar__jer__plus")
 	TTmcFSPtSmearDown.SetName("mtw_allhad__ttbar__jer__minus")
 
-	TTmcFSQ2ScaleUp.SetName("mtw_allhad__ttbar__q2__plus")
-	TTmcFSQ2ScaleDown.SetName("mtw_allhad__ttbar__q2__minus")
+	# TTmcFSQ2ScaleUp.SetName("mtw_allhad__ttbar__q2__plus")
+	# TTmcFSQ2ScaleDown.SetName("mtw_allhad__ttbar__q2__minus")
 
 	TTmcFSPileUp.SetName("mtw_allhad__ttbar__pile__plus")
 	TTmcFSPileDown.SetName("mtw_allhad__ttbar__pile__minus")
@@ -477,6 +497,10 @@ for hand in ["RH","LH","vector"]:
 
 	STtWmcFSWSFup.SetName('mtw_allhad__sttW__wtag__plus')
 	STtWmcFSWSFdown.SetName('mtw_allhad__sttW__wtag__minus')
+
+	STtWmcFSExtrapUp.SetName('mtw_allhad__sttW__extrap__plus')
+	STtWmcFSExtrapDown.SetName('mtw_allhad__sttW__extrap__minus')
+
 	# tWB
 	STtWBmcFS.SetName("mtw_allhad__sttWB")
 
@@ -494,6 +518,9 @@ for hand in ["RH","LH","vector"]:
 
 	STtWBmcFSWSFup.SetName('mtw_allhad__sttWB__wtag__plus')
 	STtWBmcFSWSFdown.SetName('mtw_allhad__sttWB__wtag__minus')
+
+	STtWBmcFSExtrapUp.SetName('mtw_allhad__sttWB__extrap__plus')
+	STtWBmcFSExtrapDown.SetName('mtw_allhad__sttWB__extrap__minus')
 
 #-------Set title------------------------------------
 	# Data and QCD
@@ -520,8 +547,8 @@ for hand in ["RH","LH","vector"]:
 	TTmcFSPtSmearUp.SetTitle("mtw_allhad__ttbar__jer__plus")
 	TTmcFSPtSmearDown.SetTitle("mtw_allhad__ttbar__jer__minus")
 
-	TTmcFSQ2ScaleUp.SetTitle("mtw_allhad__ttbar__q2__plus")
-	TTmcFSQ2ScaleDown.SetTitle("mtw_allhad__ttbar__q2__minus")
+	# TTmcFSQ2ScaleUp.SetTitle("mtw_allhad__ttbar__q2__plus")
+	# TTmcFSQ2ScaleDown.SetTitle("mtw_allhad__ttbar__q2__minus")
 
 	TTmcFSPileUp.SetTitle("mtw_allhad__ttbar__pile__plus")
 	TTmcFSPileDown.SetTitle("mtw_allhad__ttbar__pile__minus")
@@ -585,6 +612,10 @@ for hand in ["RH","LH","vector"]:
 
 	STtWmcFSWSFup.SetTitle('mtw_allhad__sttW__wtag__plus')
 	STtWmcFSWSFdown.SetTitle('mtw_allhad__sttW__wtag__minus')
+
+	STtWmcFSExtrapUp.SetTitle('mtw_allhad__sttW__extrap__plus')
+	STtWmcFSExtrapDown.SetTitle('mtw_allhad__sttW__extrap__minus')
+
 	# tWB
 	STtWBmcFS.SetTitle("mtw_allhad__sttWB")
 
@@ -602,6 +633,9 @@ for hand in ["RH","LH","vector"]:
 
 	STtWBmcFSWSFup.SetTitle('mtw_allhad__sttWB__wtag__plus')
 	STtWBmcFSWSFdown.SetTitle('mtw_allhad__sttWB__wtag__minus')
+
+	STtWBmcFSExtrapUp.SetTitle('mtw_allhad__sttWB__extrap__plus')
+	STtWBmcFSExtrapDown.SetTitle('mtw_allhad__sttWB__extrap__minus')
 
 #--------Start writing out----------------
 	output.cd()
@@ -629,8 +663,8 @@ for hand in ["RH","LH","vector"]:
 	TTmcFSPtSmearUp.Write("mtw_allhad__ttbar__jer__plus")
 	TTmcFSPtSmearDown.Write("mtw_allhad__ttbar__jer__minus")
 
-	TTmcFSQ2ScaleUp.Write("mtw_allhad__ttbar__q2__plus")
-	TTmcFSQ2ScaleDown.Write("mtw_allhad__ttbar__q2__minus")
+	# TTmcFSQ2ScaleUp.Write("mtw_allhad__ttbar__q2__plus")
+	# TTmcFSQ2ScaleDown.Write("mtw_allhad__ttbar__q2__minus")
 
 	TTmcFSPileUp.Write("mtw_allhad__ttbar__pile__plus")
 	TTmcFSPileDown.Write("mtw_allhad__ttbar__pile__minus")
@@ -694,6 +728,9 @@ for hand in ["RH","LH","vector"]:
 
 	STtWmcFSWSFup.Write('mtw_allhad__sttW__wtag__plus')
 	STtWmcFSWSFdown.Write('mtw_allhad__sttW__wtag__minus')
+
+	STtWmcFSExtrapUp.Write('mtw_allhad__sttW__extrap__plus')
+	STtWmcFSExtrapDown.Write('mtw_allhad__sttW__extrap__minus')
 	# tWB
 	STtWBmcFS.Write("mtw_allhad__sttWB")
 
@@ -712,7 +749,10 @@ for hand in ["RH","LH","vector"]:
 	STtWBmcFSWSFup.Write('mtw_allhad__sttWB__wtag__plus')
 	STtWBmcFSWSFdown.Write('mtw_allhad__sttWB__wtag__minus')
 
-	
+	STtWBmcFSExtrapUp.Write('mtw_allhad__sttWB__extrap__plus')
+	STtWBmcFSExtrapDown.Write('mtw_allhad__sttWB__extrap__minus')
+
+	xsecDict = {}
 	for RA in range(0,len(mass)):
 		SignalB11 = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_none_PSET_"+cuts+".root")
 
@@ -724,8 +764,8 @@ for hand in ["RH","LH","vector"]:
 		SignalB11PtSmearDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_JER_down_PSET_"+options.cuts+".root")
 
 
-		SignalB11PileUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_pileup_up_PSET_"+options.cuts+".root")
-		SignalB11PileDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_pileup_down_PSET_"+options.cuts+".root")
+		SignalB11PileUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_none_pileup_up_PSET_"+options.cuts+".root")
+		SignalB11PileDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_none_pileup_down_PSET_"+options.cuts+".root")
 
 
 		SignalB11PDFUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_none_pdf_up_PSET_"+options.cuts+".root")
@@ -755,6 +795,19 @@ for hand in ["RH","LH","vector"]:
 		SignalWSFup = SignalB11.Get("MtwWup")
 		SignalWSFdown = SignalB11.Get("MtwWdown")
 
+		SignalExtrapUp = SignalB11.Get('MtwExtrapUp')
+		SignalExtrapDown = SignalB11.Get('MtwExtrapDown')
+
+
+		# Need to separate the PDF shape and normalization uncertainties
+		# Normalization will be applied later as a band on the theory limit line
+		xsec_up, xsec_down = PDFNormUncert(SignalFS,SignalPDFUp,SignalPDFDown,xsecs[str(mass[RA])])
+		# Store values in a dictionary - write out at the end
+		xsecDict[str(mass[RA])] = [xsec_up,xsec_down]
+
+		# We keep the shape uncertainty here
+		SignalPDFShapeUp, SignalPDFShapeDown = PDFShapeUncert(SignalFS,SignalPDFUp,SignalPDFDown)
+
 
 		output.cd()
 
@@ -770,14 +823,17 @@ for hand in ["RH","LH","vector"]:
 		SignalPtSmearup.Rebin(rebin)
 		SignalPtSmeardown.Rebin(rebin)
 
-		SignalPDFUp.Rebin(rebin)
-		SignalPDFDown.Rebin(rebin)
+		SignalPDFShapeUp.Rebin(rebin)
+		SignalPDFShapeDown.Rebin(rebin)
 
 		SignalPileup.Rebin(rebin)
 		SignalPiledown.Rebin(rebin)
 
 		SignalWSFup.Rebin(rebin)
 		SignalWSFdown.Rebin(rebin)
+
+		SignalExtrapUp.Rebin(rebin)
+		SignalExtrapDown.Rebin(rebin)
 
 
 		SignalFS.SetTitle("mtw_allhad__bs"+str(mass[RA]))
@@ -791,8 +847,10 @@ for hand in ["RH","LH","vector"]:
 		SignalPtSmeardown.SetTitle("mtw_allhad__bs"+str(mass[RA])+"__jer__minus")
 		SignalPileup.SetTitle("mtw_allhad__bs"+str(mass[RA])+"__pile__plus")
 		SignalPiledown.SetTitle("mtw_allhad__bs"+str(mass[RA])+"__pile__minus")
-		# SignalPDFUp.SetTitle('mtw_allhad__bs'+str(mass[RA])+'__pdf__plus')
-		# SignalPDFDown.SetTitle('mtw_allhad__bs'+str(mass[RA])+'__pdf__minus')
+		SignalPDFShapeUp.SetTitle('mtw_allhad__bs'+str(mass[RA])+'__pdf__plus')
+		SignalPDFShapeDown.SetTitle('mtw_allhad__bs'+str(mass[RA])+'__pdf__minus')
+		SignalExtrapUp.SetTitle('mtw_allhad__bs'+str(mass[RA])+'__extrap__plus')
+		SignalExtrapDown.SetTitle('mtw_allhad__bs'+str(mass[RA])+'__extrap__minus')
 
 
 		SignalFS.SetName("mtw_allhad__bs"+str(mass[RA]))
@@ -806,8 +864,10 @@ for hand in ["RH","LH","vector"]:
 		SignalPtSmeardown.SetName("mtw_allhad__bs"+str(mass[RA])+"__jer__minus")
 		SignalPileup.SetName("mtw_allhad__bs"+str(mass[RA])+"__pile__plus")
 		SignalPiledown.SetName("mtw_allhad__bs"+str(mass[RA])+"__pile__minus")
-		# SignalPDFUp.SetName('mtw_allhad__bs'+str(mass[RA])+'__pdf__plus')
-		# SignalPDFDown.SetName('mtw_allhad__bs'+str(mass[RA])+'__pdf__minus')
+		SignalPDFShapeUp.SetName('mtw_allhad__bs'+str(mass[RA])+'__pdf__plus')
+		SignalPDFShapeDown.SetName('mtw_allhad__bs'+str(mass[RA])+'__pdf__minus')
+		SignalExtrapUp.SetName('mtw_allhad__bs'+str(mass[RA])+'__extrap__plus')
+		SignalExtrapDown.SetName('mtw_allhad__bs'+str(mass[RA])+'__extrap__minus')
 
 
 		SignalFS.Write("mtw_allhad__bs"+str(mass[RA]))
@@ -821,10 +881,14 @@ for hand in ["RH","LH","vector"]:
 		SignalPtSmeardown.Write("mtw_allhad__bs"+str(mass[RA])+"__jer__minus")
 		SignalPileup.Write("mtw_allhad__bs"+str(mass[RA])+"__pile__plus")
 		SignalPiledown.Write("mtw_allhad__bs"+str(mass[RA])+"__pile__minus")
-		# SignalPDFUp.Write('mtw_allhad__bs'+str(mass[RA])+'__pdf__plus')
-		# SignalPDFDown.Write('mtw_allhad__bs'+str(mass[RA])+'__pdf__minus')
+		SignalPDFShapeUp.Write('mtw_allhad__bs'+str(mass[RA])+'__pdf__plus')
+		SignalPDFShapeDown.Write('mtw_allhad__bs'+str(mass[RA])+'__pdf__minus')
+		SignalExtrapUp.Write('mtw_allhad__bs'+str(mass[RA])+'__extrap__plus')
+		SignalExtrapDown.Write('mtw_allhad__bs'+str(mass[RA])+'__extrap__minus')
 
-
+	xsecFile = open('results/xsec_dict_'+coup+'_had.pkl',"wb")
+	pickle.dump(xsecDict,xsecFile)
+	xsecFile.close()
 		
 
 

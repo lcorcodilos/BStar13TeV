@@ -1,4 +1,10 @@
-python ./tardir/TWPileup.py -s ttbar -g on
-python ./tardir/TWPileup.py -s signalRH1200 -g on
-python ./tardir/TWPileup.py -s signalRH2000 -g on
-python ./tardir/TWPileup.py -s signalRH2800 -g on
+# python ./tardir/TWPileup.py -s ttbar -g on
+# python ./tardir/TWPileup.py -s signalRH1200 -g on
+# python ./tardir/TWPileup.py -s signalRH2000 -g on
+# python ./tardir/TWPileup.py -s signalRH2800 -g on
+
+python ./tardir/TWPileup.py -s QCDHT500 -g on
+python ./tardir/TWPileup.py -s QCDHT700 -g on
+python ./tardir/TWPileup.py -s QCDHT1000 -g on
+python ./tardir/TWPileup.py -s QCDHT1500 -g on
+python ./tardir/TWPileup.py -s QCDHT2000 -g on

@@ -369,6 +369,15 @@ if options.set.find('ttbar') != -1:
 	treeVars['pt_reweight'] = array('d',[0])
 	Tree.Branch('pt_reweight',treeVars['pt_reweight'],'pt_reweight/D')
 
+# Grab pilefile and plot if not data
+if options.set != 'data':
+	PileFile = TFile(di+"PileUp_Ratio_ttbar.root")
+	if options.pileup=='up':
+		PilePlot = PileFile.Get("Pileup_Ratio_up")
+	elif options.pileup=='down':
+		PilePlot = PileFile.Get("Pileup_Ratio_down")
+	else:	
+		PilePlot = PileFile.Get("Pileup_Ratio")
 
 # Now we can loop
 # We check for the trigger on data, do pt cuts on the jets, and eta cuts
@@ -552,14 +561,6 @@ for event in events:
 
 				# Get pileup info if not data
 				if options.set != 'data':
-					PileFile = TFile(di+"PileUp_Ratio_ttbar.root")
-					if options.pileup=='up':
-						PilePlot = PileFile.Get("Pileup_Ratio_up")
-					elif options.pileup=='down':
-						PilePlot = PileFile.Get("Pileup_Ratio_down")
-					else:	
-						PilePlot = PileFile.Get("Pileup_Ratio")
-
 					event.getByLabel (puLabel, puHandle)
 					PileUp 		= 	puHandle.product()
 					Temp_vars['pileBin'] = PilePlot.FindBin(PileUp[0])

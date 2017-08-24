@@ -54,7 +54,7 @@ parser.add_option('-p', '--pdfweights', metavar='F', type='string', action='stor
 				  dest		=	'pdfweights',
 				  help		=	'nominal, up, or down')
 parser.add_option('-x', '--pileup', metavar='F', type='string', action='store',
-				  default	=	'off',
+				  default	=	'on',
 				  dest		=	'pileup',
 				  help		=	'If not data do pileup reweighting?')
 parser.add_option('-S', '--split', metavar='F', type='string', action='store',
@@ -70,7 +70,7 @@ parser.add_option('-j', '--jobs', metavar='F', type='string', action='store',
 				  dest      =   'jobs',
 				  help      =   'number of jobs')
 parser.add_option('-u', '--ptreweight', metavar='F', type='string', action='store',
-				  default	=	'none',
+				  default	=	'on',
 				  dest		=	'ptreweight',
 				  help		=	'on or off')
 
@@ -93,7 +93,7 @@ for iname in range(0,len(tname)):
 		tnamestr+='OR'
 
 		
-if tnamestr=='HLT_PFHT900ORHLT_PFHT800ORHLT_AK8PFJet450':
+if tnamestr=='HLT_PFHT900ORHLT_PFHT800ORHLT_JET450':
 	tnameformat='nominal'
 elif tnamestr=='':
 	tnameformat='none'
@@ -125,6 +125,16 @@ else:
 Cons = LoadConstants()
 lumi = Cons['lumi']
 Lumi = str(lumi/1000)+"fb"
+ttagsf = Cons['ttagsf']
+
+if options.cuts.find('rate') != -1:
+	Wpurity = 'LP'
+	wtagsf = Cons['wtagsf_LP']
+	wtagsfsig = Cons['wtagsfsig_LP']
+else:
+	Wpurity = 'HP'
+	wtagsf = Cons['wtagsf_HP']
+	wtagsfsig = Cons['wtagsfsig_HP']
 
 Cuts = LoadCuts(options.cuts)
 wpt = Cuts['wpt']
@@ -146,13 +156,14 @@ file = TFile(mainDir + "TWtreefile_"+options.set+"_Trigger_nominal_none.root")
 
 tree = file.Get("Tree")
 
-if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
-	settype = 'ttbar'
-elif (options.set.find('QCD') != -1):
-	settype ='ttbar'
-	run_b_SF = False
-else :	
-	settype = options.set
+settype = 'ttbar'
+# if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
+# 	settype = 'ttbar'
+# elif (options.set.find('QCD') != -1):
+# 	settype ='ttbar'
+# 	run_b_SF = False
+# else :	
+# 	settype = options.set
 
 print 'The type of set is ' + settype
 
@@ -238,6 +249,9 @@ MtwtptcomparepostSB1e2    = TH2F("MtwtptcomparepostSB1e2",  "Comparison wpt and 
 
 MtwtptcomparepreSB1e2.Sumw2()
 MtwtptcomparepostSB1e2.Sumw2()
+
+preTop = TH1D("preTop","mtw before full top requirement",400,500,4000)
+preTop.Sumw2()
 
 Mtwfaileta1          = TH1D("Mtwfaileta1",           "top + W mass fail 0<Eta<0.8",             400,  500,  4000 )
 Mtwfaileta1.Sumw2()
@@ -409,13 +423,12 @@ for entry in range(lowBinEdge,highBinEdge):
 				#Pileup reweighting is done here 
 				bin1 = tree.pileBin
 
-				if options.pileup != 'off':
+				# CHANGE BACK - have pileup for QCD temporarily off
+				if options.pileup != 'off':# and options.set.find("QCD") == -1:
 					weight *= PilePlot.GetBinContent(bin1)
 				
-				if options.cuts=="default" and options.set.find("QCD") == -1:
+				if options.set.find("QCD") == -1: #and options.cuts=="default":
 					weightSFt = ttagsf
-					# weightSFtup = ttagsf + ttagsf_errUp
-					# weightSFtdown = ttagsf - ttagsf_errDown
 
 			tmass_cut = tmass[0]<tVals["SDmass"]<tmass[1]
 
@@ -423,36 +436,27 @@ for entry in range(lowBinEdge,highBinEdge):
 			if tmass_cut:
 				ht = tjet.Perp() + wjet.Perp()
 
-				#MANUAL HT CUT -- TAKE OUT WHEN TRIGGER CORRECTION FINALIZED
-				# if ht<1100.0:
-				# 	continue 
+				weight*=weightSFt
 
-				# weighttrigup=1.0
-				# weighttrigdown=1.0
 
-				if tname != [] and options.set!='data' :
+				if tree.WJetMatchingRequirement == 1:
+					if options.set.find('tW') != -1 or options.set.find('signal') != -1:
+						weight*=wtagsf
+
+
+				if tname != 'none' and options.set!='data' :
 					#Trigger reweighting done here
 					TRW = Trigger_Lookup( ht , TrigPlot )[0]
-					# TRWup = Trigger_Lookup( ht , TrigPlot )[1]
-					# TRWdown = Trigger_Lookup( ht , TrigPlot )[2]
 
-					# weighttrigup=weight*TRWup
-					# weighttrigdown=weight*TRWdown
 					weight*=TRW
 
 				if options.ptreweight == "on" and options.set.find('ttbar') != -1:
 					#ttbar pt reweighting done here
-					PTW = tree.pt_reweight
+					PTW = tree.pt_reweight*(1+0.19)
 					weight*=PTW
-					# weightSFptup=max(0.0,weight*(2*PTW-1))
-					# weightSFptdown=weight
 
-				# weightSFtup=weight*weightSFtup
-				# weightSFtdown=weight*weightSFtdown
-				weight*=weightSFt
 
-				# weighttrigup*=weightSFt
-				# weighttrigdown*=weightSFt
+
 
 				try:
 					tau32val		= 	tVals["tau3"]/tVals["tau2"] 
@@ -472,7 +476,8 @@ for entry in range(lowBinEdge,highBinEdge):
 				elif type(wmass[0]) is list:
 					wmass_cut = wmass[0][0]<=wVals["SDmass"]<wmass[0][1] or wmass[1][0]<=wVals["SDmass"]<wmass[1][1] 
 				else:
-					print "wmass type error"                        
+					print "wmass type error"
+					continue                        
 
 				FullTop = sjbtag_cut and tau32_cut
 				if wmass_cut:
@@ -481,6 +486,8 @@ for entry in range(lowBinEdge,highBinEdge):
 						eta2_cut = eta2[0]<=abs(tjet.Eta())<eta2[1]
 						#Extract tags and probes for the average b tagging rate here 
 						#We use two eta regions 
+						preTop.Fill((tjet+wjet).M(),weight)
+
 						if eta1_cut:
 							eta1Count += 1
 							if not FullTop:
@@ -523,7 +530,16 @@ for entry in range(lowBinEdge,highBinEdge):
 								ptFullEtaPass.Fill(tjet.Perp(),weight)
 								MtvsptPasseta2.Fill(tjet.Perp(),tjet.M(),weight)
 						
-						temp_variables = {"wpt":wjet.Perp(),"wmass":wVals["SDmass"],"tpt":tVals["pt"],"tmass":tVals["SDmass"],"tau32":tau32val,"tau21":tau21val,"sjbtag":SJ_csvval,"weight":weight}#"nsubjets":nSubjets[tindexval]}
+						temp_variables = {"wpt":wjet.Perp(),
+								"wmass":wVals["SDmass"],
+								"tpt":tVals["pt"],
+								"tmass":tVals["SDmass"],
+								"tau32":tau32val,
+								"tau21":tau21val,
+								"sjbtag":SJ_csvval,
+								"weight":weight }
+
+								
 						for tv in tree_vars.keys():
 							tree_vars[tv][0] = temp_variables[tv]
 						NewTree.Fill()

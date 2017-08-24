@@ -75,7 +75,7 @@ void insertlogo( TPad* pad, int iPeriod, int iPosX )
     }
   else if ( iPeriod==8 )
     {
-      lumiText += "2.553 fb^{-1}";
+      lumiText += "36.4 fb^{-1}";
       lumiText += " (13 TeV)";
     }
   else if ( iPeriod==12 )

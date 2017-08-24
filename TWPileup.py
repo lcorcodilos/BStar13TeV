@@ -163,10 +163,10 @@ npvtruehistUW	    = ROOT.TH1F("npvtruehistUW",     "mass W' in b+1",     	  	   
 npvtruehistUW.Sumw2()
 
 npvhistUW	    = ROOT.TH1F("npvhistUW",     "mass W' in b+1",     	  	      80, 0, 80 )
-npvhist	    = ROOT.TH1F("npvhist",     "mass W' in b+1",     	  	      80, 0, 80 )
+# npvhist	    = ROOT.TH1F("npvhist",     "mass W' in b+1",     	  	      80, 0, 80 )
 
 npvhistUW.Sumw2()
-npvhist.Sumw2()
+# npvhist.Sumw2()
 
 #---------------------------------------------------------------------------------------------------------------------#
 

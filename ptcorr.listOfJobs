@@ -1,0 +1,104 @@
+#----------------------------default------------------------------------------------------#
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c default 
+python ./tardir/TWanalyzer.py -s ttbarscaleup -g on -v analyzer -c default 
+python ./tardir/TWanalyzer.py -s ttbarscaledown -g on -v analyzer -c default
+
+#JES Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c default -J up 
+#JES Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c default -J down 
+
+#JER Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c default -R up 
+#JER Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c default -R down 
+
+#JMSUp
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c default -a up 
+#JMS Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c default -a down 
+
+#JMR Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c default -b up 
+#JMR Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c default -b down 
+
+#Pileup Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c default -x up 
+#Pileup Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c default -x down 
+
+#PDF Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c default -p up
+#PDF Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c default -p down 
+
+#----------------------------sideband------------------------------------------------------#
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband 
+python ./tardir/TWanalyzer.py -s ttbarscaleup -g on -v analyzer -c sideband 
+python ./tardir/TWanalyzer.py -s ttbarscaledown -g on -v analyzer -c sideband
+
+#JES Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband -J up 
+#JES Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband -J down 
+
+#JER Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband -R up 
+#JER Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband -R down 
+
+#JMS Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband -a up 
+#JMS Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband -a down 
+
+#JMR Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband -b up 
+#JMR Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband -b down 
+
+#Pileup Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband -x up 
+#Pileup Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband -x down 
+
+#PDF Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband -p up
+#PDF Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband -p down 
+
+#----------------------------sideband1------------------------------------------------------#
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 
+python ./tardir/TWanalyzer.py -s ttbarscaleup -g on -v analyzer -c sideband1 
+python ./tardir/TWanalyzer.py -s ttbarscaledown -g on -v analyzer -c sideband1
+
+#JES Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -J up 
+#JES Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -J down 
+
+#JER Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -R up 
+#JER Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -R down 
+
+#JMS Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -a up 
+#JMS Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -a down 
+
+#JMR Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -b up 
+#JMR Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -b down 
+
+#Pileup Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -x up
+#Pileup Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -x down 
+
+#PDF Up
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -p up
+#PDF Down
+python ./tardir/TWanalyzer.py -s ttbar -g on -v analyzer -c sideband1 -p down 

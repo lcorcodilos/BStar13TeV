@@ -23,7 +23,16 @@ parser.add_option('-r', '--rate', metavar='F', type='string', action='store',
 				  default	=	'tpt',
 				  dest		=	'rate',
 				  help		=	'tpt, Mt, Mtw')
+parser.add_option('-p', '--printCanvas', metavar='F', type='string', action='store',
+				  default	=	'off',
+				  dest		=	'printCanvas',
+				  help		=	'on or off')
 (options, args) = parser.parse_args()
+
+if options.printCanvas == 'off':
+	ROOT.gROOT.SetBatch(True)
+	ROOT.PyConfig.IgnoreCommandLineOptions = True
+
 
 rootdir="rootfiles/"
 import Bstar_Functions	
@@ -70,11 +79,11 @@ c8 = TCanvas('c8', 'tagged vs signal', 800, 500)
 
 cleg = TCanvas('cleg', 'tagged vs signal', 400, 600)
 
-stack1 = THStack("typeb1probeseta1", "; Probe Jet p_{T} (GeV); Events / 50(GeV)")
-stack2 = THStack("typeb1probeseta2", "; Probe Jet p_{T} (GeV); Events / 50(GeV)")
+stack1 = THStack("typeb1probeseta1", "; Failed t-tagged Jet p_{T} (GeV); Events / 50(GeV)")
+stack2 = THStack("typeb1probeseta2", "; Failed t-tagged Jet p_{T} (GeV); Events / 50(GeV)")
 
-stack4 = THStack("typeb1tagseta1", "; t-tagged Jet p_{T} (GeV); Events / 50(GeV)")
-stack5 = THStack("typeb1tagseta2", "; t-tagged Jet p_{T} (GeV); Events / 50(GeV)")
+stack4 = THStack("typeb1tagseta1", "; Passed t-tagged Jet p_{T} (GeV); Events / 50(GeV)")
+stack5 = THStack("typeb1tagseta2", "; Passed t-tagged Jet p_{T} (GeV); Events / 50(GeV)")
 
 tagrates = ROOT.TFile("plots/TWrate_Maker_"+setstr+"_"+Lumi+"_PSET_"+options.cuts+".root")
 
@@ -244,8 +253,8 @@ ROOT.TFile(rootdir+Lumi+"/TWratefileweightedsignalRH3000_PSET_"+options.cuts+".r
 ]
 
 
-c1.Divide(2,3)
-c1.cd(1)
+c1.Divide(2,2)
+c1.cd(3)
 
 # ttbar subtraction
 if options.set=='data':
@@ -271,7 +280,7 @@ stack1.Draw()
 stack1.GetYaxis().SetTitleOffset(OFF)
 stack1.GetXaxis().SetRangeUser(400,1200)
 prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.00 < |#eta| < 0.80) }" )
-c1.cd(3)
+c1.cd(4)
 gPad.SetLeftMargin(0.16)
 
 
@@ -283,7 +292,7 @@ stack2.Draw()
 stack2.GetYaxis().SetTitleOffset(OFF)
 stack2.GetXaxis().SetRangeUser(400,1200)
 prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.80 < |#eta| < 2.40) }" )
-c1.cd(5)
+c1.cd(1)
 gPad.SetLeftMargin(0.16)
 
 
@@ -295,7 +304,7 @@ stack4.Draw()
 stack4.GetYaxis().SetTitleOffset(OFF)
 stack4.GetXaxis().SetRangeUser(400,1200)
 prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.00 < |#eta| < 0.80) }" )
-c1.cd(4)
+c1.cd(2)
 gPad.SetLeftMargin(0.16)
 
 stack5.Add( tageta2st, "Hist" )
@@ -306,11 +315,12 @@ stack5.Draw()
 stack5.GetYaxis().SetTitleOffset(OFF)
 stack5.GetXaxis().SetRangeUser(400,1200)
 prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.80 < |#eta| < 2.40) }" )
-c1.cd(6)
+# c1.cd(6)
 gPad.SetLeftMargin(0.16)
 
-c1.Print("plots/"+options.cuts+"/tagrates.png",'png')
-c1.Print("plots/"+options.cuts+"tagrates.root",'root')
+c1.Print("plots/"+options.cuts+"/N-Dtagrates.pdf",'pdf')
+c1.Print("plots/"+options.cuts+"/N-Dtagrates.png",'png')
+c1.Print("plots/"+options.cuts+"/N-Dtagrates.root",'root')
 
 
 

@@ -6,8 +6,6 @@ import glob
 import math
 import ROOT
 import sys
-ROOT.gROOT.SetBatch(True)
-ROOT.PyConfig.IgnoreCommandLineOptions = True
 from ROOT import *
 from array import *
 from optparse import OptionParser
@@ -39,6 +37,10 @@ parser.add_option('-u', '--ptreweight', metavar='F', type='string', action='stor
 				  default	=	'on',
 				  dest		=	'ptreweight',
 				  help		=	'on or off')
+parser.add_option('--noExtraPtCorrection', metavar='F', action='store_false',
+				  default=True,
+				  dest='extraPtCorrection',
+				  help='Call to turn off extraPtCorrection')
 parser.add_option('-b', '--blinded', metavar='F', type='string', action='store',
                   default	=	'off',
                   dest		=	'blinded',
@@ -56,13 +58,22 @@ parser.add_option('-p', '--bprime', metavar='F', action='store_true',
                   default       =       False,
                   dest          =       'bprime',
                   help          =       'True if running bprime. False if running bstar.')
+parser.add_option('-C', '--printCanvas', metavar='F', type='string', action='store',
+				  default	=	'off',
+				  dest		=	'printCanvas',
+				  help		=	'on or off')
 (options, args) = parser.parse_args()
+
+if options.printCanvas == 'off':
+	ROOT.gROOT.SetBatch(True)
+	ROOT.PyConfig.IgnoreCommandLineOptions = True
+
 
 cuts = options.cuts
 
 
-import Bstar_Functions	
-from Bstar_Functions import *
+import Bstar_Functions_local	
+from Bstar_Functions_local import *
 
 #Consts = LoadConstants()
 #lumi = Consts['lumi']
@@ -97,6 +108,8 @@ if options.pileup == 'off':
 ptString = ''
 if options.ptreweight == 'off':
 	ptString = '_ptreweight_off'
+elif not options.extraPtCorrection:
+	ptString = '_extraPtCorrection_off'
 
 mmstr = ""
 if options.modmass!="nominal":
@@ -109,9 +122,11 @@ else:
 	sBlind = ''
 
 if options.cuts == 'default' and options.var == 'analyzer':
-	mod = ['none','pileup_up','pileup_down','JES_up','JES_down','JER_up','JER_down','none_pdf_up','none_pdf_down']
+	mod = ['none','none_pileup_up','none_pileup_down','JES_up','JES_down','JER_up','JER_down','JMS_up','JMS_down','JMR_up','JMR_down','none_pdf_up','none_pdf_down']
+	subtractPDF = -2
 else:
 	mod = ['none']
+	subtractPDF = 0
 #string lists for naming
 SR1200sList = []
 SR2800sList = []
@@ -136,16 +151,18 @@ for m in mod:
 
 
 #Make root file lists by pulling from string lists
+# Subtract 2 from signals because we don't want full PDF uncertainties
 SR1200fList = []
-for i in range(len(SR1200sList)):
+for i in range(len(SR1200sList)-subtractPDF):
+	# print SR1200sList[i]
 	SR1200fList.append(ROOT.TFile(SR1200sList[i]))
 
 SR2800fList = []
-for i in range(len(SR2800sList)):
+for i in range(len(SR2800sList)-subtractPDF):
 	SR2800fList.append(ROOT.TFile(SR2800sList[i]))
 
 SR2000fList = []
-for i in range(len(SR2000sList)):
+for i in range(len(SR2000sList)-subtractPDF):
 	SR2000fList.append(ROOT.TFile(SR2000sList[i]))
 
 TTmcfList = []
@@ -165,52 +182,53 @@ DataMmdown = ROOT.TFile("rootfiles/"+Lumi+"/TWanalyzer"+options.set+"_Trigger_no
 print "Root file opened"
 
 #---------For ttbar closure test, using MtStack-----------------------------------
+# Outdated
 
-st2 = ROOT.THStack('st2','st2')
-MtStackData = Data.Get('Mt')
-MtStackBE = Data.Get('QCDbkgMt')
-MtStackTTmc = TTmcfList[0].Get('Mt')
-MtStackTTmcBE = TTmcfList[0].Get('QCDbkgMt')
+# st2 = ROOT.THStack('st2','st2')
+# MtStackData = Data.Get('Mt')
+# MtStackBE = Data.Get('QCDbkgMt')
+# MtStackTTmc = TTmcfList[0].Get('Mt')
+# MtStackTTmcBE = TTmcfList[0].Get('QCDbkgMt')
 
-MtStackData.Rebin(1)
-MtStackBE.Rebin(1)
-MtStackTTmc.Rebin(1)
-MtStackTTmcBE.Rebin(1)
+# MtStackData.Rebin(1)
+# MtStackBE.Rebin(1)
+# MtStackTTmc.Rebin(1)
+# MtStackTTmcBE.Rebin(1)
 
-cMtStack = TCanvas('MtStack', 'Top mass with Full selection', 700, 700)
-legend = TLegend(0.7, 0.7, 0.93, 0.9)
+# cMtStack = TCanvas('MtStack', 'Top mass with Full selection', 700, 700)
+# legend = TLegend(0.7, 0.7, 0.93, 0.9)
 
-cMtStack.SetLeftMargin(0.16)
-cMtStack.SetRightMargin(0.05)
-cMtStack.SetTopMargin(0.13)
-cMtStack.SetBottomMargin(0.15)
+# cMtStack.SetLeftMargin(0.16)
+# cMtStack.SetRightMargin(0.05)
+# cMtStack.SetTopMargin(0.13)
+# cMtStack.SetBottomMargin(0.15)
 
-MtStackBE.Add(MtStackTTmcBE,-1)
+# MtStackBE.Add(MtStackTTmcBE,-1)
 
-MtStackBE.SetFillColor(kYellow)
-MtStackTTmc.SetFillColor(kRed)
-st2.Add(MtStackBE)
-st2.Add(MtStackTTmc)
+# MtStackBE.SetFillColor(kYellow)
+# MtStackTTmc.SetFillColor(kRed)
+# st2.Add(MtStackBE)
+# st2.Add(MtStackTTmc)
 
-legend.AddEntry( MtStackData, 'Data', 'P')
-legend.AddEntry( MtStackBE, 'QCD background prediction', 'F')	
-legend.AddEntry( MtStackTTmc, 't#bar{t} MC prediction', 'F')
+# legend.AddEntry( MtStackData, 'Data', 'P')
+# legend.AddEntry( MtStackBE, 'QCD background prediction', 'F')	
+# legend.AddEntry( MtStackTTmc, 't#bar{t} MC prediction', 'F')
 
-st2.SetMaximum(MtStackData.GetMaximum() * 1.3)
-st2.SetMinimum(0.1)
-st2.SetTitle(";M_{t} (GeV);Counts")
-st2.Draw("hist")
+# st2.SetMaximum(MtStackData.GetMaximum() * 1.3)
+# st2.SetMinimum(0.1)
+# st2.SetTitle(";M_{t} (GeV);Counts")
+# st2.Draw("hist")
 
-MtStackData.SetMaximum(MtStackData.GetMaximum() * 1.3)
-MtStackData.Draw("same")
+# MtStackData.SetMaximum(MtStackData.GetMaximum() * 1.3)
+# MtStackData.Draw("same")
 
-cMtStack.cd()
+# cMtStack.cd()
 
-legend.Draw()
+# legend.Draw()
 
-cMtStack.Print('rootfiles/'+Lumi+'/MtStack_'+Lumi+'_'+options.set+'_'+options.cuts+'.root')
-cMtStack.Print('rootfiles/'+Lumi+'/MtStack_'+Lumi+'_'+options.set+'_'+options.cuts+'.pdf')
-cMtStack.Print('rootfiles/'+Lumi+'/MtStack_'+Lumi+'_'+options.set+'_'+options.cuts+'.png')
+# cMtStack.Print('rootfiles/'+Lumi+'/MtStack_'+Lumi+'_'+options.set+'_'+options.cuts+'.root')
+# cMtStack.Print('rootfiles/'+Lumi+'/MtStack_'+Lumi+'_'+options.set+'_'+options.cuts+'.pdf')
+# cMtStack.Print('rootfiles/'+Lumi+'/MtStack_'+Lumi+'_'+options.set+'_'+options.cuts+'.png')
 
 
 
@@ -255,7 +273,7 @@ for i in range(0, iterations):
 	DataBE2dup = Data.Get("QCDbkg" + kinBkg[i]+"2Dup")
 	DataBE2ddown = Data.Get("QCDbkg" + kinBkg[i]+"2Ddown")
 
-	#Selections in order (Selection, PUup, PUdown, JESup, JESdown, JERup, JERdown, tup, tdown, trigup, trig down)
+	#Selections in order (Selection, PUup, PUdown, JESup, JESdown, JERup, JERdown, Wup, Wdown, trigup, trig down)
 	SR1200FS = []
 	for j in range(len(SR1200fList)):
 		SR1200FS.append(SR1200fList[j].Get(kinVar[i]))
@@ -284,37 +302,67 @@ for i in range(0, iterations):
 	#	BPT1800FS.append(BPT1800fList[j].Get(kinVar[i]))
 
 	if options.var == 'analyzer':
+		# Need to calculate the PDF shape uncertainty and then append it
+		SR1200fPDFup = TFile(SR1200sList[-2])
+		SR1200fPDFdown = TFile(SR1200sList[-1])
+		SR1200PDFup, SR1200PDFdown = PDFShapeUncert(SR1200fList[0].Get('Mtw'),SR1200fPDFup.Get('Mtw'),SR1200fPDFdown.Get('Mtw'))
+		SR1200FS.append(SR1200PDFup)
+		SR1200FS.append(SR1200PDFdown)
 		#[0] index is your regular full selection
 		SR1200trigup = SR1200fList[0].Get("Mtwtrigup")
 		SR1200trigdown = SR1200fList[0].Get("Mtwtrigdown")
-		SR1200Tup = SR1200fList[0].Get("MtwTup")
-		SR1200Tdown = SR1200fList[0].Get("MtwTdown")
-		SR1200FS.append(SR1200Tup)
-		SR1200FS.append(SR1200Tdown)
+		SR1200Wup = SR1200fList[0].Get("MtwWup")
+		SR1200Wdown = SR1200fList[0].Get("MtwWdown")
+		SR1200ExtrapUp = SR1200fList[0].Get("MtwExtrapUp")
+		SR1200ExtrapDown = SR1200fList[0].Get("MtwExtrapDown")
 		SR1200FS.append(SR1200trigup)
 		SR1200FS.append(SR1200trigdown)
+		SR1200FS.append(SR1200Wup)
+		SR1200FS.append(SR1200Wdown)
+		SR1200FS.append(SR1200ExtrapUp)
+		SR1200FS.append(SR1200ExtrapDown)
 
+
+		# Need to calculate the PDF shape uncertainty and then append it
+		SR2800fPDFup = TFile(SR2800sList[-2])
+		SR2800fPDFdown = TFile(SR2800sList[-1])
+		SR2800PDFup, SR2800PDFdown = PDFShapeUncert(SR2800fList[0].Get('Mtw'),SR2800fPDFup.Get('Mtw'),SR2800fPDFdown.Get('Mtw'))
+		SR2800FS.append(SR2800PDFup)
+		SR2800FS.append(SR2800PDFdown)
 		#[0] index is your regular full selection
 		SR2800trigup = SR2800fList[0].Get("Mtwtrigup")
 		SR2800trigdown = SR2800fList[0].Get("Mtwtrigdown")
-		SR2800Tup = SR2800fList[0].Get("MtwTup")
-		SR2800Tdown = SR2800fList[0].Get("MtwTdown")
-		SR2800FS.append(SR2800Tup)
-		SR2800FS.append(SR2800Tdown)
+		SR2800Wup = SR2800fList[0].Get("MtwWup")
+		SR2800Wdown = SR2800fList[0].Get("MtwWdown")
+		SR2800ExtrapUp = SR2800fList[0].Get("MtwExtrapUp")
+		SR2800ExtrapDown = SR2800fList[0].Get("MtwExtrapDown")
 		SR2800FS.append(SR2800trigup)
 		SR2800FS.append(SR2800trigdown)
-				
+		SR2800FS.append(SR2800Wup)
+		SR2800FS.append(SR2800Wdown)
+		SR2800FS.append(SR2800ExtrapUp)
+		SR2800FS.append(SR2800ExtrapDown)
 	
-
+		# Need to calculate the PDF shape uncertainty and then append it
+		SR2000fPDFup = TFile(SR2000sList[-2])
+		SR2000fPDFdown = TFile(SR2000sList[-1])
+		SR2000PDFup, SR2000PDFdown = PDFShapeUncert(SR2000fList[0].Get('Mtw'),SR2000fPDFup.Get('Mtw'),SR2000fPDFdown.Get('Mtw'))
+		SR2000FS.append(SR2000PDFup)
+		SR2000FS.append(SR2000PDFdown)
 		#[0] index is your regular full selection
 		SR2000trigup = SR2000fList[0].Get("Mtwtrigup")
 		SR2000trigdown = SR2000fList[0].Get("Mtwtrigdown")
-		SR2000Tup = SR2000fList[0].Get("MtwTup")
-		SR2000Tdown = SR2000fList[0].Get("MtwTdown")
-		SR2000FS.append(SR2000Tup)
-		SR2000FS.append(SR2000Tdown)
+		SR2000Wup = SR2000fList[0].Get("MtwWup")
+		SR2000Wdown = SR2000fList[0].Get("MtwWdown")
+		SR2000ExtrapUp = SR2000fList[0].Get("MtwExtrapUp")
+		SR2000ExtrapDown = SR2000fList[0].Get("MtwExtrapDown")
 		SR2000FS.append(SR2000trigup)
 		SR2000FS.append(SR2000trigdown)
+		SR2000FS.append(SR2000Wup)
+		SR2000FS.append(SR2000Wdown)
+		SR2000FS.append(SR2000ExtrapUp)
+		SR2000FS.append(SR2000ExtrapDown)
+
 	
 		#BPB1200FS = []
 		#for j in range(len(BPB1200fList)):
@@ -323,9 +371,9 @@ for i in range(0, iterations):
 		#[0] index is your regular full selection
 		#BPB1200trigup = BPB1200fList[0].Get("Mtwtrigup")
 		#BPB1200trigdown = BPB1200fList[0].Get("Mtwtrigdown")
-		#BPB1200Tup = BPB1200fList[0].Get("MtwTup")
+		#BPB1200Wup = BPB1200fList[0].Get("MtwWup")
 		#BPB1200Tdown = BPB1200fList[0].Get("MtwTdown")
-		#BPB1200FS.append(BPB1200Tup)
+		#BPB1200FS.append(BPB1200Wup)
 		#BPB1200FS.append(BPB1200Tdown)
 		#BPB1200FS.append(BPB1200trigup)
 		#BPB1200FS.append(BPB1200trigdown)
@@ -337,9 +385,9 @@ for i in range(0, iterations):
 		#[0] index is your regular full selection
 		#BPB1400trigup = BPB1400fList[0].Get("Mtwtrigup")
 		#BPB1400trigdown = BPB1400fList[0].Get("Mtwtrigdown")
-		#BPB1400Tup = BPB1400fList[0].Get("MtwTup")
+		#BPB1400Wup = BPB1400fList[0].Get("MtwWup")
 		#BPB1400Tdown = BPB1400fList[0].Get("MtwTdown")
-		#BPB1400FS.append(BPB1400Tup)
+		#BPB1400FS.append(BPB1400Wup)
 		#BPB1400FS.append(BPB1400Tdown)
 		#BPB1400FS.append(BPB1400trigup)
 		#BPB1400FS.append(BPB1400trigdown)
@@ -351,9 +399,9 @@ for i in range(0, iterations):
 		#[0] index is your regular full selection
 		#BPB1600trigup = BPB1600fList[0].Get("Mtwtrigup")
 		#BPB1600trigdown = BPB1600fList[0].Get("Mtwtrigdown")
-		#BPB1600Tup = BPB1600fList[0].Get("MtwTup")
+		#BPB1600Wup = BPB1600fList[0].Get("MtwWup")
 		#BPB1600Tdown = BPB1600fList[0].Get("MtwTdown")
-		#BPB1600FS.append(BPB1600Tup)
+		#BPB1600FS.append(BPB1600Wup)
 		#BPB1600FS.append(BPB1600Tdown)
 		#BPB1600FS.append(BPB1600trigup)
 		#BPB1600FS.append(BPB1600trigdown)
@@ -365,9 +413,9 @@ for i in range(0, iterations):
 		#[0] index is your regular full selection
 		#BPB1800trigup = BPB1800fList[0].Get("Mtwtrigup")
 		#BPB1800trigdown = BPB1800fList[0].Get("Mtwtrigdown")
-		#BPB1800Tup = BPB1800fList[0].Get("MtwTup")
+		#BPB1800Wup = BPB1800fList[0].Get("MtwWup")
 		#BPB1800Tdown = BPB1800fList[0].Get("MtwTdown")
-		#BPB1800FS.append(BPB1800Tup)
+		#BPB1800FS.append(BPB1800Wup)
 		#BPB1800FS.append(BPB1800Tdown)
 		#BPB1800FS.append(BPB1800trigup)
 		#BPB1800FS.append(BPB1800trigdown)
@@ -375,9 +423,9 @@ for i in range(0, iterations):
 		#[0] index is your regular full selection
 		#BPT1200trigup = BPT1200fList[0].Get("Mtwtrigup")
 		#BPT1200trigdown = BPT1200fList[0].Get("Mtwtrigdown")
-		#BPT1200Tup = BPT1200fList[0].Get("MtwTup")
+		#BPT1200Wup = BPT1200fList[0].Get("MtwWup")
 		#BPT1200Tdown = BPT1200fList[0].Get("MtwTdown")
-		#BPT1200FS.append(BPT1200Tup)
+		#BPT1200FS.append(BPT1200Wup)
 		#BPT1200FS.append(BPT1200Tdown)
 		#BPT1200FS.append(BPT1200trigup)
 		#BPT1200FS.append(BPT1200trigdown)
@@ -387,9 +435,9 @@ for i in range(0, iterations):
 		#[0] index is your regular full selection
 		#BPT1400trigup = BPT1400fList[0].Get("Mtwtrigup")
 		#BPT1400trigdown = BPT1400fList[0].Get("Mtwtrigdown")
-		#BPT1400Tup = BPT1400fList[0].Get("MtwTup")
+		#BPT1400Wup = BPT1400fList[0].Get("MtwWup")
 		#BPT1400Tdown = BPT1400fList[0].Get("MtwTdown")
-		#BPT1400FS.append(BPT1400Tup)
+		#BPT1400FS.append(BPT1400Wup)
 		#BPT1400FS.append(BPT1400Tdown)
 		#BPT1400FS.append(BPT1400trigup)
 		#BPT1400FS.append(BPT1400trigdown)
@@ -399,9 +447,9 @@ for i in range(0, iterations):
 		#[0] index is your regular full selection
 		#BPT1600trigup = BPT1600fList[0].Get("Mtwtrigup")
 		#BPT1600trigdown = BPT1600fList[0].Get("Mtwtrigdown")
-		#BPT1600Tup = BPT1600fList[0].Get("MtwTup")
+		#BPT1600Wup = BPT1600fList[0].Get("MtwWup")
 		#BPT1600Tdown = BPT1600fList[0].Get("MtwTdown")
-		#BPT1600FS.append(BPT1600Tup)
+		#BPT1600FS.append(BPT1600Wup)
 		#BPT1600FS.append(BPT1600Tdown)
 		#BPT1600FS.append(BPT1600trigup)
 		#BPT1600FS.append(BPT1600trigdown)
@@ -411,9 +459,9 @@ for i in range(0, iterations):
 		#[0] index is your regular full selection
 		#BPT1800trigup = BPT1800fList[0].Get("Mtwtrigup")
 		#BPT1800trigdown = BPT1800fList[0].Get("Mtwtrigdown")
-		#BPT1800Tup = BPT1800fList[0].Get("MtwTup")
+		#BPT1800Wup = BPT1800fList[0].Get("MtwWup")
 		#BPT1800Tdown = BPT1800fList[0].Get("MtwTdown")
-		#BPT1800FS.append(BPT1800Tup)
+		#BPT1800FS.append(BPT1800Wup)
 		#BPT1800FS.append(BPT1800Tdown)
 		#BPT1800FS.append(BPT1800trigup)
 		#BPT1800FS.append(BPT1800trigdown)
@@ -432,7 +480,7 @@ for i in range(0, iterations):
 
 
 	main.SetLeftMargin(0.16)
-	main.SetRightMargin(0.06)
+	main.SetRightMargin(0.05)
 	main.SetTopMargin(0.1)
 
 	sub.SetLeftMargin(0.16)
@@ -447,7 +495,7 @@ for i in range(0, iterations):
 
 
 
-	#Selections in order (Selection, PUup, PUdown, JESup, JESdown, JERup, JERdown, ScaleUp, ScaleDown, Tup, Tdown, trigup, trig down)
+	#Selections in order (Selection, PUup, PUdown, JESup, JESdown, JERup, JERdown, JMSup, JMSdown, JMRup, JMRdown, PDFup, PDFdown, ScaleUp, ScaleDown, trigup, trig down)
 	TTmcFS = []
 	for j in range(len(TTmcfList)):
 		TTmcFS.append(TTmcfList[j].Get(kinVar[i]))
@@ -455,19 +503,19 @@ for i in range(0, iterations):
 	if options.var == 'analyzer':
 		TTmctrigup = TTmcfList[0].Get("Mtwtrigup")
 		TTmctrigdown = TTmcfList[0].Get("Mtwtrigdown")
-		TTmcTup = TTmcfList[0].Get("MtwTup")
-		TTmcTdown = TTmcfList[0].Get("MtwTdown")
-		TTmcFS.append(TTmcTup)
-		TTmcFS.append(TTmcTdown)
+		# TTmcTup = TTmcfList[0].Get("MtwTup")
+		# TTmcTdown = TTmcfList[0].Get("MtwTdown")
+		# TTmcFS.append(TTmcTup)
+		# TTmcFS.append(TTmcTdown)
 		TTmcFS.append(TTmctrigup)
 		TTmcFS.append(TTmctrigdown)
 
-		#To be consistent with the SRs, switch the 7th and 8th entries with the 11th and 12th entries
+		#To be consistent with the SRs, switch the 13th and 14th entries with the 15th and 16th entries
 		#This puts scaleup and down at the end of the list
-#CHANGE BACK (three lines)
-		#if options.cuts == 'default':
-		#	TTmcFS[7], TTmcFS[11] = TTmcFS[11], TTmcFS[7]
-		#	TTmcFS[8], TTmcFS[12] = TTmcFS[12], TTmcFS[8]
+
+		if options.cuts == 'default':
+			TTmcFS[13], TTmcFS[15] = TTmcFS[15], TTmcFS[13]
+			TTmcFS[14], TTmcFS[16] = TTmcFS[16], TTmcFS[14]
 
 	TTmcBE = TTmcfList[0].Get("QCDbkg" + kinBkg[i])
 
@@ -489,17 +537,18 @@ for i in range(0, iterations):
 	DataBEl = DataBEl.Rebin(rebin[i])
 	DataBEh = DataBEh.Rebin(rebin[i])
 
-	setList = [SR1200FS, SR2800FS, SR2000FS, TTmcFS]#, BPT1200FS, BPT1400FS, BPT1600FS, BPT1800FS]# BPB1200FS, BPB1400FS, BPB1600FS, BPB1800FS,
+	setList = [SR1200FS, SR2000FS, SR2800FS,  TTmcFS]#, BPT1200FS, BPT1400FS, BPT1600FS, BPT1800FS]# BPB1200FS, BPB1400FS, BPB1600FS, BPB1800FS,
 
 
 	x =1
 	for selection in setList:
-		#print x,' ',
+		# print '\n'
+		# print x,' : ',
 		y=1
 		x+=1
 		for item in selection:
 			item.Rebin(rebin[i])
-			#print y
+			# print y,
 			y+=1
 
 	DataBEMmup = DataBEMmup.Rebin(rebin[i])
@@ -553,6 +602,8 @@ for i in range(0, iterations):
 		ssubsl[ifile] = ssubsl[ifile].Rebin(rebin[i])
 		ssubs2d[ifile] = ssubs2d[ifile].Rebin(rebin[i])
 
+		print stop[ifile]
+
 		if options.set == 'data':
 			DataBE.Add(ssubs[ifile],-1)
 			DataBEl.Add(ssubsl[ifile],-1)
@@ -587,7 +638,7 @@ for i in range(0, iterations):
 	DataTOTALBEH=DataBE.Clone("DataTOTALBEH")
 	DataTOTALBEL=DataBE.Clone("DataTOTALBEL")
 
-	for ibin in range(0,DataBE.GetNbinsX()):
+	for ibin in range(1,DataBE.GetNbinsX()+1):
 
 		TTstat=TTmcFS[0].GetBinError(ibin)
 		if DataBE.GetBinContent(ibin)>0:
@@ -638,20 +689,20 @@ for i in range(0, iterations):
 
 	#setList is a list of SR1200/2800/2000, TTmc
 	#each of those is a list with the necessary histos
-	#(Selection, PUup, PUdown, JESup, JESdown, JERup, JERdown, Tup, Tdown, trigup, trig down, ScaleUp, ScaleDown )
+	#(Selection, PUup, PUdown, JESup, JESdown, JERup, JERdown, JMSup, JMSdown, JMRup, JMRdown, trig up, trig down, Wup, Wdown/ScaleUp, ScaleDown )
 	#ScaleUp and ScaleDown are ttbar only
 	
 	# Indexes of relevant histos in *FS
 	if options.cuts == 'default' and options.var == 'analyzer':
-		myIndexes = {'Pileup':[0,1,2],'JES':[0,3,4],'JER':[0,5,6], 'PDF':[0,7,8], 'TSF':[0,9,10], 'Trig':[0,11,12], 'Scale':[0,13,14]}
-		orderedKeys = ['Pileup','JES','JER','PDF','TSF','Trig','Scale']
-		strSetList = ['SR1200', 'SR2800', 'SR2000', 'TTmc']#, 'BPT1200', 'BPT1400', 'BPT1600', 'BPT1800','BPB1200', 'BPB1400', 'BPB1600', 'BPB1800', 'BPT1200', 'BPT1400', 'BPT1600', 'BPT1800']
+		myIndexes = {'Pileup':[0,1,2],'JES':[0,3,4],'JER':[0,5,6], 'JMS':[0,7,8], 'JMR':[0,9,10], 'PDF':[0,11,12], 'Trig':[0,13,14], 'WSF':[0,15,16], 'Scale':[0,15,16], 'Extrap':[0,17,18]}
+		# orderedKeys = ['Pileup','JES','JER','JMS','JMR','PDF','Trig','WSF','Scale']
+		strSetList = ['SR1200', 'SR2000', 'SR2800',  'TTmc']#, 'BPT1200', 'BPT1400', 'BPT1600', 'BPT1800','BPB1200', 'BPB1400', 'BPB1600', 'BPB1800', 'BPT1200', 'BPT1400', 'BPT1600', 'BPT1800']
 		for selection in setList:
 			if selection == TTmcFS:
-				indexRange = (len(myIndexes))
-				print 'Index range changed to ' + str(indexRange)
+				orderedKeys = ['Pileup','JES','JER','JMS','JMR','PDF','Trig','Scale']
 			else:
-				indexRange = (len(myIndexes)-1)#indent back when changing back
+				orderedKeys = ['Pileup','JES','JER','JMS','JMR','PDF','Trig','WSF','Extrap']
+			indexRange = len(orderedKeys)
 
 			for x in range(indexRange):
 				sSet =  strSetList[setList.index(selection)]
@@ -805,7 +856,7 @@ for i in range(0, iterations):
 
 		QCDup = DataBE.Clone()
 		QCDdown = DataBE.Clone()
-		for ibin in range(0,DataBE.GetNbinsX()):
+		for ibin in range(1,DataBE.GetNbinsX()+1):
 			QCDfiterr=abs(BEfiterrh.GetBinContent(ibin))
 			QCDnominal=abs(DataBE.GetBinContent(ibin))
 			QCDup.SetBinContent(ibin,(QCDnominal + QCDfiterr))
@@ -951,7 +1002,7 @@ for i in range(0, iterations):
 		testHist = DataBE.Clone('testHist')
 		testHist.Add(TTmcFS[0])
 		testHist.Add(singletop)
-		for b in range(0,testHist.GetNbinsX()):
+		for b in range(1,testHist.GetNbinsX()+1):
 			thisBinError = sigma.GetBinContent(b)/2
 			testHist.SetBinError(b, thisBinError)
 
@@ -999,36 +1050,36 @@ for i in range(0, iterations):
 	leg.AddEntry( sigma, '1 #sigma background uncertainty', 'F')
 
 #------------------Plot to show this is a 'bump hunt'---------------------------------------------------------
-	if i==0 :
-		cBump = TCanvas('Bump','Bump')
-		pBump = ROOT.TPad("Bump", "Bump", 0, 0, 1, 1)
-		pBump.SetLeftMargin(0.1)
-		pBump.SetRightMargin(0.1)
-		pBump.SetTopMargin(0.1)
-		pBump.SetBottomMargin(0.15)
-		pBump.Draw()
-		pBump.cd()
+	# if i==0 :
+	# 	cBump = TCanvas('Bump','Bump')
+	# 	pBump = ROOT.TPad("Bump", "Bump", 0, 0, 1, 1)
+	# 	pBump.SetLeftMargin(0.1)
+	# 	pBump.SetRightMargin(0.1)
+	# 	pBump.SetTopMargin(0.1)
+	# 	pBump.SetBottomMargin(0.15)
+	# 	pBump.Draw()
+	# 	pBump.cd()
 
-		lBump = TLegend(0.6, 0.5, 0.95, 0.95)
-		lBump.AddEntry( DataBE, 'QCD background prediction', 'F')	
-		lBump.AddEntry( TTmcFS[0], 't#bar{t} MC prediction', 'F')
-		lBump.AddEntry( singletop, 'Single top quark MC prediction', 'F')
-		lBump.AddEntry( sigma, '1 #sigma background uncertainty', 'F')
-		lBump.AddEntry( SR1200FS[0], 'b*_{R} at 1200 GeV', 'L' )
+	# 	lBump = TLegend(0.6, 0.5, 0.95, 0.95)
+	# 	lBump.AddEntry( DataBE, 'QCD background prediction', 'F')	
+	# 	lBump.AddEntry( TTmcFS[0], 't#bar{t} MC prediction', 'F')
+	# 	lBump.AddEntry( singletop, 'Single top quark MC prediction', 'F')
+	# 	lBump.AddEntry( sigma, '1 #sigma background uncertainty', 'F')
+	# 	lBump.AddEntry( SR1200FS[0], 'b*_{R} at 1200 GeV', 'L' )
 
-		sBump = st1.Clone()
-		sBump.Add(SR1200FS[0])
+	# 	sBump = st1.Clone()
+	# 	sBump.Add(SR1200FS[0])
 
-		sBump.Draw("hist")
-		sBump.GetXaxis().SetTitle("M_{tW} GeV")
-		sBump.GetYaxis().SetTitle("Counts")
-		sBump.GetYaxis().SetTitleOffset(0.9)
-		lBump.Draw()
+	# 	sBump.Draw("hist")
+	# 	sBump.GetXaxis().SetTitle("M_{tW} GeV")
+	# 	sBump.GetYaxis().SetTitle("Counts")
+	# 	sBump.GetYaxis().SetTitleOffset(0.9)
+	# 	lBump.Draw()
 
 
-	#pBump.SetLogy()
+	# #pBump.SetLogy()
 
-		cBump.Print('BumpHunt.pdf','pdf')
+	# 	cBump.Print('BumpHunt.pdf','pdf')
 
 	
 

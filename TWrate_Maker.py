@@ -25,8 +25,6 @@ import ROOT
 import sys
 from array import *
 from ROOT import *
-ROOT.gROOT.SetBatch(True)
-ROOT.PyConfig.IgnoreCommandLineOptions = True
 from optparse import OptionParser
 
 parser = OptionParser()
@@ -40,8 +38,16 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
                   default	=	'rate_default',
                   dest		=	'cuts',
                   help		=	'Cuts type (ie default, rate, etc)')
+parser.add_option('-p', '--printCanvas', metavar='F', type='string', action='store',
+				  default	=	'off',
+				  dest		=	'printCanvas',
+				  help		=	'on or off')
 
 (options, args) = parser.parse_args()
+
+if options.printCanvas == 'off':
+	ROOT.gROOT.SetBatch(True)
+	ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 gROOT.Macro("rootlogon.C")
 

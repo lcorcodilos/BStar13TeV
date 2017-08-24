@@ -93,6 +93,10 @@ parser.add_option('--printEvents', metavar='F', action='store_true',
 				  default=False,
 				  dest='printEvents',
 				  help='Print events that pass selection (run:lumi:event)')
+parser.add_option('--noExtraPtCorrection', metavar='F', action='store_false',
+				  default=True,
+				  dest='extraPtCorrection',
+				  help='Call to turn off extraPtCorrection')
 parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
 				  default	=	'default',
 				  dest		=	'cuts',
@@ -113,7 +117,10 @@ parser.add_option('-r', '--rate', metavar='F', type='string', action='store',
 				  default	=	'tpt',
 				  dest		=	'rate',
 				  help		=	'tpt, Mt, Mtw')
-
+parser.add_option('-C', '--cheat', metavar='F', type='string', action='store',
+				  default	=	'off',
+				  dest		=	'cheat',
+				  help		=	'on or off')
 
 (options, args) = parser.parse_args()
 
@@ -180,16 +187,15 @@ lumi = Cons['lumi']
 Lumi = str(lumi/1000)+'fb'
 Lumi2 = str(int(lumi)) + 'pb'
 ttagsf = Cons['ttagsf']
-ttagsf_errUp = Cons['ttagsf_errUp']
-ttagsf_errDown = Cons['ttagsf_errDown']
-if options.cuts.find('default') != -1:
-	Wpurity = 'HP'
-	wtagsf = Cons['wtagsf_HP']
-	wtagsfsig = Cons['wtagsfsig_HP']
-elif options.cuts.find('sideband') != -1:
+
+if options.cuts.find('rate') != -1:
 	Wpurity = 'LP'
 	wtagsf = Cons['wtagsf_LP']
 	wtagsfsig = Cons['wtagsfsig_LP']
+else:
+	Wpurity = 'HP'
+	wtagsf = Cons['wtagsf_HP']
+	wtagsfsig = Cons['wtagsfsig_HP']
 
 
 
@@ -224,8 +230,8 @@ if options.JMR!='nominal':
 
 
 ptString = ''
-# if options.ptreweight == 'off':
-# 	ptString = '_ptreweight_off'
+if not options.extraPtCorrection:
+	ptString = '_extraPtCorrection_off'
 
 pstr = ""
 if options.pdfweights!="nominal":
@@ -234,12 +240,12 @@ if options.pdfweights!="nominal":
 
 pustr = ""
 if options.pileup=='off':
-	pustr = "pileup_unweighted"
+	pustr = "_pileup_unweighted"
 if options.pileup=='up':
-	pustr = "pileup_up"
+	pustr = "_pileup_up"
 if options.pileup=='down':
-	pustr = "pileup_down"
-mod = mod+pustr
+	pustr = "_pileup_down"
+
 if mod == '':
 	mod = options.modulesuffix
 
@@ -263,24 +269,24 @@ tree = file.Get("Tree")
 
 settype = 'ttbar'
 
-# CHANGE BACK if we get signal pileup
-# if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
+#CHANGE BACK if we get signal pileup
+# if (options.set.find('ttbar') != -1) or (options.set.find('signal') != -1):
 # 	settype = 'ttbar'
-# elif (options.set.find('QCD') != -1):
-# 	settype ='ttbar'
-# 	run_b_SF = False
 # else :
 # 	settype = options.set
 
-print 'The type of set is ' + settype
+# print 'The type of set is ' + settype
 
 #----------------Need to grab extra top pt reweight factor-------------------
 
-TopPtReweightFile = TFile(di+'/TWTopPtSF.root')
+TopPtReweightFile = TFile(di+'TWTopPtSF.root')
 TopPtReweightPlot = TopPtReweightFile.Get('TopPtSF')
 
 #---------------Modmass file if you dont want alphabet-----------------------
-rateCuts = 'rate_'+options.cuts
+if options.cheat == 'off':
+	rateCuts = 'rate_'+options.cuts
+elif options.cheat == 'on':
+	rateCuts = options.cuts
 if options.cuts == 'sideband1':
 	rateCuts = 'rate_default'
 
@@ -312,14 +318,14 @@ if options.set != 'data':
 	TrigPlot = TrigFile.Get("TriggerWeight_"+tnamestr+"_pre_HLT_PFHT475")
 
 
-
-	PileFile = TFile(di+"PileUp_Ratio_"+settype+".root")
-	if options.pileup=='up':
-		PilePlot = PileFile.Get("Pileup_Ratio_up")
-	elif options.pileup=='down':
-		PilePlot = PileFile.Get("Pileup_Ratio_down")
-	else:	
-		PilePlot = PileFile.Get("Pileup_Ratio")
+	if settype == 'ttbar':
+		PileFile = TFile(di+"PileUp_Ratio_"+settype+".root")
+		if options.pileup=='up':
+			PilePlot = PileFile.Get("Pileup_Ratio_up")
+		elif options.pileup=='down':
+			PilePlot = PileFile.Get("Pileup_Ratio_down")
+		else:	
+			PilePlot = PileFile.Get("Pileup_Ratio")
 
 
 nevHisto = file.Get("nev")
@@ -333,9 +339,9 @@ tpt = Cuts['tpt']
 # 	var = "_kin"
 
 if jobs != 1:
-	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pstr+mmstr+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+ptString+".root", "recreate" )
+	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+ptString+".root", "recreate" )
 else:
-	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pstr+mmstr+"_PSET_"+options.cuts+ptString+".root", "recreate" )
+	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_PSET_"+options.cuts+ptString+".root", "recreate" )
 
 #Load up the average t-tagging rates -- Takes parameters from text file and makes a function
 #CHANGE BACK
@@ -350,6 +356,7 @@ if options.Alphabet == "on":
 
 elif options.Alphabet == "off":
 	TagFile = TFile(di+"plots/TWrate_Maker_"+setstr+"_"+Lumi2+"_PSET_"+rateCuts+".root")
+	print "Opening rate file " + "plots/TWrate_Maker_"+setstr+"_"+Lumi2+"_PSET_"+rateCuts+".root"
 	TagPlote1 = TagFile.Get("tagrateeta1")
 	TagPlote2 = TagFile.Get("tagrateeta2") 
 
@@ -617,9 +624,9 @@ QCDbkgMtl.Sumw2()
 QCDbkg_ARR = []
 	
 kinVars = 	['', 	'ET', 	'EW', 	'PT', 	'PW', 	'PTW', 	'PhT', 	'PhW', 	'dPhi', 'Mt'	]
-kinBin = 	[140, 	12, 	12, 	50, 	50,	35,	12,	12,	12, 25	]
+kinBin = 	[140, 	12, 	12, 	50, 	50,	35,	12,	12,	12, 60	]
 kinLow = 	[500, 	-2.4, 	-2.4, 	450, 	370,	0,	-pie,	-pie,	2.2, 105	]
-kinHigh = 	[4000, 	2.4, 	2.4, 	1500, 	1430,	700,	pie,	pie,	pie, 210	]
+kinHigh = 	[4000, 	2.4, 	2.4, 	1500, 	1430,	700,	pie,	pie,	pie, 405	]
 
 # if options.var == 'analyzer':
 # 	iterations = 1
@@ -789,28 +796,16 @@ for entry in range(lowBinEdge,highBinEdge):
 				if options.set!="data":
 					bin1 = tree.pileBin
 
-					if options.pileup != 'off':
+					if options.pileup != 'off': # and options.set.find("QCD") == -1:
 						weight *= PilePlot.GetBinContent(bin1)
 
-					if options.cuts=="default" and options.set.find("QCD") == -1:
+					if options.set.find("QCD") == -1 and options.cuts=="default":
 						weightSFt = ttagsf
 						# weightSFtup = ttagsf + ttagsf_errUp
 						# weightSFtdown = ttagsf - ttagsf_errDown
 					
 				# weightSFtup=weight*weightSFtup
 				# weightSFtdown=weight*weightSFtdown
-				weight*=weightSFt
-
-# Apply w tagging scale factor for anything that passes w jet matching requirement and is ST_tW or signal
-				weightSFwup = 1.0
-				weightSFwdown = 1.0
-				if tree.WJetMatchingRequirement == 1:
-					if options.set.find('tW') != -1 and options.set.find('signal') != -1:
-						weightSFwup = wtagsf + wtagsfsig
-						weightSFwdown = wtagsf - wtagsfsig
-						weight*=wtagsf
-				elif tree.WJetMatchingRequirement == 0:
-					matchingFailed += 1
 
 
 				tmass_cut = tmass[0]<tVals["SDmass"]<tmass[1]
@@ -820,6 +815,18 @@ for entry in range(lowBinEdge,highBinEdge):
 
 					ht = tjet.Perp() + wjet.Perp()
 
+					weight*=weightSFt
+
+	# Apply w tagging scale factor for anything that passes w jet matching requirement and is ST_tW or signal
+					weightSFwup = 1.0
+					weightSFwdown = 1.0
+					if tree.WJetMatchingRequirement == 1:
+						if options.set.find('tW') != -1 or options.set.find('signal') != -1:
+							weightSFwup = (wtagsf + wtagsfsig)*weight
+							weightSFwdown = (wtagsf - wtagsfsig)*weight
+							weight*=wtagsf
+					elif tree.WJetMatchingRequirement == 0:
+						matchingFailed += 1
 
 					weighttrigup=1.0
 					weighttrigdown=1.0
@@ -841,10 +848,10 @@ for entry in range(lowBinEdge,highBinEdge):
 					weightSFptdown=1.0
 					if options.ptreweight == "on" and options.set.find('ttbar') != -1:
 					# 	ttbar pt reweighting done here
-						#if options.cuts != 'sideband1':
-						extraCorrection = TopPtReweightPlot.GetBinContent(1)
-						#else:
-						#	extraCorrection = 0
+						if options.extraPtCorrection:
+							extraCorrection = TopPtReweightPlot.GetBinContent(1)
+						else:
+							extraCorrection = 0
 						PTW = tree.pt_reweight*(1+extraCorrection)
 						weightSFptSig = abs(weight - weight*PTW)
 
@@ -1088,10 +1095,10 @@ for entry in range(lowBinEdge,highBinEdge):
 									if tau32_cut:
 										Mtw_cut10.Fill(MtopW,weight)
 							  				        	
-
+								if FullTop:
 										#if ((MtopW)>2400):
 										#	goodEvents.append( [ tree.object().id().run(), tree.object().id().luminosityBlock(), tree.object().id().event(),  ] )
-										Mtw.Fill(MtopW,weight) 
+										Mtw.Fill((wjet+tjet).M(),weight) 
 
 										MwStack.Fill(wjet.M(),weight)
 
@@ -1224,7 +1231,7 @@ for entry in range(lowBinEdge,highBinEdge):
 										PhiW.Fill(wjet.Phi(),weight)
 										dPhi.Fill(abs(tjet.Phi()-wjet.Phi()),weight)
 
-										temp_variables = {	"wpt":wjet.Perp(),
+										temp_variables = {"wpt":wjet.Perp(),
 												"wmass":wVals["SDmass"],
 												"tpt":tjet.Perp(),
 												"tmass":tVals["SDmass"],

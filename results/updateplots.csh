@@ -1,5 +1,6 @@
 rm resultsright/had/*limits*.txt
 cp ../limitsetting/theta/analysis_bstar_right_had/results/*.txt resultsright/had/
+cp limit_plot_shape.py resultsright/had/
 cat resultsright/had/*observed*.txt | grep -v "# x; y" >resultsright/had/observed_limits.txt
 cat resultsright/had/*expected*.txt | grep -v "# x; y; band 0 low; band 0 high; band 1 low; band 1 high" >resultsright/had/expected_limits.txt
 cd resultsright/had/
@@ -33,6 +34,7 @@ cd ../../
 
 rm resultsleft/had/*limits*.txt
 cp ../limitsetting/theta/analysis_bstar_left_had/results/*.txt resultsleft/had/
+cp limit_plot_shape.py resultsleft/had/
 cat resultsleft/had/*observed*.txt | grep -v "# x; y" >resultsleft/had/observed_limits.txt
 cat resultsleft/had/*expected*.txt | grep -v "# x; y; band 0 low; band 0 high; band 1 low; band 1 high" >resultsleft/had/expected_limits.txt
 cd resultsleft/had/
@@ -65,6 +67,7 @@ cd ../../
 
 rm resultsvector/had/*limits*.txt
 cp ../limitsetting/theta/analysis_bstar_vector_had/results/*.txt resultsvector/had/
+cp limit_plot_shape.py resultsvector/had/
 cat resultsvector/had/*observed*.txt | grep -v "# x; y" >resultsvector/had/observed_limits.txt
 cat resultsvector/had/*expected*.txt | grep -v "# x; y; band 0 low; band 0 high; band 1 low; band 1 high" >resultsvector/had/expected_limits.txt
 cd resultsvector/had/

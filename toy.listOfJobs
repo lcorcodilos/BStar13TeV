@@ -1,0 +1,53 @@
+python ./tardir/TWanalyzer.py -s QCDHT500 -g on -c default
+python ./tardir/TWanalyzer.py -s QCDHT700 -g on -c default -n 1 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1000 -g on -c default -n 1 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1500 -g on -c default -n 1 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT2000 -g on -c default -n 1 -j 5
+
+python ./tardir/TWanalyzer.py -s QCDHT700 -g on -c default -n 2 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1000 -g on -c default -n 2 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1500 -g on -c default -n 2 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT2000 -g on -c default -n 2 -j 5
+
+python ./tardir/TWanalyzer.py -s QCDHT700 -g on -c default -n 3 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1000 -g on -c default -n 3 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1500 -g on -c default -n 3 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT2000 -g on -c default -n 3 -j 5
+
+python ./tardir/TWanalyzer.py -s QCDHT700 -g on -c default -n 4 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1000 -g on -c default -n 4 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1500 -g on -c default -n 4 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT2000 -g on -c default -n 4 -j 5
+
+python ./tardir/TWanalyzer.py -s QCDHT700 -g on -c default -n 5 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1000 -g on -c default -n 5 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1500 -g on -c default -n 5 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT2000 -g on -c default -n 5 -j 5
+
+#--------------------------------------------------------------------
+
+python ./tardir/TWanalyzer.py -s QCDHT500 -g on -x off -c default
+python ./tardir/TWanalyzer.py -s QCDHT700 -g on -x off -c default -n 1 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1000 -g on -x off -c default -n 1 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1500 -g on -x off -c default -n 1 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT2000 -g on -x off -c default -n 1 -j 5
+
+python ./tardir/TWanalyzer.py -s QCDHT700 -g on -x off -c default -n 2 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1000 -g on -x off -c default -n 2 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1500 -g on -x off -c default -n 2 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT2000 -g on -x off -c default -n 2 -j 5
+
+python ./tardir/TWanalyzer.py -s QCDHT700 -g on -x off -c default -n 3 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1000 -g on -x off -c default -n 3 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1500 -g on -x off -c default -n 3 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT2000 -g on -x off -c default -n 3 -j 5
+
+python ./tardir/TWanalyzer.py -s QCDHT700 -g on -x off -c default -n 4 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1000 -g on -x off -c default -n 4 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1500 -g on -x off -c default -n 4 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT2000 -g on -x off -c default -n 4 -j 5
+
+python ./tardir/TWanalyzer.py -s QCDHT700 -g on -x off -c default -n 5 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1000 -g on -x off -c default -n 5 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT1500 -g on -x off -c default -n 5 -j 5
+python ./tardir/TWanalyzer.py -s QCDHT2000 -g on -x off -c default -n 5 -j 5
