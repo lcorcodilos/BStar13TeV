@@ -53,7 +53,7 @@ commands2.append('cd rootfiles/35851pb/')
 commands2.append('python MakeVectorLike.py -c sideband1')
 commands2.append('cd ../../')
 
-commands2.append('python PtReweightStudy.py')
+#commands2.append('python PtReweightStudy.py')
 
 commands2.append('python TWanalyzer_plotter.py -s QCD -c default -v kinematics')
 commands2.append('python TWanalyzer_plotter.py -s QCD -c default')

@@ -273,8 +273,8 @@ tau2Label  	= 	( "jetsAK8" , "jetAK8Puppitau2")
 tau3Handle 	= 	Handle (  "vector<float> "  )
 tau3Label  	= 	( "jetsAK8" , "jetAK8Puppitau3")
 
-# HT800Handle	=	Handle ( "vector<bool>" )
-# HT800Label	=	( "Filter" , "HT800bit" )
+HT800Handle	=	Handle ( "vector<bool>" )
+HT800Label	=	( "Filter" , "HT800bit" )
 
 HT900Handle = Handle ( "vector<bool>" )
 HT900Label = ("Filter", "HT900bit")
@@ -393,13 +393,16 @@ for event in events:
 	if options.set == 'data':
 		event.getByLabel (HT900Label, HT900Handle)
 		HT900bit = HT900Handle.product()
+		event.getByLabel (HT800Label, HT800Handle)
+		HT800bit = HT800Handle.product()
 		event.getByLabel (JET450Label, JET450Handle)
 		JET450bit = JET450Handle.product()
 
-		try:
-			trigbits = [JET450bit[0],HT900bit[0]]
-		except:
-			trigbits = [HT900bit[0]]
+
+		# try:
+		trigbits = [JET450bit[-1],HT900bit[-1],HT800bit[-1]]
+		# except:
+		# 	trigbits = [HT900bit[0]]
 
 		passt = False
 		for t in trigbits:

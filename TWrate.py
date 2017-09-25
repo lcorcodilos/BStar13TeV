@@ -73,6 +73,14 @@ parser.add_option('-u', '--ptreweight', metavar='F', type='string', action='stor
 				  default	=	'on',
 				  dest		=	'ptreweight',
 				  help		=	'on or off')
+parser.add_option('-i', '--iteration', metavar='F', type='int', action='store',
+				  default	=	-1,
+				  dest		=	'iteration',
+				  help		=	'Scale factor iteration. Default -1 is off')
+parser.add_option('--noExtraPtCorrection', metavar='F', action='store_false',
+				  default=True,
+				  dest='extraPtCorrection',
+				  help='Call to turn off extraPtCorrection')
 
 (options, args) = parser.parse_args()
 
@@ -184,13 +192,50 @@ if options.set != 'data':
 	else:   
 		PilePlot = PileFile.Get("Pileup_Ratio")
 
+#----------------Need to grab extra top pt reweight factor-------------------
+# Naming syntax
+# - ptItString: only non-empty for doing the iterations study, assigned to all files
+# - ptTTString: always empty for non-ttbar, empty for ttbar when doing iterations
+
+ptItString = ''
+ptTTString = ''
+if options.iteration == -1:
+	# And we want the extra correction turned on
+	if options.extraPtCorrection:
+		# Grab the latest SF and don't do any renaming
+		ptTTString = ''
+		TopPtReweightFile = TFile(di+'TWTopPtSF_9.root')
+		TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_9')
+	# And we don't want the extra correction turned on
+	elif not options.extraPtCorrection:
+		ptTTString = '_noExtraPtCorrection'
+		TopPtReweightFile = TFile(di+'TWTopPtSF_0.root')
+		TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_0')
+	# And we don't want any pt correction
+	elif options.ptreweight == 'off':
+		ptTTString = '_ptreweight_off'
+# If we are running the pt study
+elif options.iteration >=0:
+	ptItString = '_ptSF' + str(options.iteration)
+	TopPtReweightFile = TFile(di+'TWTopPtSF_'+str(options.iteration)+'.root')
+	TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_'+str(options.iteration))
+
+# Turn off ptTTString if we aren't looking at ttbar MC
+if options.set.find('ttbar') == -1:
+	ptTTString = ''
+
+# Used for file naming
+ptString = ptItString + ptTTString
+
+#----------------------------------------------------------------------------
+
 nevHisto = file.Get("nev")
 B2Gnev = nevHisto.Integral()/jobs
 
 if jobs!=1:
-	f = TFile( "TWratefile"+options.set+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+".root", "recreate" )
+	f = TFile( "TWratefile"+options.set+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+ptString+".root", "recreate" )
 else:
-	f = TFile( "TWratefile"+options.set+"_PSET_"+options.cuts+".root", "recreate" )
+	f = TFile( "TWratefile"+options.set+"_PSET_"+options.cuts+ptString+".root", "recreate" )
 
 print "Creating histograms"
 
@@ -452,10 +497,11 @@ for entry in range(lowBinEdge,highBinEdge):
 
 				if options.ptreweight == "on" and options.set.find('ttbar') != -1:
 					#ttbar pt reweighting done here
-					PTW = tree.pt_reweight*(1+0.19)
+					
+					extraCorrection = TopPtReweightPlot.GetBinContent(1) # Will be zero for iteration 0
+
+					PTW = tree.pt_reweight*(1+extraCorrection)
 					weight*=PTW
-
-
 
 
 				try:

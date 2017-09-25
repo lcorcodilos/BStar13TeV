@@ -109,7 +109,7 @@ ptString = ''
 if options.ptreweight == 'off':
 	ptString = '_ptreweight_off'
 elif not options.extraPtCorrection:
-	ptString = '_extraPtCorrection_off'
+	ptString = '_noExtraPtCorrection'
 
 mmstr = ""
 if options.modmass!="nominal":

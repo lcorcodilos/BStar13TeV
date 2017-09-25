@@ -101,7 +101,7 @@ for f in files_to_sum:
 for l in range(len(lumiList)):
 	lumi = lumiList[l]
 	for mmstr in mmstrList:
-		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerQCD_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_rate_default.root')
+		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerQCD_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+'.root')
 		commands.append('python HistoWeight.py -i TWanalyzerQCDHT500_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWanalyzerQCDHT500_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+'weighted.root -n auto -w ' + str(lumi*xsec_qcd['HT500']))
 		commands.append('python HistoWeight.py -i TWanalyzerQCDHT700_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWanalyzerQCDHT700_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+'weighted.root -n auto -w ' + str(lumi*xsec_qcd['HT700']))
 		commands.append('python HistoWeight.py -i TWanalyzerQCDHT1000_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+var+'.root -o temprootfiles/TWanalyzerQCDHT1000_Trigger_nominal_'+filestr[0]+mmstr+'_PSET_'+cuts+'weighted.root -n auto -w ' + str(lumi*xsec_qcd['HT1000']))
@@ -155,9 +155,9 @@ for l in range(len(lumiList)):
 		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root') #removes old file with same name in /rootfiles/
 		commands.append('python HistoWeight.py -i TWanalyzerttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root -n auto -w ' + str(lumi*xsec_ttbar['PH']))
 		commands.append('mv TWanalyzerttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root temprootfiles/')
-	commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_PSET_'+cuts+'_extraPtCorrection_off.root')
-	commands.append('python HistoWeight.py -i TWanalyzerttbar_Trigger_nominal_none_PSET_'+cuts+'_extraPtCorrection_off.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_PSET_'+cuts+'_extraPtCorrection_off.root -n auto -w ' + str(lumi*xsec_ttbar['PH']))
-	commands.append('mv TWanalyzerttbar_Trigger_nominal_none_PSET_'+cuts+'_extraPtCorrection_off.root temprootfiles/')
+	commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_PSET_'+cuts+'_noExtraPtCorrection.root')
+	commands.append('python HistoWeight.py -i TWanalyzerttbar_Trigger_nominal_none_PSET_'+cuts+'_noExtraPtCorrection.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_PSET_'+cuts+'_noExtraPtCorrection.root -n auto -w ' + str(lumi*xsec_ttbar['PH']))
+	commands.append('mv TWanalyzerttbar_Trigger_nominal_none_PSET_'+cuts+'_noExtraPtCorrection.root temprootfiles/')
 
 for l in range(len(lumiList)):
 	lumi = lumiList[l]

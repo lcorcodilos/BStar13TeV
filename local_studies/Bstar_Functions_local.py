@@ -15,7 +15,6 @@
 ##								 ##
 ###################################################################
 
-# from DataFormats.FWLite import Runs
 import os
 import array
 import glob
@@ -23,10 +22,11 @@ import math
 from math import sqrt, exp, log
 import ROOT
 import sys
+import time
+import subprocess
 import cppyy
 from array import *
 from ROOT import *
-# from DataFormats.FWLite import Events, Handle
 #This is the most impostant Function.  Correct information here is essential to obtaining valid results.
 #In order we have Luminosity, top tagging scale factor, cross sections for wprime right,left,mixed,ttbar,qcd, and singletop and their corresponding event numbers
 #If I wanted to access the left handed W' cross section at 1900 GeV I could do Xsecl1900 = LoadConstants()['xsec_wpl']['1900']
@@ -438,81 +438,85 @@ def BTR_Init(ST,CUT,di,setval):
 
 #This is a poorly written function, but I cant think of a better way to do this 
 #It works, but you should be able to just have one input
-def TTR_Init(ST,CUT,SET,RATE,di):
+def TTR_Init(ST,CUT,SET,RATE,di,ITERATION):
+	ptString = ''
+	if ITERATION != 0:
+		ptString = '_ptSF'+str(ITERATION)
+		
 	rateFolder = ''
 	if RATE != 'tpt':
 		rateFolder = RATE + '/'
 	if ST == 'Bifpoly':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"bpinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"bpinput"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"bpinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"bpinput"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",BifPoly,0,4000,5)
 		eta2fit = TF1("eta2fit",BifPoly,0,4000,5)
 		Params = 5
 	if ST == 'Bifpoly_err':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"bperrorinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"bperrorinput"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"bperrorinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"bperrorinput"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit=TF1("eta1fit",BifPolyErr,0,4000,10)
 		eta2fit=TF1("eta2fit",BifPolyErr,0,4000,10)
 		Params = 10
 
 	if ST == 'pol0':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol0input"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol0input"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol0input"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol0input"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'pol0',0,4000)
 		eta2fit = TF1("eta2fit",'pol0',0,4000)
 		Params = 1
 
 	if ST == 'pol2':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol2input"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol2input"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol2input"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol2input"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'pol2',0,4000)
 		eta2fit = TF1("eta2fit",'pol2',0,4000)
 		Params = 3
 
 	if ST == 'pol3':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol3input"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol3input"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol3input"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol3input"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'pol3',0,4000)
 		eta2fit = TF1("eta2fit",'pol3',0,4000)
 		Params = 4
 	if ST == 'FIT':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"newfitinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"newfitinput"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"newfitinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"newfitinput"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,4000)
 		eta2fit = TF1("eta2fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,4000)
 		Params = 4
 	if ST == 'expofit':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"expoconinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"expoconinput"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"expoconinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"expoconinput"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'expo(0) + pol0(2)',0,4000)
 		eta2fit = TF1("eta2fit",'expo(0) + pol0(2)',0,4000)
 		Params = 3
 	if ST == 'QUAD':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+ptString+".txt")
 		TRBP.seek(0)
 		fit = TF1("fit",'pol2',0,300)
 		Params = 3
 	if ST == 'QUAD_errUp':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+ptString+".txt")
 		TRBP.seek(0)
 		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
 		Params = 9
 	if ST == 'QUAD_errDown':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+ptString+".txt")
 		TRBP.seek(0)
 		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
 		Params = 9
@@ -523,11 +527,11 @@ def TTR_Init(ST,CUT,SET,RATE,di):
 		TBP = TRBP.read()
 	
 	for i in range(0,Params):
-		try:
+		# try:
 			eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
 			eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
-		except:
-			fit.SetParameter(i,float(TBP.split('\n')[i]) )
+		# except:
+		# 	fit.SetParameter(i,float(TBP.split('\n')[i]) )
 
 	try:
 		return [eta1fit.Clone(),eta2fit.Clone()] 
@@ -687,45 +691,6 @@ def WJetMatching(GP):
 		passed = 1
 
 	return passed
-
-			
-
-# def Initlv(string,post=''):
-# 	PtHandle 	= 	Handle (  "vector<float> "  )
-# 	PtLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiPt")
-
-# 	EtaHandle 	= 	Handle (  "vector<float> "  )
-# 	EtaLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiEta")
-
-# 	PhiHandle 	= 	Handle (  "vector<float> "  )
-# 	PhiLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiPhi")
-
-# 	MassHandle 	= 	Handle (  "vector<float> "  )
-# 	MassLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiMass")
-
-# 	return [[PtHandle,PtLabel],[EtaHandle,EtaLabel],[PhiHandle,PhiLabel],[MassHandle,MassLabel]]
-
-# def Makelv(vector,event):
-# 	event.getByLabel (vector[0][1], vector[0][0])
-# 	Pt 		= 	vector[0][0].product()
-
-# 	event.getByLabel (vector[1][1], vector[1][0])
-# 	Eta 		= 	vector[1][0].product()
-
-# 	event.getByLabel (vector[2][1], vector[2][0])
-# 	Phi 		= 	vector[2][0].product()
-
-# 	event.getByLabel (vector[3][1], vector[3][0])
-# 	Mass 		= 	vector[3][0].product()
- 
-# 	lvs = []
-# 	for i in range(0,len(Pt)):
- 
-# 		#lvs.append(ROOT.Math.LorentzVector('ROOT::Math::PtEtaPhiM4D<double>')(Pt[i],Eta[i],Phi[i],Mass[i]))
-# 		lvs.append(TLorentzVector())
-# 		lvs[i].SetPtEtaPhiM(Pt[i],Eta[i],Phi[i],Mass[i])
-
-# 	return lvs
  
  
 def Hemispherize(LV1,LV2):
@@ -917,3 +882,70 @@ def strf( x ):
 def strf1( x ):
 	return '%.0f' % x
 
+# Built to wait for condor jobs to finish and then check that they didn't fail
+# The script that calls this function will quit if there are any job failures
+# listOfJobs input should be whatever comes before '.listOfJobs' for the set of jobs you submitted
+def WaitForJobs( listOfJobs ):
+	# Runs grep to count the number of jobs - output will have non-digit characters b/c of wc
+	preNumberOfJobs = subprocess.check_output('grep "python" '+listOfJobs+'.listOfJobs | wc -l', shell=True)
+	commentedNumberOfJobs = subprocess.check_output('grep "# python" '+listOfJobs+'.listOfJobs | wc -l', shell=True)
+
+	# Get rid of non-digits and convert to an int
+	preNumberOfJobs = int(filter(lambda x: x.isdigit(), preNumberOfJobs))
+	commentedNumberOfJobs = int(filter(lambda x: x.isdigit(), commentedNumberOfJobs))
+	numberOfJobs = preNumberOfJobs - commentedNumberOfJobs
+
+	finishedJobs = 0
+	# Rudementary progress bar
+	while finishedJobs < numberOfJobs:
+		# Count how many output files there are to see how many jobs finished
+		# the `2> null.txt` writes the stderr to null.txt instead of printing it which means
+		# you don't have to look at `ls: output_*.log: No such file or directory`
+		finishedJobs = subprocess.check_output('ls output_*.log 2> null.txt | wc -l', shell=True)
+		finishedJobs = int(filter(lambda x: x.isdigit(), finishedJobs))
+		sys.stdout.write('\rProcessing ' + str(listOfJobs) + ' - ')
+		# Print the count out as a 'progress bar' that refreshes (via \r)
+		sys.stdout.write("%i / %i of jobs finished..." % (finishedJobs,numberOfJobs))
+		# Clear the buffer
+		sys.stdout.flush()
+		# Sleep for one second
+		time.sleep(1)
+
+
+	print 'Jobs completed. Checking for errors...'
+	numberOfTracebacks = subprocess.check_output('grep -i "Traceback" output*.log | wc -l', shell=True)
+	numberOfSyntax = subprocess.check_output('grep -i "Syntax" output*.log | wc -l', shell=True)
+
+	numberOfTracebacks = int(filter(lambda x: x.isdigit(), numberOfTracebacks))
+	numberOfSyntax = int(filter(lambda x: x.isdigit(), numberOfSyntax))
+
+	# Check there are no syntax or traceback errors
+	# Future idea - check output file sizes
+	if numberOfTracebacks > 0:
+		print str(numberOfTracebacks) + ' job(s) failed with traceback error'
+		quit()
+	elif numberOfSyntax > 0:
+		print str(numberOfSyntax) + ' job(s) failed with syntax error'
+		quit()
+	else:
+		print 'No errors!'
+
+# Scales the up and down pdf uncertainty distributions to the nominal value to isolate the shape uncertainty
+def PDFShapeUncert(nominal, up, down):
+	upShape = up.Clone("Mtw")
+	downShape = down.Clone("Mtw")
+	upShape.Scale(nominal.Integral()/up.Integral())
+	downShape.Scale(nominal.Integral()/down.Integral())
+
+	return upShape, downShape
+
+# Creates ratios between the events in up/down PDF distributions to nominal distribution and
+# used the ratio to derive up/down xsec values for the given mass point
+def PDFNormUncert(nominal, up, down, xsec_nominal):
+	ratio_up = up.Integral()/nominal.Integral()
+	ratio_down = down.Integral()/nominal.Integral()
+
+	xsec_up = ratio_up*xsec_nominal
+	xsec_down = ratio_down*xsec_nominal
+
+	return xsec_up, xsec_down

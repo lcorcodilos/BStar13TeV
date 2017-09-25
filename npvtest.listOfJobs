@@ -1,0 +1,18 @@
+python ./tardir/THBnpvtester.py -s ttbar -g on
+
+python ./tardir/THBnpvtester.py -s QCDHT500 -g on
+python ./tardir/THBnpvtester.py -s QCDHT700 -g on
+python ./tardir/THBnpvtester.py -s QCDHT1000 -g on
+python ./tardir/THBnpvtester.py -s QCDHT1500 -g on
+python ./tardir/THBnpvtester.py -s QCDHT2000 -g on
+
+python ./tardir/THBnpvtester.py -s dataB -g on
+python ./tardir/THBnpvtester.py -s dataC -g on
+python ./tardir/THBnpvtester.py -s dataD -g on
+python ./tardir/THBnpvtester.py -s dataE -g on
+python ./tardir/THBnpvtester.py -s dataF -g on
+python ./tardir/THBnpvtester.py -s dataG -g on
+python ./tardir/THBnpvtester.py -s dataH -g on
+python ./tardir/THBnpvtester.py -s dataH2 -g on
+
+

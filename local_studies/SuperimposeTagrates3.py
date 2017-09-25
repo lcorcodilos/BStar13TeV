@@ -16,17 +16,17 @@ Lumi = str(int(Constants["lumi"]))+'pb'
 
 
 
-tagrates_main = ROOT.TFile("../plots/TWrate_Maker_QCD_"+Lumi+"_PSET_rate_sideband.root")
-tagrates_cheat = ROOT.TFile("../plots/TWrate_Maker_QCD_"+Lumi+"_PSET_sideband.root")
+tagrates_main = ROOT.TFile("../plots_bup/TWrate_Maker_QCD_35867pb_PSET_rate_highWmass.root")
+tagrates_cheat = ROOT.TFile("../plots_bup/TWrate_Maker_QCD_35867pb_PSET_rate_highWmass1.root")
 
 c4 = TCanvas('c4', 'Pt fitted tagrate in 0.0 < Eta <0.8', 800, 500)
 
-cuts = { 	"rate_sideband": {
+cuts = { 	"rate_highWmass": {
 				"graphBP": [],
 				"graphBPerrh": [],
 				"graphBPerrl": []
 			},
-			"sideband": {
+			"rate_highWmass1": {
 				"graphBP": [],
 				"graphBPerrh": [],
 				"graphBPerrl": []
@@ -35,8 +35,8 @@ cuts = { 	"rate_sideband": {
 
 # Make two sets of fits
 for cut in cuts.keys():
-	TTR = TTR_Init('Bifpoly',cut,'QCD','tpt','../')
-	TTR_err = TTR_Init('Bifpoly_err',cut,'QCD','tpt','../')
+	TTR = TTR_Init('Bifpoly',cut,'data','tpt','../',0)
+	TTR_err = TTR_Init('Bifpoly_err',cut,'data','tpt','../',0)
 	x = array( 'd' )
 	BPy = []
 	BPerryh = []
@@ -62,17 +62,17 @@ for cut in cuts.keys():
 
 	for eta in range(0,2):
 		graphBP.append(TGraph(len(x),x,BPy[eta]))
-		if cut == "rate_sideband":
+		if cut == "rate_highWmass":
 			graphBP[eta].SetLineColor(kBlue)
-		if cut == "sideband":
+		if cut == "rate_highWmass1":
 			graphBP[eta].SetLineColor(kRed)
 
 		graphBPerrh.append(TGraph(len(x),x,BPerryh[eta]))
 		graphBPerrl.append(TGraph(len(x),x,BPerryl[eta]))
-		if cut == "rate_sideband":
+		if cut == "rate_highWmass":
 			graphBPerrh[eta].SetLineColor(kBlue)
 			graphBPerrl[eta].SetLineColor(kBlue)
-		elif cut == "sideband":
+		elif cut == "rate_highWmass1":
 			graphBPerrh[eta].SetLineColor(kRed)
 			graphBPerrl[eta].SetLineColor(kRed)
 		graphBP[eta].SetLineWidth(2)
@@ -123,13 +123,13 @@ for eta in range(0,2):
 			trs[eta].SetLineColor(kRed)
 			trs[eta].Draw("samehiste")
 
-	cuts["rate_sideband"]["graphBP"][eta].Draw("same")
-	cuts["rate_sideband"]["graphBPerrh"][eta].Draw("same")
-	cuts["rate_sideband"]["graphBPerrl"][eta].Draw("same")
+	cuts["rate_highWmass"]["graphBP"][eta].Draw("same")
+	cuts["rate_highWmass"]["graphBPerrh"][eta].Draw("same")
+	cuts["rate_highWmass"]["graphBPerrl"][eta].Draw("same")
 
-	cuts["sideband"]["graphBP"][eta].Draw("same")
-	cuts["sideband"]["graphBPerrh"][eta].Draw("same")
-	cuts["sideband"]["graphBPerrl"][eta].Draw("same")
+	cuts["rate_highWmass1"]["graphBP"][eta].Draw("same")
+	cuts["rate_highWmass1"]["graphBPerrh"][eta].Draw("same")
+	cuts["rate_highWmass1"]["graphBPerrl"][eta].Draw("same")
 
 	c4.RedrawAxis()
 	c4.Print('plots/tagrateeta'+str(eta+1)+'QCDfitBP_cheat.pdf', 'pdf')

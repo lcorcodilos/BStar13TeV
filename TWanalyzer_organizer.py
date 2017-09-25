@@ -85,6 +85,12 @@ for hand in ["RH","LH","vector"]:
 	TTmcPtSmearUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_JER_up_PSET_"+options.cuts+".root")
 	TTmcPtSmearDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_JER_down_PSET_"+options.cuts+".root")
 
+	TTmcMassScaleUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_JMS_up_PSET_"+options.cuts+".root")
+	TTmcMassScaleDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_JMS_down_PSET_"+options.cuts+".root")
+
+	TTmcMassSmearUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_JMR_up_PSET_"+options.cuts+".root")
+	TTmcMassSmearDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbar_Trigger_nominal_JMR_down_PSET_"+options.cuts+".root")
+
 	# Now included in ttbar xsec uncertainty
 	# TTmcQ2ScaleUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbarscaleup_Trigger_nominal_none_PSET_"+options.cuts+".root")
 	# TTmcQ2ScaleDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedttbarscaledown_Trigger_nominal_none_PSET_"+options.cuts+".root")
@@ -104,8 +110,15 @@ for hand in ["RH","LH","vector"]:
 	STtmcPtSmearUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_JER_up_PSET_'+options.cuts+'.root')
 	STtmcPtSmearDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_JER_down_PSET_'+options.cuts+'.root')
 
+	STtmcMassScaleUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_JMS_up_PSET_'+options.cuts+'.root')
+	STtmcMassScaleDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_JMS_down_PSET_'+options.cuts+'.root')
+
+	STtmcMassSmearUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_JMR_up_PSET_'+options.cuts+'.root')
+	STtmcMassSmearDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_JMR_down_PSET_'+options.cuts+'.root')
+
 	STtmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_none_pileup_up_PSET_'+options.cuts+'.root')
 	STtmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_t_Trigger_nominal_none_pileup_down_PSET_'+options.cuts+'.root')
+
 	# tB
 	STtBmcPtScaleUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_JES_up_PSET_'+options.cuts+'.root')
 	STtBmcPtScaleDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_JES_down_PSET_'+options.cuts+'.root')
@@ -113,14 +126,27 @@ for hand in ["RH","LH","vector"]:
 	STtBmcPtSmearUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_JER_up_PSET_'+options.cuts+'.root')
 	STtBmcPtSmearDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_JER_down_PSET_'+options.cuts+'.root')
 
+	STtBmcMassScaleUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_JMS_up_PSET_'+options.cuts+'.root')
+	STtBmcMassScaleDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_JMS_down_PSET_'+options.cuts+'.root')
+
+	STtBmcMassSmearUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_JMR_up_PSET_'+options.cuts+'.root')
+	STtBmcMassSmearDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_JMR_down_PSET_'+options.cuts+'.root')
+
 	STtBmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_none_pileup_up_PSET_'+options.cuts+'.root')
 	STtBmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tB_Trigger_nominal_none_pileup_down_PSET_'+options.cuts+'.root')
+
 	# tW
 	STtWmcPtScaleUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_JES_up_PSET_'+options.cuts+'.root')
 	STtWmcPtScaleDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_JES_down_PSET_'+options.cuts+'.root')
 
 	STtWmcPtSmearUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_JER_up_PSET_'+options.cuts+'.root')
 	STtWmcPtSmearDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_JER_down_PSET_'+options.cuts+'.root')
+
+	STtWmcMassScaleUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_JMS_up_PSET_'+options.cuts+'.root')
+	STtWmcMassScaleDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_JMS_down_PSET_'+options.cuts+'.root')
+
+	STtWmcMassSmearUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_JMR_up_PSET_'+options.cuts+'.root')
+	STtWmcMassSmearDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_JMR_down_PSET_'+options.cuts+'.root')
 
 	STtWmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_none_pileup_up_PSET_'+options.cuts+'.root')
 	STtWmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tW_Trigger_nominal_none_pileup_down_PSET_'+options.cuts+'.root')
@@ -131,6 +157,12 @@ for hand in ["RH","LH","vector"]:
 
 	STtWBmcPtSmearUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_JER_up_PSET_'+options.cuts+'.root')
 	STtWBmcPtSmearDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_JER_down_PSET_'+options.cuts+'.root')
+
+	STtWBmcMassScaleUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_JMS_up_PSET_'+options.cuts+'.root')
+	STtWBmcMassScaleDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_JMS_down_PSET_'+options.cuts+'.root')
+
+	STtWBmcMassSmearUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_JMR_up_PSET_'+options.cuts+'.root')
+	STtWBmcMassSmearDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_JMR_down_PSET_'+options.cuts+'.root')
 
 	STtWBmcPileUp = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_none_pileup_up_PSET_'+options.cuts+'.root')
 	STtWBmcPileDown = ROOT.TFile("rootfiles/"+options.lumi+'/TWanalyzerweightedsingletop_tWB_Trigger_nominal_none_pileup_down_PSET_'+options.cuts+'.root')
@@ -160,6 +192,12 @@ for hand in ["RH","LH","vector"]:
 	TTmcFSPtSmearUp = TTmcPtSmearUp.Get("Mtw")
 	TTmcFSPtSmearDown = TTmcPtSmearDown.Get("Mtw")
 
+	TTmcFSMassScaleUp = TTmcMassScaleUp.Get("Mtw")
+	TTmcFSMassScaleDown = TTmcMassScaleDown.Get("Mtw")
+
+	TTmcFSMassSmearUp = TTmcMassSmearUp.Get("Mtw")
+	TTmcFSMassSmearDown = TTmcMassSmearDown.Get("Mtw")
+
 	# TTmcFSQ2ScaleUp = TTmcQ2ScaleUp.Get("Mtw")
 	# TTmcFSQ2ScaleDown = TTmcQ2ScaleDown.Get("Mtw")
 
@@ -187,6 +225,12 @@ for hand in ["RH","LH","vector"]:
 	STtmcFSPtSmearUp = STtmcPtSmearUp.Get("Mtw")
 	STtmcFSPtSmearDown = STtmcPtSmearDown.Get("Mtw")
 
+	STtmcFSMassScaleUp = STtmcMassScaleUp.Get("Mtw")
+	STtmcFSMassScaleDown = STtmcMassScaleDown.Get("Mtw")
+
+	STtmcFSMassSmearUp = STtmcMassSmearUp.Get("Mtw")
+	STtmcFSMassSmearDown = STtmcMassSmearDown.Get("Mtw")
+
 	STtmcFSPileUp = STtmcPileUp.Get("Mtw")
 	STtmcFSPileDown = STtmcPileDown.Get("Mtw")
 
@@ -200,6 +244,12 @@ for hand in ["RH","LH","vector"]:
 	STtBmcFSPtSmearUp = STtBmcPtSmearUp.Get("Mtw")
 	STtBmcFSPtSmearDown = STtBmcPtSmearDown.Get("Mtw")
 
+	STtBmcFSMassScaleUp = STtBmcMassScaleUp.Get("Mtw")
+	STtBmcFSMassScaleDown = STtBmcMassScaleDown.Get("Mtw")
+
+	STtBmcFSMassSmearUp = STtBmcMassSmearUp.Get("Mtw")
+	STtBmcFSMassSmearDown = STtBmcMassSmearDown.Get("Mtw")
+
 	STtBmcFSPileUp = STtBmcPileUp.Get("Mtw")
 	STtBmcFSPileDown = STtBmcPileDown.Get("Mtw")
 
@@ -212,6 +262,12 @@ for hand in ["RH","LH","vector"]:
 
 	STtWmcFSPtSmearUp = STtWmcPtSmearUp.Get("Mtw")
 	STtWmcFSPtSmearDown = STtWmcPtSmearDown.Get("Mtw")
+
+	STtWmcFSMassScaleUp = STtWmcMassScaleUp.Get("Mtw")
+	STtWmcFSMassScaleDown = STtWmcMassScaleDown.Get("Mtw")
+
+	STtWmcFSMassSmearUp = STtWmcMassSmearUp.Get("Mtw")
+	STtWmcFSMassSmearDown = STtWmcMassSmearDown.Get("Mtw")
 
 	STtWmcFSPileUp = STtWmcPileUp.Get("Mtw")
 	STtWmcFSPileDown = STtWmcPileDown.Get("Mtw")
@@ -231,6 +287,12 @@ for hand in ["RH","LH","vector"]:
 
 	STtWBmcFSPtSmearUp = STtWBmcPtSmearUp.Get("Mtw")
 	STtWBmcFSPtSmearDown = STtWBmcPtSmearDown.Get("Mtw")
+
+	STtWBmcFSMassScaleUp = STtWBmcMassScaleUp.Get("Mtw")
+	STtWBmcFSMassScaleDown = STtWBmcMassScaleDown.Get("Mtw")
+
+	STtWBmcFSMassSmearUp = STtWBmcMassSmearUp.Get("Mtw")
+	STtWBmcFSMassSmearDown = STtWBmcMassSmearDown.Get("Mtw")
 
 	STtWBmcFSPileUp = STtWBmcPileUp.Get("Mtw")
 	STtWBmcFSPileDown = STtWBmcPileDown.Get("Mtw")
@@ -311,6 +373,12 @@ for hand in ["RH","LH","vector"]:
 	TTmcFSPtSmearUp.Rebin(rebin)
 	TTmcFSPtSmearDown.Rebin(rebin)
 
+	TTmcFSMassScaleUp.Rebin(rebin)
+	TTmcFSMassScaleDown.Rebin(rebin)
+
+	TTmcFSMassSmearUp.Rebin(rebin)
+	TTmcFSMassSmearDown.Rebin(rebin)
+
 	TTmcFSPileUp.Rebin(rebin)
 	TTmcFSPileDown.Rebin(rebin)
 
@@ -333,6 +401,12 @@ for hand in ["RH","LH","vector"]:
 	STtmcFSPtSmearUp.Rebin(rebin)
 	STtmcFSPtSmearDown.Rebin(rebin)
 
+	STtmcFSMassScaleUp.Rebin(rebin)
+	STtmcFSMassScaleDown.Rebin(rebin)
+
+	STtmcFSMassSmearUp.Rebin(rebin)
+	STtmcFSMassSmearDown.Rebin(rebin)
+
 	STtmcFSPileUp.Rebin(rebin)
 	STtmcFSPileDown.Rebin(rebin)
 
@@ -348,6 +422,12 @@ for hand in ["RH","LH","vector"]:
 	STtBmcFSPtSmearUp.Rebin(rebin)
 	STtBmcFSPtSmearDown.Rebin(rebin)
 
+	STtBmcFSMassScaleUp.Rebin(rebin)
+	STtBmcFSMassScaleDown.Rebin(rebin)
+
+	STtBmcFSMassSmearUp.Rebin(rebin)
+	STtBmcFSMassSmearDown.Rebin(rebin)
+
 	STtBmcFSPileUp.Rebin(rebin)
 	STtBmcFSPileDown.Rebin(rebin)
 
@@ -362,6 +442,12 @@ for hand in ["RH","LH","vector"]:
 
 	STtWmcFSPtSmearUp.Rebin(rebin)
 	STtWmcFSPtSmearDown.Rebin(rebin)
+
+	STtWmcFSMassScaleUp.Rebin(rebin)
+	STtWmcFSMassScaleDown.Rebin(rebin)
+
+	STtWmcFSMassSmearUp.Rebin(rebin)
+	STtWmcFSMassSmearDown.Rebin(rebin)
 
 	STtWmcFSPileUp.Rebin(rebin)
 	STtWmcFSPileDown.Rebin(rebin)
@@ -383,6 +469,12 @@ for hand in ["RH","LH","vector"]:
 
 	STtWBmcFSPtSmearUp.Rebin(rebin)
 	STtWBmcFSPtSmearDown.Rebin(rebin)
+
+	STtWBmcFSMassScaleUp.Rebin(rebin)
+	STtWBmcFSMassScaleDown.Rebin(rebin)
+
+	STtWBmcFSMassSmearUp.Rebin(rebin)
+	STtWBmcFSMassSmearDown.Rebin(rebin)
 
 	STtWBmcFSPileUp.Rebin(rebin)
 	STtWBmcFSPileDown.Rebin(rebin)
@@ -432,6 +524,12 @@ for hand in ["RH","LH","vector"]:
 	TTmcFSPtSmearUp.SetName("mtw_allhad__ttbar__jer__plus")
 	TTmcFSPtSmearDown.SetName("mtw_allhad__ttbar__jer__minus")
 
+	TTmcFSMassScaleUp.SetName("mtw_allhad__ttbar__jms__plus")
+	TTmcFSMassScaleDown.SetName("mtw_allhad__ttbar__jms__minus")
+	
+	TTmcFSMassSmearUp.SetName("mtw_allhad__ttbar__jmr__plus")
+	TTmcFSMassSmearDown.SetName("mtw_allhad__ttbar__jmr__minus")
+
 	# TTmcFSQ2ScaleUp.SetName("mtw_allhad__ttbar__q2__plus")
 	# TTmcFSQ2ScaleDown.SetName("mtw_allhad__ttbar__q2__minus")
 
@@ -461,6 +559,12 @@ for hand in ["RH","LH","vector"]:
 	STtmcFSPtSmearUp.SetName('mtw_allhad__stt__jer__plus')
 	STtmcFSPtSmearDown.SetName('mtw_allhad__stt__jer__minus')
 
+	STtmcFSMassScaleUp.SetName('mtw_allhad__stt__jms__plus')
+	STtmcFSMassScaleDown.SetName('mtw_allhad__stt__jms__minus')
+
+	STtmcFSMassSmearUp.SetName('mtw_allhad__stt__jmr__plus')
+	STtmcFSMassSmearDown.SetName('mtw_allhad__stt__jmr__minus')
+
 	STtmcFSPileUp.SetName('mtw_allhad__stt__pile__plus')
 	STtmcFSPileDown.SetName('mtw_allhad__stt__pile__minus')
 
@@ -475,6 +579,12 @@ for hand in ["RH","LH","vector"]:
 	STtBmcFSPtSmearUp.SetName('mtw_allhad__sttB__jer__plus')
 	STtBmcFSPtSmearDown.SetName('mtw_allhad__sttB__jer__minus')
 
+	STtBmcFSMassScaleUp.SetName('mtw_allhad__sttB__jms__plus')
+	STtBmcFSMassScaleDown.SetName('mtw_allhad__sttB__jms__minus')
+
+	STtBmcFSMassSmearUp.SetName('mtw_allhad__sttB__jmr__plus')
+	STtBmcFSMassSmearDown.SetName('mtw_allhad__sttB__jmr__minus')
+
 	STtBmcFSPileUp.SetName('mtw_allhad__sttB__pile__plus')
 	STtBmcFSPileDown.SetName('mtw_allhad__sttB__pile__minus')
 
@@ -488,6 +598,12 @@ for hand in ["RH","LH","vector"]:
 
 	STtWmcFSPtSmearUp.SetName('mtw_allhad__sttW__jer__plus')
 	STtWmcFSPtSmearDown.SetName('mtw_allhad__sttW__jer__minus')
+
+	STtWmcFSMassScaleUp.SetName('mtw_allhad__sttW__jms__plus')
+	STtWmcFSMassScaleDown.SetName('mtw_allhad__sttW__jms__minus')
+
+	STtWmcFSMassSmearUp.SetName('mtw_allhad__sttW__jmr__plus')
+	STtWmcFSMassSmearDown.SetName('mtw_allhad__sttW__jmr__minus')
 
 	STtWmcFSPileUp.SetName('mtw_allhad__sttW__pile__plus')
 	STtWmcFSPileDown.SetName('mtw_allhad__sttW__pile__minus')
@@ -509,6 +625,12 @@ for hand in ["RH","LH","vector"]:
 
 	STtWBmcFSPtSmearUp.SetName('mtw_allhad__sttWB__jer__plus')
 	STtWBmcFSPtSmearDown.SetName('mtw_allhad__sttWB__jer__minus')
+
+	STtWBmcFSMassScaleUp.SetName('mtw_allhad__sttWB__jms__plus')
+	STtWBmcFSMassScaleDown.SetName('mtw_allhad__sttWB__jms__minus')
+
+	STtWBmcFSMassSmearUp.SetName('mtw_allhad__sttWB__jmr__plus')
+	STtWBmcFSMassSmearDown.SetName('mtw_allhad__sttWB__jmr__minus')
 
 	STtWBmcFSPileUp.SetName('mtw_allhad__sttWB__pile__plus')
 	STtWBmcFSPileDown.SetName('mtw_allhad__sttWB__pile__minus')
@@ -547,6 +669,12 @@ for hand in ["RH","LH","vector"]:
 	TTmcFSPtSmearUp.SetTitle("mtw_allhad__ttbar__jer__plus")
 	TTmcFSPtSmearDown.SetTitle("mtw_allhad__ttbar__jer__minus")
 
+	TTmcFSMassScaleUp.SetTitle("mtw_allhad__ttbar__jms__plus")
+	TTmcFSMassScaleDown.SetTitle("mtw_allhad__ttbar__jms__minus")
+	
+	TTmcFSMassSmearUp.SetTitle("mtw_allhad__ttbar__jmr__plus")
+	TTmcFSMassSmearDown.SetTitle("mtw_allhad__ttbar__jmr__minus")
+
 	# TTmcFSQ2ScaleUp.SetTitle("mtw_allhad__ttbar__q2__plus")
 	# TTmcFSQ2ScaleDown.SetTitle("mtw_allhad__ttbar__q2__minus")
 
@@ -576,6 +704,12 @@ for hand in ["RH","LH","vector"]:
 	STtmcFSPtSmearUp.SetTitle('mtw_allhad__stt__jer__plus')
 	STtmcFSPtSmearDown.SetTitle('mtw_allhad__stt__jer__minus')
 
+	STtmcFSMassScaleUp.SetTitle('mtw_allhad__stt__jms__plus')
+	STtmcFSMassScaleDown.SetTitle('mtw_allhad__stt__jms__minus')
+
+	STtmcFSMassSmearUp.SetTitle('mtw_allhad__stt__jmr__plus')
+	STtmcFSMassSmearDown.SetTitle('mtw_allhad__stt__jmr__minus')
+
 	STtmcFSPileUp.SetTitle('mtw_allhad__stt__pile__plus')
 	STtmcFSPileDown.SetTitle('mtw_allhad__stt__pile__minus')
 
@@ -590,6 +724,12 @@ for hand in ["RH","LH","vector"]:
 	STtBmcFSPtSmearUp.SetTitle('mtw_allhad__sttB__jer__plus')
 	STtBmcFSPtSmearDown.SetTitle('mtw_allhad__sttB__jer__minus')
 
+	STtBmcFSMassScaleUp.SetTitle('mtw_allhad__sttB__jms__plus')
+	STtBmcFSMassScaleDown.SetTitle('mtw_allhad__sttB__jms__minus')
+
+	STtBmcFSMassSmearUp.SetTitle('mtw_allhad__sttB__jmr__plus')
+	STtBmcFSMassSmearDown.SetTitle('mtw_allhad__sttB__jmr__minus')
+
 	STtBmcFSPileUp.SetTitle('mtw_allhad__sttB__pile__plus')
 	STtBmcFSPileDown.SetTitle('mtw_allhad__sttB__pile__minus')
 
@@ -603,6 +743,12 @@ for hand in ["RH","LH","vector"]:
 
 	STtWmcFSPtSmearUp.SetTitle('mtw_allhad__sttW__jer__plus')
 	STtWmcFSPtSmearDown.SetTitle('mtw_allhad__sttW__jer__minus')
+
+	STtWmcFSMassScaleUp.SetTitle('mtw_allhad__sttW__jms__plus')
+	STtWmcFSMassScaleDown.SetTitle('mtw_allhad__sttW__jms__minus')
+
+	STtWmcFSMassSmearUp.SetTitle('mtw_allhad__sttW__jmr__plus')
+	STtWmcFSMassSmearDown.SetTitle('mtw_allhad__sttW__jmr__minus')
 
 	STtWmcFSPileUp.SetTitle('mtw_allhad__sttW__pile__plus')
 	STtWmcFSPileDown.SetTitle('mtw_allhad__sttW__pile__minus')
@@ -624,6 +770,12 @@ for hand in ["RH","LH","vector"]:
 
 	STtWBmcFSPtSmearUp.SetTitle('mtw_allhad__sttWB__jer__plus')
 	STtWBmcFSPtSmearDown.SetTitle('mtw_allhad__sttWB__jer__minus')
+
+	STtWBmcFSMassScaleUp.SetTitle('mtw_allhad__sttWB__jms__plus')
+	STtWBmcFSMassScaleDown.SetTitle('mtw_allhad__sttWB__jms__minus')
+
+	STtWBmcFSMassSmearUp.SetTitle('mtw_allhad__sttWB__jmr__plus')
+	STtWBmcFSMassSmearDown.SetTitle('mtw_allhad__sttWB__jmr__minus')
 
 	STtWBmcFSPileUp.SetTitle('mtw_allhad__sttWB__pile__plus')
 	STtWBmcFSPileDown.SetTitle('mtw_allhad__sttWB__pile__minus')
@@ -663,6 +815,12 @@ for hand in ["RH","LH","vector"]:
 	TTmcFSPtSmearUp.Write("mtw_allhad__ttbar__jer__plus")
 	TTmcFSPtSmearDown.Write("mtw_allhad__ttbar__jer__minus")
 
+	TTmcFSMassScaleUp.Write("mtw_allhad__ttbar__jms__plus")
+	TTmcFSMassScaleDown.Write("mtw_allhad__ttbar__jms__minus")
+	
+	TTmcFSMassSmearUp.Write("mtw_allhad__ttbar__jmr__plus")
+	TTmcFSMassSmearDown.Write("mtw_allhad__ttbar__jmr__minus")
+
 	# TTmcFSQ2ScaleUp.Write("mtw_allhad__ttbar__q2__plus")
 	# TTmcFSQ2ScaleDown.Write("mtw_allhad__ttbar__q2__minus")
 
@@ -692,6 +850,12 @@ for hand in ["RH","LH","vector"]:
 	STtmcFSPtSmearUp.Write('mtw_allhad__stt__jer__plus')
 	STtmcFSPtSmearDown.Write('mtw_allhad__stt__jer__minus')
 
+	STtmcFSMassScaleUp.Write('mtw_allhad__stt__jms__plus')
+	STtmcFSMassScaleDown.Write('mtw_allhad__stt__jms__minus')
+
+	STtmcFSMassSmearUp.Write('mtw_allhad__stt__jmr__plus')
+	STtmcFSMassSmearDown.Write('mtw_allhad__stt__jmr__minus')
+
 	STtmcFSPileUp.Write('mtw_allhad__stt__pile__plus')
 	STtmcFSPileDown.Write('mtw_allhad__stt__pile__minus')
 
@@ -706,6 +870,12 @@ for hand in ["RH","LH","vector"]:
 	STtBmcFSPtSmearUp.Write('mtw_allhad__sttB__jer__plus')
 	STtBmcFSPtSmearDown.Write('mtw_allhad__sttB__jer__minus')
 
+	STtBmcFSMassScaleUp.Write('mtw_allhad__sttB__jms__plus')
+	STtBmcFSMassScaleDown.Write('mtw_allhad__sttB__jms__minus')
+
+	STtBmcFSMassSmearUp.Write('mtw_allhad__sttB__jmr__plus')
+	STtBmcFSMassSmearDown.Write('mtw_allhad__sttB__jmr__minus')
+
 	STtBmcFSPileUp.Write('mtw_allhad__sttB__pile__plus')
 	STtBmcFSPileDown.Write('mtw_allhad__sttB__pile__minus')
 
@@ -719,6 +889,12 @@ for hand in ["RH","LH","vector"]:
 
 	STtWmcFSPtSmearUp.Write('mtw_allhad__sttW__jer__plus')
 	STtWmcFSPtSmearDown.Write('mtw_allhad__sttW__jer__minus')
+
+	STtWmcFSMassScaleUp.Write('mtw_allhad__sttW__jms__plus')
+	STtWmcFSMassScaleDown.Write('mtw_allhad__sttW__jms__minus')
+
+	STtWmcFSMassSmearUp.Write('mtw_allhad__sttW__jmr__plus')
+	STtWmcFSMassSmearDown.Write('mtw_allhad__sttW__jmr__minus')
 
 	STtWmcFSPileUp.Write('mtw_allhad__sttW__pile__plus')
 	STtWmcFSPileDown.Write('mtw_allhad__sttW__pile__minus')
@@ -739,6 +915,12 @@ for hand in ["RH","LH","vector"]:
 
 	STtWBmcFSPtSmearUp.Write('mtw_allhad__sttWB__jer__plus')
 	STtWBmcFSPtSmearDown.Write('mtw_allhad__sttWB__jer__minus')
+
+	STtWBmcFSMassScaleUp.Write('mtw_allhad__sttWB__jms__plus')
+	STtWBmcFSMassScaleDown.Write('mtw_allhad__sttWB__jms__minus')
+
+	STtWBmcFSMassSmearUp.Write('mtw_allhad__sttWB__jmr__plus')
+	STtWBmcFSMassSmearDown.Write('mtw_allhad__sttWB__jmr__minus')
 
 	STtWBmcFSPileUp.Write('mtw_allhad__sttWB__pile__plus')
 	STtWBmcFSPileDown.Write('mtw_allhad__sttWB__pile__minus')
@@ -762,6 +944,14 @@ for hand in ["RH","LH","vector"]:
 
 		SignalB11PtSmearUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_JER_up_PSET_"+options.cuts+".root")
 		SignalB11PtSmearDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_JER_down_PSET_"+options.cuts+".root")
+
+
+		SignalB11MassScaleUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_JMS_up_PSET_"+options.cuts+".root")
+		SignalB11MassScaleDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_JMS_down_PSET_"+options.cuts+".root")
+
+
+		SignalB11MassSmearUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_JMR_up_PSET_"+options.cuts+".root")
+		SignalB11MassSmearDown = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_JMR_down_PSET_"+options.cuts+".root")
 
 
 		SignalB11PileUp = ROOT.TFile("rootfiles/"+options.lumi+"/TWanalyzerweightedsignal"+hand+str(mass[RA])+"_Trigger_nominal_none_pileup_up_PSET_"+options.cuts+".root")
@@ -788,6 +978,12 @@ for hand in ["RH","LH","vector"]:
 
 		SignalPtSmearup = SignalB11PtSmearUp.Get("Mtw")
 		SignalPtSmeardown = SignalB11PtSmearDown.Get("Mtw")
+
+		SignalMassScaleup = SignalB11MassScaleUp.Get("Mtw")
+		SignalMassScaledown = SignalB11MassScaleDown.Get("Mtw")
+
+		SignalMassSmearup = SignalB11MassSmearUp.Get("Mtw")
+		SignalMassSmeardown = SignalB11MassSmearDown.Get("Mtw")
 
 		SignalPileup = SignalB11PileUp.Get("Mtw")
 		SignalPiledown = SignalB11PileDown.Get("Mtw")
@@ -823,6 +1019,12 @@ for hand in ["RH","LH","vector"]:
 		SignalPtSmearup.Rebin(rebin)
 		SignalPtSmeardown.Rebin(rebin)
 
+		SignalMassScaleup.Rebin(rebin)
+		SignalMassScaledown.Rebin(rebin)
+
+		SignalMassSmearup.Rebin(rebin)
+		SignalMassSmeardown.Rebin(rebin)
+
 		SignalPDFShapeUp.Rebin(rebin)
 		SignalPDFShapeDown.Rebin(rebin)
 
@@ -845,6 +1047,10 @@ for hand in ["RH","LH","vector"]:
 		SignalPtScaledown.SetTitle("mtw_allhad__bs"+str(mass[RA])+"__jes__minus")
 		SignalPtSmearup.SetTitle("mtw_allhad__bs"+str(mass[RA])+"__jer__plus")
 		SignalPtSmeardown.SetTitle("mtw_allhad__bs"+str(mass[RA])+"__jer__minus")
+		SignalMassScaleup.SetTitle("mtw_allhad__bs"+str(mass[RA])+"__jms__plus")
+		SignalMassScaledown.SetTitle("mtw_allhad__bs"+str(mass[RA])+"__jms__minus")
+		SignalMassSmearup.SetTitle("mtw_allhad__bs"+str(mass[RA])+"__jmr__plus")
+		SignalMassSmeardown.SetTitle("mtw_allhad__bs"+str(mass[RA])+"__jmr__minus")
 		SignalPileup.SetTitle("mtw_allhad__bs"+str(mass[RA])+"__pile__plus")
 		SignalPiledown.SetTitle("mtw_allhad__bs"+str(mass[RA])+"__pile__minus")
 		SignalPDFShapeUp.SetTitle('mtw_allhad__bs'+str(mass[RA])+'__pdf__plus')
@@ -862,6 +1068,10 @@ for hand in ["RH","LH","vector"]:
 		SignalPtScaledown.SetName("mtw_allhad__bs"+str(mass[RA])+"__jes__minus")
 		SignalPtSmearup.SetName("mtw_allhad__bs"+str(mass[RA])+"__jer__plus")
 		SignalPtSmeardown.SetName("mtw_allhad__bs"+str(mass[RA])+"__jer__minus")
+		SignalMassScaleup.SetName("mtw_allhad__bs"+str(mass[RA])+"__jms__plus")
+		SignalMassScaledown.SetName("mtw_allhad__bs"+str(mass[RA])+"__jms__minus")
+		SignalMassSmearup.SetName("mtw_allhad__bs"+str(mass[RA])+"__jmr__plus")
+		SignalMassSmeardown.SetName("mtw_allhad__bs"+str(mass[RA])+"__jmr__minus")
 		SignalPileup.SetName("mtw_allhad__bs"+str(mass[RA])+"__pile__plus")
 		SignalPiledown.SetName("mtw_allhad__bs"+str(mass[RA])+"__pile__minus")
 		SignalPDFShapeUp.SetName('mtw_allhad__bs'+str(mass[RA])+'__pdf__plus')
@@ -879,6 +1089,10 @@ for hand in ["RH","LH","vector"]:
 		SignalPtScaledown.Write("mtw_allhad__bs"+str(mass[RA])+"__jes__minus")
 		SignalPtSmearup.Write("mtw_allhad__bs"+str(mass[RA])+"__jer__plus")
 		SignalPtSmeardown.Write("mtw_allhad__bs"+str(mass[RA])+"__jer__minus")
+		SignalMassScaleup.Write("mtw_allhad__bs"+str(mass[RA])+"__jms__plus")
+		SignalMassScaledown.Write("mtw_allhad__bs"+str(mass[RA])+"__jms__minus")
+		SignalMassSmearup.Write("mtw_allhad__bs"+str(mass[RA])+"__jmr__plus")
+		SignalMassSmeardown.Write("mtw_allhad__bs"+str(mass[RA])+"__jmr__minus")
 		SignalPileup.Write("mtw_allhad__bs"+str(mass[RA])+"__pile__plus")
 		SignalPiledown.Write("mtw_allhad__bs"+str(mass[RA])+"__pile__minus")
 		SignalPDFShapeUp.Write('mtw_allhad__bs'+str(mass[RA])+'__pdf__plus')

@@ -121,6 +121,10 @@ parser.add_option('-C', '--cheat', metavar='F', type='string', action='store',
 				  default	=	'off',
 				  dest		=	'cheat',
 				  help		=	'on or off')
+parser.add_option('-i', '--iteration', metavar='F', type='int', action='store',
+				  default	=	-1,
+				  dest		=	'iteration',
+				  help		=	'Scale factor iteration. Default 0')
 
 (options, args) = parser.parse_args()
 
@@ -228,10 +232,37 @@ if options.JMR!='nominal':
 	mod = mod + 'JMR' + '_' + options.JMR
 	post2='jer'+options.JMR
 
+#----------------Need to grab extra top pt reweight factor-------------------
+# Naming syntax
+# - ptItString: only non-empty for doing the iterations study, assigned to all files
+# - ptTTString: always empty for non-ttbar, empty for ttbar when doing iterations
 
-ptString = ''
-if not options.extraPtCorrection:
-	ptString = '_extraPtCorrection_off'
+ptItString = ''
+ptTTString = ''
+# If we're not running the study
+if options.iteration == -1:
+	# And we want the extra correction turned on
+	if options.extraPtCorrection:
+		# Grab the latest SF and don't do any renaming
+		ptTTString = ''
+		TopPtReweightFile = TFile(di+'TWTopPtSF_9.root')
+		TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_9')
+	# And we don't want the extra correction turned on
+	elif not options.extraPtCorrection:
+		ptTTString = '_noExtraPtCorrection'
+		TopPtReweightFile = TFile(di+'TWTopPtSF_0.root')
+		TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_0')
+	# And we don't want any pt correction
+	elif options.ptreweight == 'off':
+		ptTTString = '_ptreweight_off'
+# If we are running the pt study
+elif options.iteration >=0:
+	ptTTString = '_ptSF' + str(options.iteration)
+	TopPtReweightFile = TFile(di+'TWTopPtSF_'+str(options.iteration)+'.root')
+	TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_'+str(options.iteration))
+
+#----------------------------------------------------------------------------
+
 
 pstr = ""
 if options.pdfweights!="nominal":
@@ -277,21 +308,18 @@ settype = 'ttbar'
 
 # print 'The type of set is ' + settype
 
-#----------------Need to grab extra top pt reweight factor-------------------
-
-TopPtReweightFile = TFile(di+'TWTopPtSF.root')
-TopPtReweightPlot = TopPtReweightFile.Get('TopPtSF')
-
 #---------------Modmass file if you dont want alphabet-----------------------
 if options.cheat == 'off':
 	rateCuts = 'rate_'+options.cuts
 elif options.cheat == 'on':
 	rateCuts = options.cuts
-if options.cuts == 'sideband1':
-	rateCuts = 'rate_default'
+
+# if rateCuts == 'rate_sideband1':
+# 	rateCuts = 'rate_default'
+
 
 if options.Alphabet != "on":
-	ModFile = ROOT.TFile(di+"ModMassFile_"+rateCuts+".root")
+	ModFile = ROOT.TFile(di+"ModMassFile_"+rateCuts+ptTTString+".root")
 	ModPlot = ModFile.Get("rtmass")
 
 	# if options.rate == 'tpt':
@@ -339,40 +367,37 @@ tpt = Cuts['tpt']
 # 	var = "_kin"
 
 if jobs != 1:
-	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+ptString+".root", "recreate" )
+	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+ptTTString+".root", "recreate" )
 else:
-	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_PSET_"+options.cuts+ptString+".root", "recreate" )
+	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_PSET_"+options.cuts+ptTTString+".root", "recreate" )
 
 #Load up the average t-tagging rates -- Takes parameters from text file and makes a function
 #CHANGE BACK
 if options.Alphabet == "on":
-	TTR = TTR_Init('QUAD',rateCuts,setstr,options.rate,di)
-	TTR_errUp = TTR_Init('QUAD_errUp',rateCuts,setstr,options.rate,di)
-	TTR_errDown = TTR_Init('QUAD_errDown',rateCuts,setstr,options.rate,di)
+	TTR = TTR_Init('QUAD',rateCuts,setstr,options.rate,di,ptTTString)
+	TTR_errUp = TTR_Init('QUAD_errUp',rateCuts,setstr,options.rate,di,ptTTString)
+	TTR_errDown = TTR_Init('QUAD_errDown',rateCuts,setstr,options.rate,di,ptTTString)
 	fittitles = ["QUAD"]
 	fits = []
 	for fittitle in fittitles:
-		fits.append(TTR_Init(fittitle,rateCuts,setstr,options.rate,di))
+		fits.append(TTR_Init(fittitle,rateCuts,setstr,options.rate,di,ptTTString))
 
 elif options.Alphabet == "off":
-	TagFile = TFile(di+"plots/TWrate_Maker_"+setstr+"_"+Lumi2+"_PSET_"+rateCuts+".root")
-	print "Opening rate file " + "plots/TWrate_Maker_"+setstr+"_"+Lumi2+"_PSET_"+rateCuts+".root"
+	TagFile = TFile(di+"plots/TWrate_Maker_"+setstr+"_"+Lumi2+"_PSET_"+rateCuts+ptTTString+".root")
+	print "Opening rate file " + "plots/TWrate_Maker_"+setstr+"_"+Lumi2+"_PSET_"+rateCuts+ptTTString+".root"
 	TagPlote1 = TagFile.Get("tagrateeta1")
 	TagPlote2 = TagFile.Get("tagrateeta2") 
 
 
-	TTR = TTR_Init('Bifpoly',rateCuts,setstr,options.rate,di)
-	TTR_err = TTR_Init('Bifpoly_err',rateCuts,setstr,options.rate,di)
-	#TTR = TTR_Init('Bifpoly',options.cuts,setstr,options.rate,di)
-	#TTR_err = TTR_Init('Bifpoly_err',options.cuts,setstr,options.rate,di)
+	TTR = TTR_Init('Bifpoly',rateCuts,setstr,options.rate,di,ptTTString)
+	TTR_err = TTR_Init('Bifpoly_err',rateCuts,setstr,options.rate,di,ptTTString)
 
 	fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
 	fits = []
 	for fittitle in fittitles:
-		fits.append(TTR_Init(fittitle,rateCuts,setstr,options.rate,di))
-		#fits.append(TTR_Init(fittitle,options.cuts,setstr,options.rate,di))
-	TagFile1 = TFile(di+"Tagrate"+setstr+"2D_"+rateCuts+".root")
-	#TagFile1 = TFile(di+"Tagrate"+setstr+"2D_"+options.cuts+".root")
+		fits.append(TTR_Init(fittitle,rateCuts,setstr,options.rate,di,ptTTString))
+
+	TagFile1 = TFile(di+"Tagrate"+setstr+"2D_"+rateCuts+ptTTString+".root")
 	TagPlot2de1= TagFile1.Get("tagrateeta1")
 	TagPlot2de2= TagFile1.Get("tagrateeta2")
 
@@ -624,9 +649,9 @@ QCDbkgMtl.Sumw2()
 QCDbkg_ARR = []
 	
 kinVars = 	['', 	'ET', 	'EW', 	'PT', 	'PW', 	'PTW', 	'PhT', 	'PhW', 	'dPhi', 'Mt'	]
-kinBin = 	[140, 	12, 	12, 	50, 	50,	35,	12,	12,	12, 60	]
+kinBin = 	[140, 	12, 	12, 	50, 	50,	35,	12,	12,	12, 25	]
 kinLow = 	[500, 	-2.4, 	-2.4, 	450, 	370,	0,	-pie,	-pie,	2.2, 105	]
-kinHigh = 	[4000, 	2.4, 	2.4, 	1500, 	1430,	700,	pie,	pie,	pie, 405	]
+kinHigh = 	[4000, 	2.4, 	2.4, 	1500, 	1430,	700,	pie,	pie,	pie, 210	]
 
 # if options.var == 'analyzer':
 # 	iterations = 1
@@ -848,10 +873,8 @@ for entry in range(lowBinEdge,highBinEdge):
 					weightSFptdown=1.0
 					if options.ptreweight == "on" and options.set.find('ttbar') != -1:
 					# 	ttbar pt reweighting done here
-						if options.extraPtCorrection:
-							extraCorrection = TopPtReweightPlot.GetBinContent(1)
-						else:
-							extraCorrection = 0
+						extraCorrection = TopPtReweightPlot.GetBinContent(1) # Will be zero with iteration 0
+							
 						PTW = tree.pt_reweight*(1+extraCorrection)
 						weightSFptSig = abs(weight - weight*PTW)
 
@@ -972,9 +995,10 @@ for entry in range(lowBinEdge,highBinEdge):
 									QCDbkgdPhi2Dup.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d+tagrate2derr)*weight*massw)
 									QCDbkgdPhi2Ddown.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d-tagrate2derr)*weight*massw)
 
-									QCDbkgMt2D.Fill(tjet.M(),tagrate2d*weight*massw)
-									QCDbkgMt2Dup.Fill(tjet.M(),(tagrate2d+tagrate2derr)*weight*massw)
-									QCDbkgMt2Ddown.Fill(tjet.M(),(tagrate2d-tagrate2derr)*weight*massw)
+									if tjet.Perp() > 500:
+										QCDbkgMt2D.Fill(tjet.M(),tagrate2d*weight*massw)
+										QCDbkgMt2Dup.Fill(tjet.M(),(tagrate2d+tagrate2derr)*weight*massw)
+										QCDbkgMt2Ddown.Fill(tjet.M(),(tagrate2d-tagrate2derr)*weight*massw)
 
 								if (eta2_cut) and not FullTop:
 									eta2Count += 1
@@ -1019,9 +1043,10 @@ for entry in range(lowBinEdge,highBinEdge):
 									QCDbkgdPhi2Dup.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d+tagrate2derr)*weight*massw)
 									QCDbkgdPhi2Ddown.Fill(abs(tjet.Phi()-wjet.Phi()),(tagrate2d-tagrate2derr)*weight*massw)
 
-									QCDbkgMt2D.Fill(wjet.M(),tagrate2d*weight*massw)
-									QCDbkgMt2Dup.Fill(wjet.M(),(tagrate2d+tagrate2derr)*weight*massw)
-									QCDbkgMt2Ddown.Fill(wjet.M(),(tagrate2d-tagrate2derr)*weight*massw)
+									if tjet.Perp():
+										QCDbkgMt2D.Fill(wjet.M(),tagrate2d*weight*massw)
+										QCDbkgMt2Dup.Fill(wjet.M(),(tagrate2d+tagrate2derr)*weight*massw)
+										QCDbkgMt2Ddown.Fill(wjet.M(),(tagrate2d-tagrate2derr)*weight*massw)
 
 								fillSpec = [MtopW, tjet.Eta(), wjet.Eta(), tjet.Perp(), wjet.Perp(), tjet.Perp()+wjet.Perp(), tjet.Phi(), wjet.Phi(), abs(tjet.Phi()-wjet.Phi()), wVals['SDmass']]
 
@@ -1085,9 +1110,10 @@ for entry in range(lowBinEdge,highBinEdge):
 									QCDbkgdPhih.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweighterrup*weight*massw)
 									QCDbkgdPhil.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweighterrdown*weight*massw)
 
-									QCDbkgMt.Fill(tjet.M(),TTRweight*weight*massw)
-									QCDbkgMth.Fill(tjet.M(),TTRweighterrup*weight*massw)
-									QCDbkgMtl.Fill(tjet.M(),TTRweighterrdown*weight*massw)
+									if tjet.Perp() > 500:
+										QCDbkgMt.Fill(tjet.M(),TTRweight*weight*massw)
+										QCDbkgMth.Fill(tjet.M(),TTRweighterrup*weight*massw)
+										QCDbkgMtl.Fill(tjet.M(),TTRweighterrdown*weight*massw)
 
 								if sjbtag_cut:
 									Mtw_cut9.Fill(MtopW,weight)
@@ -1125,7 +1151,8 @@ for entry in range(lowBinEdge,highBinEdge):
 										PhiW.Fill(wjet.Phi(),weight)
 										dPhi.Fill(abs(tjet.Phi()-wjet.Phi()),weight)
 
-										Mt.Fill(tjet.M(),weight)
+										if tjet.Perp() > 500:
+											Mt.Fill(tjet.M(),weight)
 
 										temp_variables = {	"wpt":wjet.Perp(),
 															"wmass":wVals["SDmass"],

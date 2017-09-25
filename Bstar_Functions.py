@@ -93,7 +93,7 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,400.0],
+			'tmass':[105.0,210.0],
 			'tau32':[0.0,0.65],
 			'tau21':[0.0,0.4],
 			'sjbtag':[0.5426,1.0],
@@ -107,40 +107,11 @@ def LoadCuts(TYPE):
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
 			'dy':[0.0,1.8],
-			'tmass':[105.0,400.0],
+			'tmass':[105.0,210.0],
 			'tau32':[0.0,0.65],
 			'tau21':[0.4,1.0],
 			'sjbtag':[0.5426,1.0],
-			'wmass':[130.0,float("inf")],
-			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4],
-			'eta':[0.0,2.4]
-			}
-	# Used for testing
-	if TYPE=='toy':
-		return  {
-			'wpt':[400.0,float("inf")],
-			'tpt':[400.0,float("inf")],
-			'dy':[0.0,1.8],
-			'tmass':[140.0,170.0],
-			'tau32':[0.0,0.65],
-			'tau21':[0.0,0.4],
-			'sjbtag':[0.5426,1.0],
-			'wmass':[130.0,float("inf")],
-			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4],
-			'eta':[0.0,2.4]
-			}
-	if TYPE=='rate_toy':
-		return  {
-			'wpt':[400.0,float("inf")],
-			'tpt':[400.0,float("inf")],
-			'dy':[0.0,1.8],
-			'tmass':[140.0,170.0],
-			'tau32':[0.0,0.65],
-			'tau21':[0.4,1.0],
-			'sjbtag':[0.5426,1.0],
-			'wmass':[130.0,float("inf")],
+			'wmass':[65.0,105.0],
 			'eta1':[0.0,0.8],
 			'eta2':[0.8,2.4],
 			'eta':[0.0,2.4]
@@ -469,81 +440,81 @@ def BTR_Init(ST,CUT,di,setval):
 
 #This is a poorly written function, but I cant think of a better way to do this 
 #It works, but you should be able to just have one input
-def TTR_Init(ST,CUT,SET,RATE,di):
+def TTR_Init(ST,CUT,SET,RATE,di,ptString):
 	rateFolder = ''
 	if RATE != 'tpt':
 		rateFolder = RATE + '/'
 	if ST == 'Bifpoly':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"bpinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"bpinput"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"bpinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"bpinput"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",BifPoly,0,4000,5)
 		eta2fit = TF1("eta2fit",BifPoly,0,4000,5)
 		Params = 5
 	if ST == 'Bifpoly_err':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"bperrorinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"bperrorinput"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"bperrorinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"bperrorinput"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit=TF1("eta1fit",BifPolyErr,0,4000,10)
 		eta2fit=TF1("eta2fit",BifPolyErr,0,4000,10)
 		Params = 10
 
 	if ST == 'pol0':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol0input"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol0input"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol0input"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol0input"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'pol0',0,4000)
 		eta2fit = TF1("eta2fit",'pol0',0,4000)
 		Params = 1
 
 	if ST == 'pol2':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol2input"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol2input"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol2input"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol2input"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'pol2',0,4000)
 		eta2fit = TF1("eta2fit",'pol2',0,4000)
 		Params = 3
 
 	if ST == 'pol3':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol3input"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"pol3input"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol3input"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"pol3input"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'pol3',0,4000)
 		eta2fit = TF1("eta2fit",'pol3',0,4000)
 		Params = 4
 	if ST == 'FIT':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"newfitinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"newfitinput"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"newfitinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"newfitinput"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,4000)
 		eta2fit = TF1("eta2fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,4000)
 		Params = 4
 	if ST == 'expofit':
-		TRBPE1 = open(di+"fitdata/"+rateFolder+"expoconinput"+SET+"eta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/"+rateFolder+"expoconinput"+SET+"eta1_PSET_"+CUT+ptString+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/"+rateFolder+"expoconinput"+SET+"eta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/"+rateFolder+"expoconinput"+SET+"eta2_PSET_"+CUT+ptString+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'expo(0) + pol0(2)',0,4000)
 		eta2fit = TF1("eta2fit",'expo(0) + pol0(2)',0,4000)
 		Params = 3
 	if ST == 'QUAD':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+ptString+".txt")
 		TRBP.seek(0)
 		fit = TF1("fit",'pol2',0,300)
 		Params = 3
 	if ST == 'QUAD_errUp':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+ptString+".txt")
 		TRBP.seek(0)
 		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
 		Params = 9
 	if ST == 'QUAD_errDown':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+ptString+".txt")
 		TRBP.seek(0)
 		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
 		Params = 9
@@ -554,11 +525,11 @@ def TTR_Init(ST,CUT,SET,RATE,di):
 		TBP = TRBP.read()
 	
 	for i in range(0,Params):
-		try:
+		# try:
 			eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
 			eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
-		except:
-			fit.SetParameter(i,float(TBP.split('\n')[i]) )
+		# except:
+		# 	fit.SetParameter(i,float(TBP.split('\n')[i]) )
 
 	try:
 		return [eta1fit.Clone(),eta2fit.Clone()] 
@@ -632,7 +603,7 @@ def PDF_Lookup(pdfs , pdfOP ):
 	if pdfOP == "up" :
 		return min(13.0,1.0+sqrt((ilimweight) / (len(limitedpdf))))
 	else :
-	  	return max(-12.0,1.0-sqrt((ilimweight) / (len(limitedpdf))))
+		return max(-12.0,1.0-sqrt((ilimweight) / (len(limitedpdf))))
 #This looks up the b tagging scale factor or uncertainty
 def Trigger_Lookup( H , TRP ):
 	Weight = 1.0
@@ -758,7 +729,19 @@ def Makelv(vector,event):
 
 	return lvs
  
- 
+def PU_Lookup(PU , PUP):
+	PUWeight = 1.0
+	PUWeightup = 1.0
+	PUWeightdown = 1.0
+
+	bin1 = PUP[0].FindBin(float(PU))
+
+	PUWeight = PUP[0].GetBinContent(bin1)
+	PUWeightup = PUP[1].GetBinContent(bin1)
+	PUWeightdown = PUP[2].GetBinContent(bin1)
+
+	return [PUWeight,PUWeightup,PUWeightdown]
+
 def Hemispherize(LV1,LV2):
 	tjets = [[],[]]
 	wjets = [[],[]]
@@ -969,8 +952,9 @@ def WaitForJobs( listOfJobs ):
 		# you don't have to look at `ls: output_*.log: No such file or directory`
 		finishedJobs = subprocess.check_output('ls output_*.log 2> null.txt | wc -l', shell=True)
 		finishedJobs = int(filter(lambda x: x.isdigit(), finishedJobs))
+		sys.stdout.write('\rProcessing ' + str(listOfJobs) + ' - ')
 		# Print the count out as a 'progress bar' that refreshes (via \r)
-		sys.stdout.write("\r%i / %i finished..." % (finishedJobs,numberOfJobs))
+		sys.stdout.write("%i / %i of jobs finished..." % (finishedJobs,numberOfJobs))
 		# Clear the buffer
 		sys.stdout.flush()
 		# Sleep for one second
@@ -987,10 +971,10 @@ def WaitForJobs( listOfJobs ):
 	# Check there are no syntax or traceback errors
 	# Future idea - check output file sizes
 	if numberOfTracebacks > 0:
-		print numberOfTracebacks + ' job(s) failed with traceback error'
+		print str(numberOfTracebacks) + ' job(s) failed with traceback error'
 		quit()
 	elif numberOfSyntax > 0:
-		print numberOfSyntax + ' job(s) failed with syntax error'
+		print str(numberOfSyntax) + ' job(s) failed with syntax error'
 		quit()
 	else:
 		print 'No errors!'

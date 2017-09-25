@@ -42,6 +42,18 @@ parser.add_option('-p', '--printCanvas', metavar='F', type='string', action='sto
 				  default	=	'off',
 				  dest		=	'printCanvas',
 				  help		=	'on or off')
+parser.add_option('-u', '--ptreweight', metavar='F', type='string', action='store',
+				  default	=	'on',
+				  dest		=	'ptreweight',
+				  help		=	'on or off')
+parser.add_option('-i', '--iteration', metavar='F', type='int', action='store',
+				  default	=	-1,
+				  dest		=	'iteration',
+				  help		=	'Scale factor iteration. Default -1 means pt study is off')
+parser.add_option('--noExtraPtCorrection', metavar='F', action='store_false',
+				  default=True,
+				  dest='extraPtCorrection',
+				  help='Call to turn off extraPtCorrection')
 
 (options, args) = parser.parse_args()
 
@@ -66,6 +78,34 @@ Lumi = str(int(cLumi))+'pb'
 #lumiList = [1000, 5000, 10000]
 #Lumi = ['1fb', '5fb', '10fb']
 
+#----------------Need to grab extra top pt reweight factor-------------------
+# Naming syntax
+# - ptItString: only non-empty for doing the iterations study, assigned to all non-ttbar files and always the same string
+# - ptTTString: used to call the right ttbar MC and name all outputs 
+#				changes doing iterations
+
+ptItString = ''
+ptTTString = ''
+# if not running the pt study
+if options.iteration == -1:
+	# And we want the extra correction turned on
+	if options.extraPtCorrection:
+		ptTTString = ''
+	# And we don't want the extra correction turned on
+	elif not options.extraPtCorrection:
+		ptTTString = '_noExtraPtCorrection'
+	# And we don't want any pt correction
+	elif options.ptreweight == 'off':
+		ptTTString = '_ptreweight_off'
+
+# If we are running the pt study
+elif options.iteration >=0:
+	ptTTString = '_ptSF'+str(options.iteration)
+	ptItString = '_ptSF0'
+
+
+#----------------------------------------------------------------------------
+
 rootdir="rootfiles/"+Lumi+"/"
 
 setstr = ""
@@ -77,32 +117,32 @@ elif options.set=='data':
 #Make a bunch of txt files to store the fit parameters
 saveout = sys.stdout
 
-Outf1   =   open("fitdata/pol2input"+setstr+"eta1_PSET_"+options.cuts+".txt", "w")
-Outf2   =   open("fitdata/pol2input"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
-Outf4   =   open("fitdata/pol4input"+setstr+"eta1_PSET_"+options.cuts+".txt", "w")
-Outf5   =   open("fitdata/pol4input"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
-Outf7   =   open("fitdata/pol0input"+setstr+"eta1_PSET_"+options.cuts+".txt", "w")
-Outf8   =   open("fitdata/pol0input"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
-Outf10   =   open("fitdata/newfitinput"+setstr+"eta1_PSET_"+options.cuts+".txt", "w")
-Outf11   =   open("fitdata/newfitinput"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
-Outf13   =   open("fitdata/newfiterrorinput"+setstr+"eta1_PSET_"+options.cuts+".txt", "w")
-Outf14   =   open("fitdata/newfiterrorinput"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
-Outf16   =   open("fitdata/bpinput"+setstr+"eta1_PSET_"+options.cuts+".txt", "w")
-Outf17   =   open("fitdata/bpinput"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
-Outf19   =   open("fitdata/bperrorinput"+setstr+"eta1_PSET_"+options.cuts+".txt", "w")
-Outf20   =   open("fitdata/bperrorinput"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
-Outf22   =   open("fitdata/pol3input"+setstr+"eta1_PSET_"+options.cuts+".txt", "w")
-Outf23   =   open("fitdata/pol3input"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
-Outf25   =   open("fitdata/expoconinput"+setstr+"eta1_PSET_"+options.cuts+".txt", "w")
-Outf26   =   open("fitdata/expoconinput"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
-Outf28   =   open("fitdata/expoconerrorinput"+setstr+"eta1_PSET_"+options.cuts+".txt", "w")
-Outf29   =   open("fitdata/expoconerrorinput"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
-Outf31   =   open("fitdata/expolininput"+setstr+"eta1_PSET_"+options.cuts+".txt", "w")
-Outf32   =   open("fitdata/expolininput"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
-Outf34   =   open("fitdata/expolinerrorinput"+setstr+"eta1_PSET_"+options.cuts+".txt", "w")
-Outf35   =   open("fitdata/expolinerrorinput"+setstr+"eta2_PSET_"+options.cuts+".txt", "w")
+Outf1   =   open("fitdata/pol2input"+setstr+"eta1_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf2   =   open("fitdata/pol2input"+setstr+"eta2_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf4   =   open("fitdata/pol4input"+setstr+"eta1_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf5   =   open("fitdata/pol4input"+setstr+"eta2_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf7   =   open("fitdata/pol0input"+setstr+"eta1_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf8   =   open("fitdata/pol0input"+setstr+"eta2_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf10   =   open("fitdata/newfitinput"+setstr+"eta1_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf11   =   open("fitdata/newfitinput"+setstr+"eta2_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf13   =   open("fitdata/newfiterrorinput"+setstr+"eta1_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf14   =   open("fitdata/newfiterrorinput"+setstr+"eta2_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf16   =   open("fitdata/bpinput"+setstr+"eta1_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf17   =   open("fitdata/bpinput"+setstr+"eta2_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf19   =   open("fitdata/bperrorinput"+setstr+"eta1_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf20   =   open("fitdata/bperrorinput"+setstr+"eta2_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf22   =   open("fitdata/pol3input"+setstr+"eta1_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf23   =   open("fitdata/pol3input"+setstr+"eta2_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf25   =   open("fitdata/expoconinput"+setstr+"eta1_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf26   =   open("fitdata/expoconinput"+setstr+"eta2_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf28   =   open("fitdata/expoconerrorinput"+setstr+"eta1_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf29   =   open("fitdata/expoconerrorinput"+setstr+"eta2_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf31   =   open("fitdata/expolininput"+setstr+"eta1_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf32   =   open("fitdata/expolininput"+setstr+"eta2_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf34   =   open("fitdata/expolinerrorinput"+setstr+"eta1_PSET_"+options.cuts+ptTTString+".txt", "w")
+Outf35   =   open("fitdata/expolinerrorinput"+setstr+"eta2_PSET_"+options.cuts+ptTTString+".txt", "w")
 if options.set == "QCD":
-	MMout    =   open('fitdata/ModMass_pol3_PSET_'+options.cuts+'.txt','w')
+	MMout    =   open('fitdata/ModMass_pol3_PSET_'+options.cuts+ptTTString+'.txt','w')
 sto = sys.stdout  
 
 
@@ -132,14 +172,14 @@ p44 = 0.0
 print "Running on "+options.set
 
 #Load up data and ttbar
-fdata = TFile(rootdir+"TWratefile"+options.set+"_PSET_"+options.cuts+".root")
-fttbar = TFile(rootdir+"TWratefileweightedttbar"+"_PSET_"+options.cuts+".root")
-fsingletop = TFile(rootdir+"TWratefilesingletop"+"_PSET_"+options.cuts+".root")
+fdata = TFile(rootdir+"TWratefile"+options.set+"_PSET_"+options.cuts+ptItString+".root")
+fttbar = TFile(rootdir+"TWratefileweightedttbar"+"_PSET_"+options.cuts+ptTTString+".root")
+fsingletop = TFile(rootdir+"TWratefilesingletop"+"_PSET_"+options.cuts+ptItString+".root")
 
 
 if options.set == 'QCD':
 
-	output1 = ROOT.TFile( "ModMassFile_"+options.cuts+".root", "recreate" )
+	output1 = ROOT.TFile( "ModMassFile_"+options.cuts+ptTTString+".root", "recreate" )
 	output1.cd()
 
 	ModM = fdata.Get("MpostFull")
@@ -178,7 +218,7 @@ if options.set == 'QCD':
 #TFile(rootdir+"TWratefileweightedsignalright1400_PSET_"+options.cuts+".root"),
 #]
 
-output = TFile( "plots/TWrate_Maker_"+setstr+"_"+Lumi+"_PSET_"+options.cuts+".root", "recreate" )
+output = TFile( "plots/TWrate_Maker_"+setstr+"_"+Lumi+"_PSET_"+options.cuts+ptTTString+".root", "recreate" )
 output.cd()
 
 # Get numerators and denominators for each eta region
@@ -247,14 +287,14 @@ stdeta2r = stdeta2.Rebin(len(bins2)-1,"stdeta2r",bins2)
 #TTbar subtraction is done here
 if options.set=='data':
 	print 'subtracting ttbar and single top'
-	neta1r.Add(ttneta1r,-1)
-	deta1r.Add(ttdeta1r,-1)
-	neta2r.Add(ttneta2r,-1)
-	deta2r.Add(ttdeta2r,-1)
-	neta1r.Add(stneta1r,-1)
-	deta1r.Add(stdeta1r,-1)
-	neta2r.Add(stneta2r,-1)
-	deta2r.Add(stdeta2r,-1)
+	neta1r.Add(ttneta1r,-2)
+	deta1r.Add(ttdeta1r,-2)
+	neta2r.Add(ttneta2r,-2)
+	deta2r.Add(ttdeta2r,-2)
+	neta1r.Add(stneta1r,-2)
+	deta1r.Add(stdeta1r,-2)
+	neta2r.Add(stneta2r,-2)
+	deta2r.Add(stdeta2r,-2)
 
 
 outputa = TFile( "plots/"+options.cuts+"/B_tagging_sigcont"+setstr+".root", "recreate" )
@@ -723,7 +763,7 @@ print str(p33)
 #The rest of this file makes the 3d mistag rates (parameterized in pt,eta,Mtw)
 
 
-output1 = ROOT.TFile( "Tagrate"+setstr+"2D_"+options.cuts+".root", "recreate" )
+output1 = ROOT.TFile( "Tagrate"+setstr+"2D_"+options.cuts+ptTTString+".root", "recreate" )
 output2 = ROOT.TFile( "plots/"+options.cuts+"/Tagrate"+setstr+"2Ddelta.root", "recreate" )
 
 output = ROOT.TFile( "plots/"+options.cuts+"/Tagrate"+setstr+"Slices.root", "recreate" )

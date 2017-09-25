@@ -54,13 +54,13 @@ elif options.set=='data':
 gROOT.Macro("rootlogon.C")
 #gROOT.LoadMacro("insertlogo.C+")
 
-TTR = TTR_Init('Bifpoly',options.cuts,options.set,options.rate,'')
-TTR_err = TTR_Init('Bifpoly_err',options.cuts,options.set,options.rate,'')
+TTR = TTR_Init('Bifpoly',options.cuts,options.set,options.rate,'','')
+TTR_err = TTR_Init('Bifpoly_err',options.cuts,options.set,options.rate,'','')
 
 fittitles = ["pol0","pol2","pol3","FIT","expofit"]
 fits = []
 for fittitle in fittitles:
-	fits.append(TTR_Init(fittitle,options.cuts,options.set,options.rate,''))
+	fits.append(TTR_Init(fittitle,options.cuts,options.set,options.rate,'',''))
 
 leg1 = TLegend(0.45,0.57,.84,.78)
 leg1.SetFillColor(0)
@@ -72,7 +72,7 @@ leg2.SetBorderSize(0)
 
 #output = ROOT.TFile( "fitting.root", "recreate" )
 #output.cd()
-c1 = TCanvas('c1', 'Tagrate numerator and deominator', 1000, 1300)
+c1 = TCanvas('c1', 'Tagrate numerator and deominator', 1500, 1000)
 c4 = TCanvas('c4', 'Pt fitted tagrate in 0.0 < Eta <0.8', 800, 500)
 c7 = TCanvas('c7', 'tagged vs signal', 800, 500)
 c8 = TCanvas('c8', 'tagged vs signal', 800, 500)
@@ -279,7 +279,7 @@ stack1.SetMaximum(stack1.GetMaximum() * 1.2 )
 stack1.Draw()
 stack1.GetYaxis().SetTitleOffset(OFF)
 stack1.GetXaxis().SetRangeUser(400,1200)
-prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.00 < |#eta| < 0.80) }" )
+prelim.DrawLatex( 0.25, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.00 < |#eta| < 0.80) }" )
 c1.cd(4)
 gPad.SetLeftMargin(0.16)
 
@@ -291,7 +291,7 @@ stack2.SetMaximum(stack2.GetMaximum() * 1.2 )
 stack2.Draw()
 stack2.GetYaxis().SetTitleOffset(OFF)
 stack2.GetXaxis().SetRangeUser(400,1200)
-prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.80 < |#eta| < 2.40) }" )
+prelim.DrawLatex( 0.25, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.80 < |#eta| < 2.40) }" )
 c1.cd(1)
 gPad.SetLeftMargin(0.16)
 
@@ -303,7 +303,7 @@ stack4.SetMaximum(stack4.GetMaximum() * 1.2 )
 stack4.Draw()
 stack4.GetYaxis().SetTitleOffset(OFF)
 stack4.GetXaxis().SetRangeUser(400,1200)
-prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.00 < |#eta| < 0.80) }" )
+prelim.DrawLatex( 0.25, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.00 < |#eta| < 0.80) }" )
 c1.cd(2)
 gPad.SetLeftMargin(0.16)
 
@@ -314,7 +314,7 @@ stack5.SetMaximum(stack5.GetMaximum() * 1.2 )
 stack5.Draw()
 stack5.GetYaxis().SetTitleOffset(OFF)
 stack5.GetXaxis().SetRangeUser(400,1200)
-prelim.DrawLatex( 0.15, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.80 < |#eta| < 2.40) }" )
+prelim.DrawLatex( 0.25, 0.91, "#scale[1.0]{CMS Preliminary #sqrt{s} = 13 TeV   (0.80 < |#eta| < 2.40) }" )
 # c1.cd(6)
 gPad.SetLeftMargin(0.16)
 

@@ -32,6 +32,8 @@ pdf
 [W]
 trig
 
-To Put in Asana:
-- Top mass test
---- Make a new set of cuts identical to sideband1 but change top mass window to 
+Ask marc about SF
+Look into Rp/f of sideband1 to figure out QCD plateau
+Check your iterations are correct
+
+Compare pileup distributions of QCD vs ttbar
