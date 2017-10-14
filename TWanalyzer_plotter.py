@@ -38,7 +38,7 @@ parser.add_option('-u', '--ptreweight', metavar='F', type='string', action='stor
 				  dest		=	'ptreweight',
 				  help		=	'on or off')
 parser.add_option('--noExtraPtCorrection', metavar='F', action='store_false',
-				  default=True,
+				  default=False,
 				  dest='extraPtCorrection',
 				  help='Call to turn off extraPtCorrection')
 parser.add_option('-b', '--blinded', metavar='F', type='string', action='store',
@@ -641,6 +641,13 @@ for i in range(0, iterations):
 	for ibin in range(1,DataBE.GetNbinsX()+1):
 
 		TTstat=TTmcFS[0].GetBinError(ibin)
+
+		# Normalization uncertainty for ttbar
+		FlatPtSFFile = open('bstar_theta_PtSF_onTOPgroupCorrection.txt','r')
+		FlatPtSFList = FlatPtSFFile.readlines()
+		TTnormUp = TTmcFS[0].GetBinContent(ibin)*float(FlatPtSFList[1])
+		TTnormDown = TTmcFS[0].GetBinContent(ibin)*float(FlatPtSFList[2])
+
 		if DataBE.GetBinContent(ibin)>0:
 			QCDstat=DataBE.GetBinError(ibin)
 		else:
@@ -654,14 +661,19 @@ for i in range(0, iterations):
 
 		QCDsys=sqrt(QCDMm*QCDMm+ QCDfit*QCDfit+ QCDfit1*QCDfit1) #+QCDfit2*QCDfit2)
 		QCDerror= sqrt(QCDstat*QCDstat+QCDsys*QCDsys)
-		TTerrorup=sqrt(TTstat*TTstat)
-		TTerrordown=sqrt(TTstat*TTstat)
+		TTerrorup=sqrt(TTstat*TTstat+TTnormUp*TTnormUp)
+		TTerrordown=sqrt(TTstat*TTstat+TTnormDown*TTnormDown)
 		Totalerrorup=sqrt(QCDerror*QCDerror+TTerrorup*TTerrorup)
 		Totalerrordown=sqrt(QCDerror*QCDerror+TTerrordown*TTerrordown)
 		DataQCDBEH.SetBinContent(ibin,DataQCDBEH.GetBinContent(ibin)+QCDerror)
 		DataQCDBEL.SetBinContent(ibin,DataQCDBEL.GetBinContent(ibin)-QCDerror)
 		DataTOTALBEH.SetBinContent(ibin,DataTOTALBEH.GetBinContent(ibin)+Totalerrorup)
 		DataTOTALBEL.SetBinContent(ibin,DataTOTALBEL.GetBinContent(ibin)-Totalerrordown)
+	
+	print "TTstat: " + str(TTstat)
+	print "TTnormUp: " + str(TTnormUp)
+	print "TTerrorup: " + str(TTerrorup)
+
 	print "QCDMm: " + str(QCDMm)
 	print "QCDfit: " + str(QCDfit)
 	print "QCDfit1: " + str(QCDfit1)
@@ -1230,17 +1242,17 @@ for i in range(0, iterations):
 	else:
 		mcscale = ''
 
-	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+ptString+'.root', 'root')
-	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+ptString+'.pdf', 'pdf')
-	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+ptString+'.png', 'png')
+	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+sBlind+ptString+'.root', 'root')
+	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+sBlind+ptString+'.pdf', 'pdf')
+	c1.Print('plots/' + kinVar[i] + 'vsBkg_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+sBlind+ptString+'.png', 'png')
 	main.SetLogy()
 	st1.SetMaximum( DataBEh.GetMaximum() * 5000 )
 	st1.SetMinimum( 0.1)
 	main.RedrawAxis()
 
-	c1.Print('plots/' + kinVar[i] + 'vsBkgsemilog_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+ptString+'.root', 'root')
-	c1.Print('plots/' + kinVar[i] + 'vsBkgsemilog_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+ptString+'.pdf', 'pdf')
-	c1.Print('plots/' + kinVar[i] + 'vsBkgsemilog_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+mcscale+sBlind+ptString+'.png', 'png')
+	c1.Print('plots/' + kinVar[i] + 'vsBkgsemilog_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+sBlind+ptString+'.root', 'root')
+	c1.Print('plots/' + kinVar[i] + 'vsBkgsemilog_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+sBlind+ptString+'.pdf', 'pdf')
+	c1.Print('plots/' + kinVar[i] + 'vsBkgsemilog_BifPoly_fit_'  +Lumi+'_'+pustr+'_PSET_'+options.set+'_'+options.cuts+analysis+sBlind+ptString+'.png', 'png')
 
 
 

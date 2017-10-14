@@ -2,14 +2,16 @@
 <table cellpadding="2" border="1">
 <tr><th>parameter</th><th>distribution type</th><th>distribution parameters</th></tr>
 <tr><td>jer</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
-<tr><td>toppt</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
-<tr><td>Fit</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
 <tr><td>jes</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>Fit</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>jmr</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>jms</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
 <tr><td>trig</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
 <tr><td>extrap</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
 <tr><td>pile</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
 <tr><td>wtag</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
 <tr><td>lumi</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>toppt</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
 <tr><td>pdf</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
 <tr><td>Alt</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
 <tr><td>topsf</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>

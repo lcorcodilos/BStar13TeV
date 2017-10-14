@@ -158,9 +158,13 @@ eta2 = Cuts['eta2']
 
 #Based on what set we want to analyze, we find all Ntuple root files -----------------
 #Since this is the rate script, don't care about mod and pstr so hard-coded off
-mainDir = "/uscms_data/d3/lcorcodi/BStar13TeV/CMSSW_7_4_1/src/BStar13TeV/TTrees/"
 
-file = TFile(mainDir + "TWtreefile_"+options.set+"_Trigger_nominal_none.root")
+if options.grid=='on':
+	mainDir = 'root://cmsxrootd.fnal.gov//store/user/lcorcodi/TTrees/'#"/uscms_data/d3/lcorcodi/BStar13TeV/CMSSW_7_4_1/src/BStar13TeV/TTrees/"
+else:
+	mainDir = 'TTrees/'
+
+file = TFile.Open(mainDir + "TWtreefile_"+options.set+"_Trigger_nominal_none.root")
 
 tree = file.Get("Tree")
 
@@ -199,33 +203,44 @@ if options.set != 'data':
 
 ptItString = ''
 ptTTString = ''
-if options.iteration == -1:
-	# And we want the extra correction turned on
-	if options.extraPtCorrection:
-		# Grab the latest SF and don't do any renaming
-		ptTTString = ''
-		TopPtReweightFile = TFile(di+'TWTopPtSF_9.root')
-		TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_9')
-	# And we don't want the extra correction turned on
-	elif not options.extraPtCorrection:
-		ptTTString = '_noExtraPtCorrection'
-		TopPtReweightFile = TFile(di+'TWTopPtSF_0.root')
-		TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_0')
-	# And we don't want any pt correction
-	elif options.ptreweight == 'off':
-		ptTTString = '_ptreweight_off'
-# If we are running the pt study
-elif options.iteration >=0:
-	ptItString = '_ptSF' + str(options.iteration)
-	TopPtReweightFile = TFile(di+'TWTopPtSF_'+str(options.iteration)+'.root')
-	TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_'+str(options.iteration))
+# if options.iteration == -1:
+# 	# And we want the extra correction turned on
+# 	if options.extraPtCorrection:
+# 		# Grab the latest SF and don't do any renaming
+# 		ptTTString = ''
+# 		TopPtReweightFile = TFile(di+'TWTopPtSF_9.root')
+# 		TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_9')
+# 	# And we don't want the extra correction turned on
+# 	elif not options.extraPtCorrection:
+# 		ptTTString = '_noExtraPtCorrection'
+# 		TopPtReweightFile = TFile(di+'TWTopPtSF_0.root')
+# 		TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_0')
+# 	# And we don't want any pt correction
+# 	elif options.ptreweight == 'off':
+# 		ptTTString = '_ptreweight_off'
+# # If we are running the pt study
+# elif options.iteration >=0:
+# 	ptItString = '_ptSF' + str(options.iteration)
+# 	TopPtReweightFile = TFile(di+'TWTopPtSF_'+str(options.iteration)+'.root')
+# 	TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_'+str(options.iteration))
 
-# Turn off ptTTString if we aren't looking at ttbar MC
-if options.set.find('ttbar') == -1:
-	ptTTString = ''
+# # Turn off ptTTString if we aren't looking at ttbar MC
+# if options.set.find('ttbar') == -1:
+# 	ptTTString = ''
+
+# TopPtReweightFile = TFile(di+'TWTopPtSF_0.root')
+# TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_0')
 
 # Used for file naming
-ptString = ptItString + ptTTString
+# ptString = ptItString + ptTTString
+
+ptString = ''
+if options.set == 'ttbar':
+	if not options.extraPtCorrection:
+		ptString = '_noExtraPtCorrection'
+	if options.ptreweight == 'off':
+		ptString = '_ptreweight_off'
+		
 
 #----------------------------------------------------------------------------
 
@@ -244,6 +259,9 @@ f.cd()
 #---------------------------------------------------------------------------------------------------------------------#
 hEta1Count = TH1I("eta1Count", "number of events in low eta region", 1, 0, 1)
 hEta2Count = TH1I("eta2Count", "number of events in high eta region", 1, 0, 1)
+
+h3rdJetCount = TH1I('3rdJetCount','number of events with a 3rd jet',1,0,1)
+hPassedCount = TH1I('PassedCount','number of events that pass all selection',1,0,1)
 
 pteta1pretag          = TH1D("pteta1pretag",           "t Probe pt in 0<Eta<0.8",             400,  0,  2000 )
 pteta2pretag          = TH1D("pteta2pretag",           "t Probe pt in 0.8<Eta<2.4",             400,  0,  2000 )
@@ -344,6 +362,7 @@ tree_vars = {	"wpt":array('d',[0.]),
 				"tau32":array('d',[0.]),
 				"tau21":array('d',[0.]),
 				"sjbtag":array('d',[0.]),
+				"flavor":array('d',[0.]),
 				"weight":array('d',[0.])}#,"nsubjets":array('d',[0.])
 
 
@@ -366,6 +385,9 @@ else:
 	highBinEdge = treeEntries
 
 print "Range of events: (" + str(lowBinEdge) + ", " + str(highBinEdge) + ")"
+
+passedCount = 0
+has3rdJetCount = 0
 
 # syntax to get a var(branch value) from the event is:tree.branchname
 for entry in range(lowBinEdge,highBinEdge):
@@ -391,7 +413,8 @@ for entry in range(lowBinEdge,highBinEdge):
 				"pt":tree.pt_leading,
 				"eta":tree.eta_leading,
 				"sjbtag":tree.sjbtag_leading,
-				"SDmass":tree.topSDmass_leading
+				"SDmass":tree.topSDmass_leading,
+				"flavor":tree.flavor_leading
 			}
 
 			wVals = {
@@ -428,7 +451,8 @@ for entry in range(lowBinEdge,highBinEdge):
 				"pt":tree.pt_subleading,
 				"eta":tree.eta_subleading,
 				"sjbtag":tree.sjbtag_subleading,
-				"SDmass":tree.topSDmass_subleading
+				"SDmass":tree.topSDmass_subleading,
+				"flavor":tree.flavor_subleading
 			}
 
 		elif hemis == 'hemis1' and doneAlready == True:
@@ -468,11 +492,10 @@ for entry in range(lowBinEdge,highBinEdge):
 				#Pileup reweighting is done here 
 				bin1 = tree.pileBin
 
-				# CHANGE BACK - have pileup for QCD temporarily off
-				if options.pileup != 'off':# and options.set.find("QCD") == -1:
+				if options.pileup != 'off':
 					weight *= PilePlot.GetBinContent(bin1)
 				
-				if options.set.find("QCD") == -1: #and options.cuts=="default":
+				if options.set.find("QCD") == -1:
 					weightSFt = ttagsf
 
 			tmass_cut = tmass[0]<tVals["SDmass"]<tmass[1]
@@ -497,8 +520,17 @@ for entry in range(lowBinEdge,highBinEdge):
 
 				if options.ptreweight == "on" and options.set.find('ttbar') != -1:
 					#ttbar pt reweighting done here
-					
-					extraCorrection = TopPtReweightPlot.GetBinContent(1) # Will be zero for iteration 0
+					# Need to grab extra correction from .txt
+					if options.extraPtCorrection:
+						FlatPtSFFile = open(di+'bstar_theta_PtSF_onTOPgroupCorrection.txt','r')
+						FlatPtSFList = FlatPtSFFile.readlines()
+						extraCorrection = float(FlatPtSFList[0])
+						print 'Pt scale correction = ' + str(1+extraCorrection)
+						FlatPtSFFile.close()
+					else:
+						extraCorrection = 0
+
+					# extraCorrection = TopPtReweightPlot.GetBinContent(1) # Will be zero for iteration 0
 
 					PTW = tree.pt_reweight*(1+extraCorrection)
 					weight*=PTW
@@ -525,7 +557,7 @@ for entry in range(lowBinEdge,highBinEdge):
 					print "wmass type error"
 					continue                        
 
-				FullTop = sjbtag_cut and tau32_cut
+				FullTop = tau32_cut and sjbtag_cut
 				if wmass_cut:
 					if tau21_cut:
 						eta1_cut = eta1[0]<=abs(tjet.Eta())<eta1[1]
@@ -555,6 +587,10 @@ for entry in range(lowBinEdge,highBinEdge):
 								ptFullEtaPass.Fill(tjet.Perp(),weight)
 								MtvsptPasseta1.Fill(tjet.Perp(),tjet.M(),weight)
 
+								passedCount += 1
+								if tree.pt_subsubleading > 0.0:
+									has3rdJetCount += 1
+
 						if eta2_cut:
 							eta2Count += 1
 							if not FullTop:
@@ -575,6 +611,10 @@ for entry in range(lowBinEdge,highBinEdge):
 								Mtwpasseta2.Fill((tjet+wjet).M(),weight)
 								ptFullEtaPass.Fill(tjet.Perp(),weight)
 								MtvsptPasseta2.Fill(tjet.Perp(),tjet.M(),weight)
+
+								passedCount += 1
+								if tree.pt_subsubleading > 0.0:
+									has3rdJetCount += 1
 						
 						temp_variables = {"wpt":wjet.Perp(),
 								"wmass":wVals["SDmass"],
@@ -583,6 +623,7 @@ for entry in range(lowBinEdge,highBinEdge):
 								"tau32":tau32val,
 								"tau21":tau21val,
 								"sjbtag":SJ_csvval,
+								"flavor":tVals["flavor"],
 								"weight":weight }
 
 								
@@ -593,6 +634,9 @@ for entry in range(lowBinEdge,highBinEdge):
 						doneAlready = True
 hEta1Count.SetBinContent(1,eta1Count)
 hEta2Count.SetBinContent(1,eta2Count)
+
+hPassedCount.SetBinContent(1,passedCount)
+h3rdJetCount.SetBinContent(1,has3rdJetCount)
 
 f.cd()
 f.Write()

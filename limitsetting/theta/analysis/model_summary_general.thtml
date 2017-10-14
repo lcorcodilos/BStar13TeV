@@ -1,0 +1,19 @@
+<p>Observables (xmin, xmax, nbins):</p>
+<ul>
+<li>mt_allhad (105, 210, 25)</li>
+</ul>
+<p>Background processes:</p>
+<ul>
+<li>qcd</li>
+<li>ttbar</li>
+<li>ttqcd</li>
+</ul>
+<p>Signal processes:</p><ul>
+</ul>
+<p>Nuisance parameters (includes only those which apply to the background-only model):</p>
+<ul>
+<li>Alt (morph only)</li>
+<li>Fit (morph only)</li>
+<li>modm (morph only)</li>
+<li>ttbar_rate (rate only)</li>
+</ul>

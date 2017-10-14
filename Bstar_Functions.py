@@ -145,21 +145,7 @@ def LoadCuts(TYPE):
 			'eta2':[0.8,2.4],
 			'eta':[0.0,2.4]
 			}
-	if TYPE=='rate_lowWmass':
-		return  {
-			'wpt':[400.0,float("inf")],
-			'tpt':[400.0,float("inf")],
-			'dy':[0.0,1.8],
-			'tmass':[105.0,210.0],
-			'tau32':[0.0,0.65],
-			'tau21':[0.0,0.4],
-			'sjbtag':[0.5426,1.0],
-			'wmass':[30.0,65.0],
-			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4],
-			'eta':[0.0,2.4]
-			}
-	if TYPE=='rate_highWmass':
+	if TYPE=='highWmass':
 		return  {
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
@@ -173,21 +159,7 @@ def LoadCuts(TYPE):
 			'eta2':[0.8,2.4],
 			'eta':[0.0,2.4]
 			}
-	if TYPE=='rate_lowWmass1':
-		return  {
-			'wpt':[400.0,float("inf")],
-			'tpt':[400.0,float("inf")],
-			'dy':[0.0,1.8],
-			'tmass':[105.0,210.0],
-			'tau32':[0.0,0.65],
-			'tau21':[0.4,1.0],
-			'sjbtag':[0.5426,1.0],
-			'wmass':[30.0,65.0],
-			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4],
-			'eta':[0.0,2.4]
-			}
-	if TYPE=='rate_highWmass1':
+	if TYPE=='rate_highWmass':
 		return  {
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
@@ -660,6 +632,7 @@ def PTW_Lookup( GP ):
 		wTPt = exp(0.0615-0.0005*genTpt)
 		wTbarPt = exp(0.0615-0.0005*genTBpt)
 		return sqrt(wTPt*wTbarPt)
+
 
 # This does the W jet matching requirement by looking up the deltaR separation
 # of the daughter particle from the W axis. If passes, return 1.

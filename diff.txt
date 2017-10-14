@@ -1,0 +1,338 @@
+35,37c35,37
+< 		'lumi':35867.0,#12367.583,
+< 		'wtagsf':1.0,
+< 		'wtagsfsig':1.0,
+---
+> 		'lumi':36420.0,#12367.583,
+> 		'wtagsf':1.0,#0.997,
+> 		'wtagsfsig':1.0,#1.07,
+39c39
+< 		#'xsec_bsr':{'1200': 1.936,'1400': 0.7816,'1600': 0.3416,'1800': 0.1583,'2000': 0.07675,'2200': 0.03864,'2400': 0.02008,'2600': 0.01068,'2800': 0.005814,'3000': 0.003224},
+---
+> 		'xsec_bsr':{'1200': 1.936,'1400': 0.7816,'1600': 0.3416,'1800': 0.1583,'2000': 0.07675,'2200': 0.03864,'2400': 0.02008,'2600': 0.01068,'2800': 0.005814,'3000': 0.003224},
+45c45
+< 		#'nev_bsr':{'1200':100000,'1400':98200,'1600':100000,'1800':97600,'2000':99200,'2200':100000,'2400':97800,'2600':99200,'2800':99200,'3000':100000},
+---
+> 		'nev_bsr':{'1200':100000,'1400':98200,'1600':100000,'1800':97600,'2000':99200,'2200':100000,'2400':97800,'2600':99200,'2800':99200,'3000':100000},
+56c56
+<  		return  {
+---
+> 		return  {
+66c66,67
+< 			'eta2':[0.8,2.4]
+---
+> 			'eta2':[0.8,2.4],
+> 			'eta':[0.0,2.4]
+69c70
+<  		return  {
+---
+> 		return  {
+79c80,110
+< 			'eta2':[0.8,2.4]
+---
+> 			'eta2':[0.8,2.4],
+> 			'eta':[0.0,2.4]
+> 			}
+> 	# Used for ttbar validation
+> 	if TYPE=='sideband1':
+> 		return  {
+> 			'wpt':[400.0,float("inf")],
+> 			'tpt':[400.0,float("inf")],
+> 			'dy':[0.0,1.8],
+> 			'tmass':[105.0,210.0],
+> 			'tau32':[0.0,0.65],
+> 			'tau21':[0.4,1.0],
+> 			'sjbtag':[0.46,1.0],
+> 			'wmass':[130.0,float("inf")],
+> 			'eta1':[0.0,0.8],
+> 			'eta2':[0.8,2.4],
+> 			'eta':[0.0,2.4]
+> 			}
+> 	if TYPE=='rate_sideband1':
+> 		return  {
+> 			'wpt':[400.0,float("inf")],
+> 			'tpt':[400.0,float("inf")],
+> 			'dy':[0.0,1.8],
+> 			'tmass':[105.0,210.0],
+> 			'tau32':[0.0,0.65],
+> 			'tau21':[0.0,0.4],
+> 			'sjbtag':[0.46,1.0],
+> 			'wmass':[[30.0,65.0],[95.0,130.0]],
+> 			'eta1':[0.0,0.8],
+> 			'eta2':[0.8,2.4],
+> 			'eta':[0.0,2.4]
+81d111
+< 	
+84c114
+<  		return  {
+---
+> 		return  {
+94c124,125
+< 			'eta2':[0.8,2.4]
+---
+> 			'eta2':[0.8,2.4],
+> 			'eta':[0.0,2.4]
+97c128
+<  		return  {
+---
+> 		return  {
+107c138,139
+< 			'eta2':[0.8,2.4]
+---
+> 			'eta2':[0.8,2.4],
+> 			'eta':[0.0,2.4]
+108a141,152
+> 	if TYPE=='alphabet':
+> 		return  {
+> 			'wpt':[400.0,float("inf")],
+> 			'tpt':[400.0,float("inf")],
+> 			'dy':[0.0,1.8],
+> 			'tmass':[105.0,210.0],
+> 			'tau32':[0.0,0.65],
+> 			'tau21':[0.6,1.0],
+> 			'sjbtag':[0.46,1.0],
+> 			'wmass':[65.0,95.0],
+> 			'eta':[0.0,2.4]
+> 			}			
+128c172
+<  		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+---
+> 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/0000/*.root")
+130c174
+<  	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224514/0000/*.root")
+---
+> 	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224514/0000/*.root")
+132c176
+<  	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaledown-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224307/0000/*.root")
+---
+> 	#	files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_TT_TuneCUETP8M1_13TeV-powheg-scaledown-pythia8_B2GAnaFW_V2p1_80x_Slim_V6/161122_224307/0000/*.root")
+136,142c180,186
+<  		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+<  	if string == 'QCDHT700':
+<  		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+<  	if string == 'QCDHT1000':
+<  		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+<  	if string == 'QCDHT1500':
+<  		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+---
+> 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+> 	if string == 'QCDHT700':
+> 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+> 	if string == 'QCDHT1000':
+> 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+> 	if string == 'QCDHT1500':
+> 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+144c188
+<  		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+---
+> 		files = glob.glob("/uscms_data/d3/lcorcodi/BStar13TeV/SlimTuples/crab_QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_B2GAnaFW_V2p4_80x_Slim_V7/*/*/*.root")
+229a274,277
+> 	if string == 'singletop_tWB':
+> 		files = glob.glob('root://cmsxrootd.fnal.gov//store/group/phys_b2g/B2GAnaFW_80X_V2p4/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/RunIISummer16MiniAODv2/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/170124_204058/0000/*.root')
+> 	if string == 'singletop_tW':
+> 		files = glob.glob('root://cmsxrootd.fnal.gov//store/group/phys_b2g/B2GAnaFW_80X_V2p4/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/RunIISummer16MiniAODv2/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/170124_204154/0000/B2GEDMNtuple_1.root')
+255c303
+< 		setval = "Data"
+---
+> 		setval = "data"
+393,395c441,460
+< 
+< 	TBP1 = TRBPE1.read()
+< 	TBP2 = TRBPE2.read()
+---
+> 	if ST == 'QUAD':
+> 		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+> 		TRBP.seek(0)
+> 		fit = TF1("fit",'pol2',0,300)
+> 		Params = 3
+> 	if ST == 'QUAD_errUp':
+> 		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+> 		TRBP.seek(0)
+> 		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+> 		Params = 9
+> 	if ST == 'QUAD_errDown':
+> 		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+".txt")
+> 		TRBP.seek(0)
+> 		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+> 		Params = 9
+> 	try:
+> 		TBP1 = TRBPE1.read()
+> 		TBP2 = TRBPE2.read()
+> 	except:
+> 		TBP = TRBP.read()
+397a463,467
+> 		try:
+> 			eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
+> 			eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
+> 		except:
+> 			fit.SetParameter(i,float(TBP.split('\n')[i]) )
+399,403c469,472
+< 		eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
+< 		eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
+< 
+< 
+< 	return [eta1fit.Clone(),eta2fit.Clone()] 
+---
+> 	try:
+> 		return [eta1fit.Clone(),eta2fit.Clone()] 
+> 	except:
+> 		return [fit.Clone()]
+405c474
+< #This takes the average b tagging rates that are initialized in the above function and produces 
+---
+> #This takes the average t tagging rates that are initialized in the above function and produces 
+407c476
+< def bkg_weight(blv, funcs, etabins):
+---
+> def bkg_weight_pt(vector, funcs, etabins):
+409,410c478,479
+< 		if (etabins[ibin][0] <= abs(blv.Eta()) < etabins[ibin][1]) :
+< 			tagratept = funcs[ibin].Eval(blv.Perp())		
+---
+> 		if (etabins[ibin][0] <= abs(vector.Eta()) < etabins[ibin][1]) :
+> 			tagratept = funcs[ibin].Eval(vector.Perp())		
+412a482,487
+> def bkg_weight_mass(event, funcs, etabins):
+> 	if (etabins[0] <= abs(vector.Eta()) < etabins[1]) :
+> 		tagratetmass = funcs[0].Eval(vector.M())		
+> 	return tagratetmass
+> 
+> 
+417,418c492,493
+<       		return p[0]+p[1]*xx+p[2]*(xx-p[4])**2
+<         else:
+---
+> 		return p[0]+p[1]*xx+p[2]*(xx-p[4])**2
+> 	else:
+423,424c498,499
+<       		return p[0]+p[1]*xx**2+p[2]*(xx-p[9])**4+p[3]*xx+p[4]*(xx-p[9])**2+p[5]*xx*(xx-p[9])**2
+<         else:
+---
+> 		return p[0]+p[1]*xx**2+p[2]*(xx-p[9])**4+p[3]*xx+p[4]*(xx-p[9])**2+p[5]*xx*(xx-p[9])**2
+> 	else:
+435,436c510,511
+<        	for pdf in pdfs :
+<              	iweight = iweight + (pdf-ave)*(pdf-ave)
+---
+> 	for pdf in pdfs :
+> 		iweight = iweight + (pdf-ave)*(pdf-ave)
+438,441c513,516
+<         if pdfOP == "up" :
+<         	return 1+sqrt((iweight) / (len(pdfs)))
+<         else :
+<           	return 1-sqrt((iweight) / (len(pdfs)))
+---
+> 	if pdfOP == "up" :
+> 		return 1+sqrt((iweight) / (len(pdfs)))
+> 	else :
+> 		return 1-sqrt((iweight) / (len(pdfs)))
+444c519
+<         Weight = 1.0
+---
+> 	Weight = 1.0
+447,450c522,525
+<         if H < 1200.0:
+<                 bin0 = TRP.FindBin(H) 
+<                 jetTriggerWeight = TRP.GetBinContent(bin0)
+<                 Weight = jetTriggerWeight
+---
+> 	if H < 1200.0:
+> 		bin0 = TRP.FindBin(H) 
+> 		jetTriggerWeight = TRP.GetBinContent(bin0)
+> 		Weight = jetTriggerWeight
+452,453c527,528
+<                 Weightup  =   min(1.0,jetTriggerWeight + deltaTriggerEff)
+<                 Weightdown  =   max(0.0,jetTriggerWeight - deltaTriggerEff)
+---
+> 		Weightup  =   min(1.0,jetTriggerWeight + deltaTriggerEff)
+> 		Weightdown  =   max(0.0,jetTriggerWeight - deltaTriggerEff)
+492,494c567,569
+<       		wTPt = exp(0.156-0.00137*genTpt)
+<       		wTbarPt = exp(0.156-0.00137*genTBpt)
+<       		return sqrt(wTPt*wTbarPt)
+---
+> 		wTPt = exp(0.156-0.00137*genTpt)
+> 		wTbarPt = exp(0.156-0.00137*genTBpt)
+> 		return sqrt(wTPt*wTbarPt)
+510c585
+<  
+---
+> 
+511a587,597
+> 	event.getByLabel (vector[0][1], vector[0][0])
+> 	Pt 		= 	vector[0][0].product()
+> 
+> 	event.getByLabel (vector[1][1], vector[1][0])
+> 	Eta 		= 	vector[1][0].product()
+> 
+> 	event.getByLabel (vector[2][1], vector[2][0])
+> 	Phi 		= 	vector[2][0].product()
+> 
+> 	event.getByLabel (vector[3][1], vector[3][0])
+> 	Mass 		= 	vector[3][0].product()
+513,528c599,600
+<      	event.getByLabel (vector[0][1], vector[0][0])
+<      	Pt 		= 	vector[0][0].product()
+<  
+<      	event.getByLabel (vector[1][1], vector[1][0])
+<      	Eta 		= 	vector[1][0].product()
+<  
+<      	event.getByLabel (vector[2][1], vector[2][0])
+<      	Phi 		= 	vector[2][0].product()
+<  
+<      	event.getByLabel (vector[3][1], vector[3][0])
+<      	Mass 		= 	vector[3][0].product()
+<  
+<  	lvs = []
+<  	for i in range(0,len(Pt)):
+<  
+<  		#lvs.append(ROOT.Math.LorentzVector('ROOT::Math::PtEtaPhiM4D<double>')(Pt[i],Eta[i],Phi[i],Mass[i]))
+---
+> 	lvs = []
+> 	for i in range(0,len(Pt)):
+530,532c602,606
+<  		lvs.append(TLorentzVector())
+<  		lvs[i].SetPtEtaPhiM(Pt[i],Eta[i],Phi[i],Mass[i])
+<  	return lvs
+---
+> 		#lvs.append(ROOT.Math.LorentzVector('ROOT::Math::PtEtaPhiM4D<double>')(Pt[i],Eta[i],Phi[i],Mass[i]))
+> 		lvs.append(TLorentzVector())
+> 		lvs[i].SetPtEtaPhiM(Pt[i],Eta[i],Phi[i],Mass[i])
+> 
+> 	return lvs
+536,548c610,622
+<  	tjets = [[],[]]
+<  	wjets = [[],[]]
+<  	for iLV1 in range(0,len(LV1)):
+<  		if abs(Math.VectorUtil.DeltaPhi(LV1[0],LV1[iLV1]))> TMath.Pi()/2.0:
+<  			tjets[1].append(iLV1)
+<  		else:
+<  			tjets[0].append(iLV1)
+<  	for iLV2 in range(0,len(LV2)):
+<  		if abs(Math.VectorUtil.DeltaPhi(LV1[0],LV2[iLV2]))> TMath.Pi()/2.0:
+<  			wjets[1].append(iLV2)
+<  		else:
+<  			wjets[0].append(iLV2)
+<  	return tjets,wjets
+---
+> 	tjets = [[],[]]
+> 	wjets = [[],[]]
+> 	for iLV1 in range(0,len(LV1)):
+> 		if abs(Math.VectorUtil.DeltaPhi(LV1[0],LV1[iLV1]))> TMath.Pi()/2.0:
+> 			tjets[1].append(iLV1)
+> 		else:
+> 			tjets[0].append(iLV1)
+> 	for iLV2 in range(0,len(LV2)):
+> 		if abs(Math.VectorUtil.DeltaPhi(LV1[0],LV2[iLV2]))> TMath.Pi()/2.0:
+> 			wjets[1].append(iLV2)
+> 		else:
+> 			wjets[0].append(iLV2)
+> 	return tjets,wjets
+553c627
+<         t = TTree("Tree", "Tree");
+---
+> 	t = TTree("Tree", "Tree");
+556c630
+<     		t.Branch(F, Floats[F], F+"/D")
+---
+> 		t.Branch(F, Floats[F], F+"/D")

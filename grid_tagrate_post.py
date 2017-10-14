@@ -17,14 +17,14 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
                   default	=	'rate_default',
                   dest		=	'cuts',
                   help		=	'Cuts type (ie default, rate, etc)')
-parser.add_option('-u', '--ptreweight', metavar='F', type='string', action='store',
-				  default	=	'on',
-				  dest		=	'ptreweight',
-				  help		=	'on or off')
-parser.add_option('--noExtraPtCorrection', metavar='F', action='store_false',
-				  default=True,
-				  dest='extraPtCorrection',
-				  help='Call to turn off extraPtCorrection')
+# parser.add_option('-u', '--ptreweight', metavar='F', type='string', action='store',
+# 				  default	=	'on',
+# 				  dest		=	'ptreweight',
+# 				  help		=	'on or off')
+# parser.add_option('--noExtraPtCorrection', metavar='F', action='store_false',
+# 				  default=True,
+# 				  dest='extraPtCorrection',
+# 				  help='Call to turn off extraPtCorrection')
 (options, args) = parser.parse_args()
 
 cuts = options.cuts
@@ -45,12 +45,6 @@ Lumi = str(int(cLumi))+'pb'
 #Lumi = ['1fb', '5fb', '10fb']
 
 
-#if options.cuts.find('default') != -1:
-#	wtagsf = Cons['wtagsf_HP']
-#	wtagsfsig = Cons['wtagsfsig_HP']
-#elif options.cuts.find('sideband') != -1:
-wtagsf = Cons['wtagsf_LP']
-wtagsfsig = Cons['wtagsfsig_LP']
 xsec_bsr = Cons['xsec_bsr']
 xsec_bsl = Cons['xsec_bsl']
 xsec_ttbar = Cons['xsec_ttbar']
@@ -69,16 +63,11 @@ xsec_bpl = Cons['xsec_bpl']
 
 # ptString should only be applied to ttbar 
 # If we run with the extra correction
-# if options.extraPtCorrection:
-# 	# Don't do any renaming
-# 	ptString = ''
-# # If we don't want the extra correction turned on
-# elif not options.extraPtCorrection:
-# 	# Do renaming of ttbar
-# 	ptString = '_noExtraPtCorrection'
-# # And we don't want any pt correction
-# elif options.ptreweight == 'off':
+# ptString = ''
+# if options.ptreweight == 'off':
 # 	ptString = '_ptreweight_off'
+# elif not options.extraPtCorrection:
+# 	ptString = '_noExtraPtCorrection'
 
 #-----------------------------------------------------------------------------
 
@@ -100,7 +89,7 @@ for f in files_to_sum:
 	commands.append('mv ' +  f.replace('_PSET','_job*_PSET') + ' temprootfiles/')
 
 # ttbar
-for ptString in ['','_noExtraPtCorrection']:
+for ptString in ['','_noExtraPtCorrection','_ptreweight_off']:
 	commands.append('rm rootfiles/'+Lumi+'/TWratefileweightedttbar_PSET_'+cuts+ptString+'.root')
 	commands.append('python HistoWeight.py -i TWratefilettbar_PSET_'+cuts+ptString+'.root -o TWratefileweightedttbar_PSET_'+cuts+ptString+'.root -n auto -w ' + str(cLumi*xsec_ttbar['PH']))
 	commands.append('mv TWratefileweightedttbar_PSET_'+cuts+ptString+'.root rootfiles/'+Lumi+'/')
@@ -108,31 +97,16 @@ for ptString in ['','_noExtraPtCorrection']:
 
 # QCDHT
 commands.append('rm rootfiles/'+Lumi+'/TWratefileQCD_PSET_'+cuts+'.root')
-commands.append('python HistoWeight.py -i TWratefileQCDHT500_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWratefileQCDHT500_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['HT500']))
-commands.append('python HistoWeight.py -i TWratefileQCDHT700_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWratefileQCDHT700_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['HT700']))
-commands.append('python HistoWeight.py -i TWratefileQCDHT1000_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWratefileQCDHT1000_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['HT1000']))
-commands.append('python HistoWeight.py -i TWratefileQCDHT1500_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWratefileQCDHT1500_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['HT1500']))
-commands.append('python HistoWeight.py -i TWratefileQCDHT2000_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWratefileQCDHT2000_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['HT2000']))
+commands.append('python HistoWeight.py -i TWratefileQCDHT500_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWratefileweightedQCDHT500_PSET_'+cuts+'.root -n auto -w ' + str(cLumi*xsec_qcd['HT500']))
+commands.append('python HistoWeight.py -i TWratefileQCDHT700_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWratefileweightedQCDHT700_PSET_'+cuts+'.root -n auto -w ' + str(cLumi*xsec_qcd['HT700']))
+commands.append('python HistoWeight.py -i TWratefileQCDHT1000_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWratefileweightedQCDHT1000_PSET_'+cuts+'.root -n auto -w ' + str(cLumi*xsec_qcd['HT1000']))
+commands.append('python HistoWeight.py -i TWratefileQCDHT1500_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWratefileweightedQCDHT1500_PSET_'+cuts+'.root -n auto -w ' + str(cLumi*xsec_qcd['HT1500']))
+commands.append('python HistoWeight.py -i TWratefileQCDHT2000_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWratefileweightedQCDHT2000_PSET_'+cuts+'.root -n auto -w ' + str(cLumi*xsec_qcd['HT2000']))
 
-commands.append('hadd TWratefileQCD_PSET_'+cuts+'.root rootfiles/'+Lumi+'/TWratefileQCDHT*_PSET_'+cuts+'weighted.root')
+commands.append('hadd TWratefileQCD_PSET_'+cuts+'.root rootfiles/'+Lumi+'/TWratefileweightedQCDHT*_PSET_'+cuts+'.root')
 commands.append('mv TWratefileQCDHT*_PSET_'+cuts+'.root temprootfiles/')
 commands.append('mv TWratefileQCD_PSET_'+cuts+'.root rootfiles/'+Lumi+'/')
 
-# QCDPT
-#commands.append('rm rootfiles/'+Lumi+'/TWratefileQCD_PSET_'+cuts+'.root')
-#commands.append('python HistoWeight.py -i TWratefileQCDPT300_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCDPT300_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['PT300']))
-#commands.append('python HistoWeight.py -i TWratefileQCDPT470_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCDPT470_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['PT470']))
-#commands.append('python HistoWeight.py -i TWratefileQCDPT600_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCDPT600_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['PT600']))
-#commands.append('python HistoWeight.py -i TWratefileQCDPT800_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCDPT800_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['PT800']))
-#commands.append('python HistoWeight.py -i TWratefileQCDPT1000_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCPT1000_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['PT1000']))
-#commands.append('python HistoWeight.py -i TWratefileQCDPT1400_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCPT1400_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['PT1400']))
-#commands.append('python HistoWeight.py -i TWratefileQCDPT1800_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCPT1800_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['PT1800']))
-#commands.append('python HistoWeight.py -i TWratefileQCDPT2400_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCPT2400_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['PT2400']))
-#commands.append('python HistoWeight.py -i TWratefileQCDPT3200_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCPT3200_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_qcd['PT3200']))
-
-#commands.append('hadd TWratefileQCD_PSET_'+cuts+'.root temprootfiles/TWratefileQCDPT*_PSET_'+cuts+'weighted.root')
-#commands.append('mv TWratefileQCDPT*_PSET_'+cuts+'.root temprootfiles/')
-#commands.append('mv TWratefileQCD_PSET_'+cuts+'.root rootfiles/'+Lumi+'/')
 
 # Singletop
 commands.append('rm rootfiles/'+Lumi+'/TWratefilesingletop_*_PSET_'+cuts+'.root')
@@ -169,7 +143,7 @@ for coup in ['LH','RH']:
 		elif coup == 'LH':
 			xsec_sig = xsec_bsl[mass]
 		commands.append('rm ' + f.replace('TWratefilesignal'+coup,'TWratefileweightedsignal'+coup))	 
-		commands.append('python HistoWeight.py -i '+f+' -o '+f.replace('TWratefilesignal'+coup,'TWratefileweightedsignal'+coup)+' -n auto -w ' + str(wtagsf*cLumi*xsec_sig))
+		commands.append('python HistoWeight.py -i '+f+' -o '+f.replace('TWratefilesignal'+coup,'TWratefileweightedsignal'+coup)+' -n auto -w ' + str(cLumi*xsec_sig))
 		commands.append('mv '+f+' temprootfiles/')
 		commands.append('mv '+f.replace('TWratefilesignal'+coup,'TWratefileweightedsignal'+coup)+' rootfiles/'+Lumi+'/')
 for s in commands :

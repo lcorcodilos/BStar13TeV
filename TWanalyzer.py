@@ -80,7 +80,10 @@ parser.add_option('-u', '--ptreweight', metavar='F', type='string', action='stor
 				  default	=	'on',
 				  dest		=	'ptreweight',
 				  help		=	'on or off')
-
+parser.add_option('-T', '--ttsub', metavar='F', type='string', action='store',
+				  default	=	'on',
+				  dest		=	'ttsub',
+				  help		=	'on, off, or double')
 parser.add_option('-p', '--pdfweights', metavar='F', type='string', action='store',
 				  default	=	'nominal',
 				  dest		=	'pdfweights',
@@ -239,30 +242,46 @@ if options.JMR!='nominal':
 
 ptItString = ''
 ptTTString = ''
-# If we're not running the study
-if options.iteration == -1:
-	# And we want the extra correction turned on
-	if options.extraPtCorrection:
-		# Grab the latest SF and don't do any renaming
-		ptTTString = ''
-		TopPtReweightFile = TFile(di+'TWTopPtSF_9.root')
-		TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_9')
-	# And we don't want the extra correction turned on
-	elif not options.extraPtCorrection:
+# # If we're not running the study
+# if options.iteration == -1:
+# 	# And we want the extra correction turned on
+# 	if options.extraPtCorrection:
+# 		# Grab the latest SF and don't do any renaming
+# 		ptTTString = ''
+# 		TopPtReweightFile = TFile(di+'TWTopPtSF_9.root')
+# 		TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_9')
+# 	# And we don't want the extra correction turned on
+# 	elif not options.extraPtCorrection:
+# 		ptTTString = '_noExtraPtCorrection'
+# 		TopPtReweightFile = TFile(di+'TWTopPtSF_0.root')
+# 		TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_0')
+# 	# And we don't want any pt correction
+# 	elif options.ptreweight == 'off':
+# 		ptTTString = '_ptreweight_off'
+# # If we are running the pt study
+# elif options.iteration >=0:
+# 	ptTTString = '_ptSF' + str(options.iteration)
+# 	TopPtReweightFile = TFile(di+'TWTopPtSF_'+str(options.iteration)+'.root')
+# 	TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_'+str(options.iteration))
+
+ptTTString = ''
+if options.set == 'ttbar':
+	if not options.extraPtCorrection:
 		ptTTString = '_noExtraPtCorrection'
-		TopPtReweightFile = TFile(di+'TWTopPtSF_0.root')
-		TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_0')
-	# And we don't want any pt correction
-	elif options.ptreweight == 'off':
+	if options.ptreweight == 'off':
 		ptTTString = '_ptreweight_off'
-# If we are running the pt study
-elif options.iteration >=0:
-	ptTTString = '_ptSF' + str(options.iteration)
-	TopPtReweightFile = TFile(di+'TWTopPtSF_'+str(options.iteration)+'.root')
-	TopPtReweightPlot = TopPtReweightFile.Get('TWTopPtSF_'+str(options.iteration))
 
 #----------------------------------------------------------------------------
 
+#TTbar subtraction string is set here for non-qcd
+ttsubString = ''
+if setstr == 'data':
+	if options.ttsub == 'on':
+		ttsubString = ''
+	elif options.ttsub == 'off':
+		ttsubString = '_nottsub'
+	elif options.ttsub == 'double':
+		ttsubString = '_doublettsub'
 
 pstr = ""
 if options.pdfweights!="nominal":
@@ -291,11 +310,11 @@ if options.modmass!="nominal":
 
 #Based on what set we want to analyze, we find all Ntuple root files 
 if options.grid == "on":
-	mainDir = "/uscms_data/d3/lcorcodi/BStar13TeV/CMSSW_7_4_1/src/BStar13TeV/TTrees/"
+	mainDir = "root://cmsxrootd.fnal.gov//store/user/lcorcodi/TTrees/"
 else:
 	mainDir='TTrees/'
 
-file = TFile(mainDir + "TWtreefile_"+options.set+"_Trigger_"+tnameformat+"_"+mod+".root")
+file = TFile.Open(mainDir + "TWtreefile_"+options.set+"_Trigger_"+tnameformat+"_"+mod+".root")
 tree = file.Get("Tree")
 
 settype = 'ttbar'
@@ -367,37 +386,37 @@ tpt = Cuts['tpt']
 # 	var = "_kin"
 
 if jobs != 1:
-	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+ptTTString+".root", "recreate" )
+	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+ttsubString+ptTTString+".root", "recreate" )
 else:
-	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_PSET_"+options.cuts+ptTTString+".root", "recreate" )
+	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_PSET_"+options.cuts+ttsubString+ptTTString+".root", "recreate" )
 
 #Load up the average t-tagging rates -- Takes parameters from text file and makes a function
 #CHANGE BACK
 if options.Alphabet == "on":
-	TTR = TTR_Init('QUAD',rateCuts,setstr,options.rate,di,ptTTString)
-	TTR_errUp = TTR_Init('QUAD_errUp',rateCuts,setstr,options.rate,di,ptTTString)
-	TTR_errDown = TTR_Init('QUAD_errDown',rateCuts,setstr,options.rate,di,ptTTString)
+	TTR = TTR_Init('QUAD',rateCuts,setstr,options.rate,di,ttsubString+ptTTString)
+	TTR_errUp = TTR_Init('QUAD_errUp',rateCuts,setstr,options.rate,di,ttsubString+ptTTString)
+	TTR_errDown = TTR_Init('QUAD_errDown',rateCuts,setstr,options.rate,di,ttsubString+ptTTString)
 	fittitles = ["QUAD"]
 	fits = []
 	for fittitle in fittitles:
-		fits.append(TTR_Init(fittitle,rateCuts,setstr,options.rate,di,ptTTString))
+		fits.append(TTR_Init(fittitle,rateCuts,setstr,options.rate,di,ttsubString+ptTTString))
 
 elif options.Alphabet == "off":
-	TagFile = TFile(di+"plots/TWrate_Maker_"+setstr+"_"+Lumi2+"_PSET_"+rateCuts+ptTTString+".root")
-	print "Opening rate file " + "plots/TWrate_Maker_"+setstr+"_"+Lumi2+"_PSET_"+rateCuts+ptTTString+".root"
+	TagFile = TFile(di+"plots/TWrate_Maker_"+setstr+"_"+Lumi2+"_PSET_"+rateCuts+ttsubString+ptTTString+".root")
+	print "Opening rate file " + "plots/TWrate_Maker_"+setstr+"_"+Lumi2+"_PSET_"+rateCuts+ttsubString+ptTTString+".root"
 	TagPlote1 = TagFile.Get("tagrateeta1")
 	TagPlote2 = TagFile.Get("tagrateeta2") 
 
 
-	TTR = TTR_Init('Bifpoly',rateCuts,setstr,options.rate,di,ptTTString)
-	TTR_err = TTR_Init('Bifpoly_err',rateCuts,setstr,options.rate,di,ptTTString)
+	TTR = TTR_Init('Bifpoly',rateCuts,setstr,options.rate,di,ttsubString+ptTTString)
+	TTR_err = TTR_Init('Bifpoly_err',rateCuts,setstr,options.rate,di,ttsubString+ptTTString)
 
 	fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
 	fits = []
 	for fittitle in fittitles:
-		fits.append(TTR_Init(fittitle,rateCuts,setstr,options.rate,di,ptTTString))
+		fits.append(TTR_Init(fittitle,rateCuts,setstr,options.rate,di,ttsubString+ptTTString))
 
-	TagFile1 = TFile(di+"Tagrate"+setstr+"2D_"+rateCuts+ptTTString+".root")
+	TagFile1 = TFile(di+"Tagrate"+setstr+"2D_"+rateCuts+ttsubString+ptTTString+".root")
 	TagPlot2de1= TagFile1.Get("tagrateeta1")
 	TagPlot2de2= TagFile1.Get("tagrateeta2")
 
@@ -690,6 +709,7 @@ tree_vars = {	"wpt":array('d',[0.]),
 				"tau32":array('d',[0.]),
 				"tau21":array('d',[0.]),
 				"sjbtag":array('d',[0.]),
+				"flavor":array('d',[0.]),
 				"weight":array('d',[0.])}
 
 NewTree = Make_Trees(tree_vars)
@@ -737,7 +757,8 @@ for entry in range(lowBinEdge,highBinEdge):
 				"pt":tree.pt_leading,
 				"eta":tree.eta_leading,
 				"sjbtag":tree.sjbtag_leading,
-				"SDmass":tree.topSDmass_leading
+				"SDmass":tree.topSDmass_leading,
+				"flavor":tree.flavor_leading
 			}
 
 			wVals = {
@@ -774,7 +795,8 @@ for entry in range(lowBinEdge,highBinEdge):
 				"pt":tree.pt_subleading,
 				"eta":tree.eta_subleading,
 				"sjbtag":tree.sjbtag_subleading,
-				"SDmass":tree.topSDmass_subleading
+				"SDmass":tree.topSDmass_subleading,
+				"flavor":tree.flavor_subleading
 			}
 
 		elif hemis == 'hemis1' and doneAlready == True:
@@ -816,22 +838,15 @@ for entry in range(lowBinEdge,highBinEdge):
 # Apply top scale factor and pileup correction to all MC
 # Got rid of uncertainties since they are flat and applied in theta
 				weightSFt = 1.0
-				# weightSFtdown = 1.0
-				# weightSFtup = 1.0
 				if options.set!="data":
 					bin1 = tree.pileBin
 
-					if options.pileup != 'off': # and options.set.find("QCD") == -1:
+					if options.pileup != 'off':
 						weight *= PilePlot.GetBinContent(bin1)
 
-					if options.set.find("QCD") == -1 and options.cuts=="default":
-						weightSFt = ttagsf
-						# weightSFtup = ttagsf + ttagsf_errUp
-						# weightSFtdown = ttagsf - ttagsf_errDown
-					
-				# weightSFtup=weight*weightSFtup
-				# weightSFtdown=weight*weightSFtdown
-
+					if options.set.find("QCD") == -1:
+						weightSFt = ttagsf # Error done in theta
+						
 
 				tmass_cut = tmass[0]<tVals["SDmass"]<tmass[1]
 
@@ -873,13 +888,29 @@ for entry in range(lowBinEdge,highBinEdge):
 					weightSFptdown=1.0
 					if options.ptreweight == "on" and options.set.find('ttbar') != -1:
 					# 	ttbar pt reweighting done here
-						extraCorrection = TopPtReweightPlot.GetBinContent(1) # Will be zero with iteration 0
-							
-						PTW = tree.pt_reweight*(1+extraCorrection)
-						weightSFptSig = abs(weight - weight*PTW)
+						# extraCorrection = TopPtReweightPlot.GetBinContent(1) # Will be zero with iteration 0
+						if options.extraPtCorrection:
+							FlatPtSFFile = open(di+'bstar_theta_PtSF_onTOPgroupCorrection.txt','r')
+							FlatPtSFList = FlatPtSFFile.readlines()
+							extraCorrection = float(FlatPtSFList[0])
+							extraCorrectionUp = float(FlatPtSFList[1])
+							extraCorrectionDown = float(FlatPtSFList[2])
+							# print 'Pt scale correction = ' + str(1+extraCorrection)
+							FlatPtSFFile.close()
+						else:
+							extraCorrection = 0
+							extraCorrectionUp = 0
+							extraCorrectionDown = 0
 
-						weightSFptup=weight*PTW+weightSFptSig
-						weightSFptdown=max(0.0,weight*PTW-weightSFptSig)
+
+						PTW = tree.pt_reweight*(1+extraCorrection)
+						PTWup = tree.pt_reweight*(1+extraCorrection+extraCorrectionUp)
+						PTWdown = tree.pt_reweight*(1+extraCorrection-extraCorrectionDown)
+
+						# weightSFptSig = abs(weight - weight*PTW)
+
+						weightSFptup=weight*PTWup#PTW+weightSFptSig
+						weightSFptdown=weight*PTWdown#max(0.0,weight*PTW-weightSFptSig)
 						weight*=PTW
 
 						weightSFwup*=PTW
@@ -1161,6 +1192,7 @@ for entry in range(lowBinEdge,highBinEdge):
 															"tau32":tau32val,
 															"tau21":tau21val,
 															"sjbtag":SJ_csvval,
+															"flavor":tVals["flavor"],
 															"weight":weight}
 
 										for tv in tree_vars.keys():
@@ -1265,6 +1297,7 @@ for entry in range(lowBinEdge,highBinEdge):
 												"tau32":tau32val,
 												"tau21":tau21val,
 												"sjbtag":SJ_csvval,
+												"flavor":tVals["flavor"],
 												"weight":weight }
 
 

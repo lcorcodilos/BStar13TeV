@@ -131,6 +131,9 @@ for coup in ['LH','RH']:
 		#commands.append('mv '+f.replace('.root','_weighted.root')+' TTrees/')
 		commands.append('mv '+f+' TTrees/')
 
+#commands.append('tar -zcvf myTrees.tgz TTrees')
+commands.append('eosrm -r /store/user/lcorcodi/TTrees')
+commands.append('xrdcp -r TTrees/ root://cmseos.fnal.gov//store/user/lcorcodi/')
 
 for s in commands :
     print 'executing ' + s

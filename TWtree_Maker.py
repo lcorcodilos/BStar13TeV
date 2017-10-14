@@ -243,6 +243,9 @@ filtersLabel = ('Filter','filtersbit')
 GenHandle 	= 	Handle (  "vector<reco::GenParticle>")
 GenLabel  	= 	( "filteredPrunedGenParticles" , "")
 
+flavorHandle = Handle("vector<float>")
+flavorLabel = ('jetsAK8','jetAK8PuppiPartonFlavour')
+
 puHandle    	= 	Handle("int")
 puLabel     	= 	( "eventUserData", "puNtrueInt" )
 
@@ -330,6 +333,7 @@ treeVars = {
 	"eta_leading":array('d',[0]),
 	"phi_leading":array('d',[0]),
 	"mass_leading":array('d',[0]),
+	"flavor_leading":array('d',[0]),
 
 	"topSDmass_subleading":array('d',[0]),
 	"wSDmass_subleading":array('d',[0]),
@@ -341,6 +345,18 @@ treeVars = {
 	"eta_subleading":array('d',[0]),
 	"phi_subleading":array('d',[0]),
 	"mass_subleading":array('d',[0]),
+	"flavor_subleading":array('d',[0]),
+
+	"topSDmass_subsubleading":array('d',[0]),
+	"wSDmass_subsubleading":array('d',[0]),
+	"tau1_subsubleading":array('d',[0]),
+	"tau2_subsubleading":array('d',[0]),
+	"tau3_subsubleading":array('d',[0]),
+	"pt_subsubleading":array('d',[0]),
+	"eta_subsubleading":array('d',[0]),
+	"phi_subsubleading":array('d',[0]),
+	"mass_subsubleading":array('d',[0]),
+	"flavor_subsubleading":array('d',[0]),
 
 	"WJetMatchingRequirement":array('i',[0])
 	}
@@ -383,6 +399,7 @@ if options.set != 'data':
 # We check for the trigger on data, do pt cuts on the jets, and eta cuts
 jfailCount = 0
 ffailCount = 0
+subsubleadingCount = 0
 for event in events:
 	count	= 	count + 1
 
@@ -398,11 +415,10 @@ for event in events:
 		event.getByLabel (JET450Label, JET450Handle)
 		JET450bit = JET450Handle.product()
 
-
-		# try:
-		trigbits = [JET450bit[-1],HT900bit[-1],HT800bit[-1]]
-		# except:
-		# 	trigbits = [HT900bit[0]]
+		try:
+			trigbits = [JET450bit[-1],HT900bit[-1],HT800bit[-1]]
+		except:
+			trigbits = [HT800bit[-1],HT900bit[-1]]
 
 		passt = False
 		for t in trigbits:
@@ -445,8 +461,6 @@ for event in events:
 		#print str(filterFails)+ " filters failed"
 		ffailCount += 1
 		continue
-
-
 
 	# Only need one of these since they are identical
 	tindex,windex = Hemispherize(AK8LV,AK8LV)
@@ -495,6 +509,9 @@ for event in events:
 			event.getByLabel (wMassLabel, wMassHandle)
 			wJetMass 	= 	wMassHandle.product()
 
+			event.getByLabel (flavorLabel, flavorHandle)
+			flavor = flavorHandle.product()
+
 			event.getByLabel (tau3Label, tau3Handle)
 			Tau3		= 	tau3Handle.product() 
 
@@ -536,30 +553,89 @@ for event in events:
 				leadSJ_csvmax = max(leadSJ_csvvals)
 				subSJ_csvmax = max(subSJ_csvvals)
 
-				Temp_vars = {
-					"topSDmass_leading":topJetMass[leadingIndexVal],
-					"wSDmass_leading":topJetMass[leadingIndexVal],
-					"tau1_leading":Tau1[leadingIndexVal],
-					"tau2_leading":Tau2[leadingIndexVal],
-					"tau3_leading":Tau3[leadingIndexVal],		
-					"sjbtag_leading":leadSJ_csvmax,
-					"pt_leading":leadingJet.Perp(),
-					"eta_leading":leadingJet.Eta(),
-					"phi_leading":leadingJet.Phi(),
-					"mass_leading":leadingJet.M(),
 
-					"topSDmass_subleading":topJetMass[subleadingIndexVal],
-					"wSDmass_subleading":topJetMass[subleadingIndexVal],
-					"tau1_subleading":Tau1[subleadingIndexVal],
-					"tau2_subleading":Tau2[subleadingIndexVal],
-					"tau3_subleading":Tau3[subleadingIndexVal],		
-					"sjbtag_subleading":subSJ_csvmax,
-					"pt_subleading":subleadingJet.Perp(),
-					"eta_subleading":subleadingJet.Eta(),
-					"phi_subleading":subleadingJet.Phi(),
-					"mass_subleading":subleadingJet.M(),
+				if len(AK8LV) > 2:
+					subsubleadingJet = AK8LV[2]
+					subsubleadingIndexVal = 2
 
-					"WJetMatchingRequirement":WJetMatchingRequirement}
+					subsubleadingCount +=1
+
+					Temp_vars = {
+						"topSDmass_leading":topJetMass[leadingIndexVal],
+						"wSDmass_leading":wJetMass[leadingIndexVal],
+						"tau1_leading":Tau1[leadingIndexVal],
+						"tau2_leading":Tau2[leadingIndexVal],
+						"tau3_leading":Tau3[leadingIndexVal],		
+						"sjbtag_leading":leadSJ_csvmax,
+						"pt_leading":leadingJet.Perp(),
+						"eta_leading":leadingJet.Eta(),
+						"phi_leading":leadingJet.Phi(),
+						"mass_leading":leadingJet.M(),
+						"flavor_leading":flavor[leadingIndexVal],
+
+						"topSDmass_subleading":topJetMass[subleadingIndexVal],
+						"wSDmass_subleading":wJetMass[subleadingIndexVal],
+						"tau1_subleading":Tau1[subleadingIndexVal],
+						"tau2_subleading":Tau2[subleadingIndexVal],
+						"tau3_subleading":Tau3[subleadingIndexVal],		
+						"sjbtag_subleading":subSJ_csvmax,
+						"pt_subleading":subleadingJet.Perp(),
+						"eta_subleading":subleadingJet.Eta(),
+						"phi_subleading":subleadingJet.Phi(),
+						"mass_subleading":subleadingJet.M(),
+						"flavor_subleading":flavor[subleadingIndexVal],
+
+						"topSDmass_subsubleading":topJetMass[subsubleadingIndexVal],
+						"wSDmass_subsubleading":wJetMass[subsubleadingIndexVal],
+						"tau1_subsubleading":Tau1[subsubleadingIndexVal],
+						"tau2_subsubleading":Tau2[subsubleadingIndexVal],
+						"tau3_subsubleading":Tau3[subsubleadingIndexVal],		
+						"pt_subsubleading":subsubleadingJet.Perp(),
+						"eta_subsubleading":subsubleadingJet.Eta(),
+						"phi_subsubleading":subsubleadingJet.Phi(),
+						"mass_subsubleading":subsubleadingJet.M(),
+						"flavor_subsubleading":flavor[subsubleadingIndexVal],
+
+						"WJetMatchingRequirement":WJetMatchingRequirement}
+				else:
+
+					Temp_vars = {
+						"topSDmass_leading":topJetMass[leadingIndexVal],
+						"wSDmass_leading":wJetMass[leadingIndexVal],
+						"tau1_leading":Tau1[leadingIndexVal],
+						"tau2_leading":Tau2[leadingIndexVal],
+						"tau3_leading":Tau3[leadingIndexVal],		
+						"sjbtag_leading":leadSJ_csvmax,
+						"pt_leading":leadingJet.Perp(),
+						"eta_leading":leadingJet.Eta(),
+						"phi_leading":leadingJet.Phi(),
+						"mass_leading":leadingJet.M(),
+						"flavor_leading":flavor[leadingIndexVal],
+
+						"topSDmass_subleading":topJetMass[subleadingIndexVal],
+						"wSDmass_subleading":wJetMass[subleadingIndexVal],
+						"tau1_subleading":Tau1[subleadingIndexVal],
+						"tau2_subleading":Tau2[subleadingIndexVal],
+						"tau3_subleading":Tau3[subleadingIndexVal],		
+						"sjbtag_subleading":subSJ_csvmax,
+						"pt_subleading":subleadingJet.Perp(),
+						"eta_subleading":subleadingJet.Eta(),
+						"phi_subleading":subleadingJet.Phi(),
+						"mass_subleading":subleadingJet.M(),
+						"flavor_subleading":flavor[subleadingIndexVal],
+
+						"topSDmass_subsubleading":0,
+						"wSDmass_subsubleading":0,
+						"tau1_subsubleading":0,
+						"tau2_subsubleading":0,
+						"tau3_subsubleading":0,		
+						"pt_subsubleading":0,
+						"eta_subsubleading":0,
+						"phi_subsubleading":0,
+						"mass_subsubleading":0,
+						"flavor_subsubleading":0,
+
+						"WJetMatchingRequirement":WJetMatchingRequirement}
 
 
 				# Get pileup info if not data
@@ -599,6 +675,7 @@ print "Events in slim form: " + str(count)
 print "Events that passed: " + str(passedNev)
 print "Percent lost to JetID: " + str(float(jfailCount)/float(count))
 print "Percent lost to filters: " + str(float(ffailCount)/float(count))
+print "3rd jet count in passed selection: " + str(subsubleadingCount)
 
 f.cd()
 f.Write()

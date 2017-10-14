@@ -44,9 +44,9 @@ condorOutputDir = 'notneeded'
 logSuffix = '.log'
 
 # condor command file
-# Requirements          = Memory >= 199 &&OpSys == "LINUX"&& (Arch != "DUMMY" )&& Disk > 1000000
 condor = '''universe = vanilla
 Executable            = %(command)s
+Requirements          = Memory >= 199 &&OpSys == "LINUX"&& (Arch != "DUMMY" )
 Should_Transfer_Files = YES
 WhenToTransferOutput  = ON_EXIT_OR_EVICT
 Output = %(condorOutputDir)s/candelete_$(Cluster)_$(Process).stdout
@@ -56,13 +56,15 @@ Notification    = Error
 notify_user     = %(user)s@FNAL.GOV
 Arguments       = %(arguments)s
 %(extraLines)s
-Queue %(numSections)s\n'''
+Queue %(numSections)s\n
+x509userproxy = $ENV(X509_USER_PROXY)
+'''
 
 # CMSSW variables
 cmsswFNALbashrc = '/uscmst1/prod/sw/cms/bashrc'
 cmsswEnvFNAL = 'cd %%s; . %s prod; eval `scramv1 runtime -sh`; cd -' % cmsswFNALbashrc
-
 cmsswEnvCERN = 'cd %s; eval `scramv1 runtime -sh`; cd -'
+
 
 storageXml = '$(CMS_PATH)/SITECONF/local/PhEDEx/storage.xml'
 storageProtocals = ['dcap']
@@ -634,13 +636,16 @@ if __name__ =='__main__':
     if options.submitCondor or options.dontSubmitCondor:
         extraLines = ''
         if collection.tarfile:
-            extraLines += 'transfer_input_files = %s\n' % collection.tarfile
+            #extraLines += 'transfer_input_files = %s\n' % collection.tarfile
+            tdir = collection.tarfile.replace('tarball.tgz','')
+            extraLines += 'transfer_input_files = '+tdir+'tarball.tgz,'+tdir+'runMany.bash,'+tdir+'runManySections.py,'+tdir+'commands.cmd\n'
+        print extraLines 
         argDict = \
                 { 'command'     : collection.bashname(),
                   'user'        : commands.getoutput ('whoami'),
                   'arguments'   : '%s %s $(Process) $(Cluster)' \
                   % (absPath (sys.argv[0], True),
-                     absPath (commandsFile)),
+                     './'+commandsFile),
                   'numSections' : len (collection),
                   'extraLines'  : extraLines,
                   'condorOutputDir' : condorOutputDir

@@ -1,23 +1,23 @@
 <p>Rates for all observables and processes as given by the 'nominal' templates. If errors are given, they are MC stat. uncertainties.</p>
 <table cellpadding="2" border="1">
 <tr><th>process / observable</th><th>mtw_allhad</th></tr>
-<tr><td>qcd</td><td>24464 +/- 62.151</td></tr>
-<tr><td>stt</td><td>18.877 +/- 6.3928</td></tr>
-<tr><td>sttB</td><td>25.879 +/- 13.212</td></tr>
-<tr><td>sttW</td><td>532.59 +/- 128.16</td></tr>
-<tr><td>sttWB</td><td>314.42 +/- 107.05</td></tr>
-<tr><td>ttbar</td><td>6446.3 +/- 310.32</td></tr>
-<tr><td><b>total background</b></td><td>31802 +/- 358.13</td></tr>
-<tr><td>bs1200</td><td>8637.7 +/- 422.04</td></tr>
-<tr><td>bs1400</td><td>4349.3 +/- 188.87</td></tr>
-<tr><td>bs1600</td><td>1943.3 +/- 84.632</td></tr>
-<tr><td>bs1800</td><td>892.99 +/- 38.759</td></tr>
-<tr><td>bs2000</td><td>396.27 +/- 17.395</td></tr>
-<tr><td>bs2200</td><td>204.5 +/- 9.3331</td></tr>
-<tr><td>bs2400</td><td>97.474 +/- 4.4618</td></tr>
-<tr><td>bs2600</td><td>52.615 +/- 2.3837</td></tr>
-<tr><td>bs2800</td><td>27.325 +/- 1.255</td></tr>
-<tr><td>bs3000</td><td>13.668 +/- 0.65811</td></tr>
-<tr><td><b>DATA</b></td><td>30957</td></tr>
+<tr><td>qcd</td><td>28736 +/- 55.191</td></tr>
+<tr><td>stt</td><td>64.776 +/- 7.7039</td></tr>
+<tr><td>sttB</td><td>19.94 +/- 4.0769</td></tr>
+<tr><td>sttW</td><td>388.46 +/- 23.643</td></tr>
+<tr><td>sttWB</td><td>381.77 +/- 23.554</td></tr>
+<tr><td>ttbar</td><td>8264.4 +/- 77.698</td></tr>
+<tr><td><b>total background</b></td><td>37855 +/- 101.36</td></tr>
+<tr><td>bs1200</td><td>8561.2 +/- 82.381</td></tr>
+<tr><td>bs1400</td><td>4183.2 +/- 36.734</td></tr>
+<tr><td>bs1600</td><td>1871.2 +/- 16.264</td></tr>
+<tr><td>bs1800</td><td>887.04 +/- 7.6555</td></tr>
+<tr><td>bs2000</td><td>417.04 +/- 3.6336</td></tr>
+<tr><td>bs2200</td><td>209.05 +/- 1.8831</td></tr>
+<tr><td>bs2400</td><td>102.74 +/- 0.92262</td></tr>
+<tr><td>bs2600</td><td>53.619 +/- 0.48635</td></tr>
+<tr><td>bs2800</td><td>27.901 +/- 0.25872</td></tr>
+<tr><td>bs3000</td><td>15.067 +/- 0.14171</td></tr>
+<tr><td><b>DATA</b></td><td>36939</td></tr>
 </table>
 

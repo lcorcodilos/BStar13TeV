@@ -1,0 +1,79 @@
+import ROOT
+from ROOT import *
+
+from optparse import OptionParser
+gStyle.SetOptStat(0)
+import FlavorFractionFunctions
+from FlavorFractionFunctions import *
+
+parser = OptionParser()
+
+parser.add_option('-s', '--set', metavar='F', type='string', action='store',
+				  default	=	'QCD',
+				  dest		=	'set',
+				  help		=	'data or ttbar')
+parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
+				  default	=	'sideband',
+				  dest		=	'cuts',
+				  help		=	'default, sideband, rate_sideband, etc')
+
+(options, args) = parser.parse_args()
+
+# Initialize file list
+files = []
+outfile = TFile('FlavorFraction_'+options.set+options.cuts+'.root','recreate')
+
+# Create the pass cuts
+toptag = '((tau32<0.65)&&(sjbtag>0.5426))'
+taggingDict = {'pass':toptag,'fail':'!'+toptag}
+
+# Specifies multiple files to grab
+samples = [options.set]
+
+# Grab those files
+for sample in samples:
+	files.append(TFile.Open('../rootfiles/35851pb/TWratefile'+sample+'_PSET_'+options.cuts+'.root'))
+
+entriesList=[]
+
+# For each file...
+for file in files:
+	# Grab the index
+	iFile = files.index(file)
+	# Grab the tree and number of entries
+	thisTree = file.Get('Tree')
+	numberOfEntries = thisTree.GetEntries()
+	entriesList.append(numberOfEntries)
+
+	# Split into pass and fail distributions
+	for cuts in taggingDict.keys():
+		# Project the tree onto a hist
+		# ProjectTreeVar(tree, var string, [string(title),int(bins),int(min),int(max)])
+		thisHistInfo = [samples[iFile]+cuts+'_FlavFrac',23,0,22]
+		thisHist = ProjectScaledTreeVar(thisTree,'abs(flavor)',taggingDict[cuts],thisHistInfo)
+
+		# Do some coloring and remove yellow
+		if iFile < 4:
+			thisHist.SetLineColor(iFile+1)
+		else:
+			thisHist.SetLineColor(iFile+2)
+
+		outfile.cd()
+		thisHist.Write()
+
+# Initialize canvas and legend
+c1 = TCanvas('c1','c1',800,700)
+leg = TLegend(0.35,0.55,0.7,0.8)
+
+count = 0
+for key in outfile.GetListOfKeys():
+	hist = key.ReadObj()
+	hist.SetMaximum(0.55)
+	leg.AddEntry(hist,hist.GetTitle())
+	hist.SetTitle('QCD MC Flavor - ' + options.cuts.replace('rate_',''))
+	hist.Draw('samehist')
+	count += 1
+
+leg.Draw()
+c1.Print('FlavorFraction_'+options.set+options.cuts+'.pdf','pdf')
+

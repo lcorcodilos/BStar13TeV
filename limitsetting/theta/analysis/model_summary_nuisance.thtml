@@ -1,0 +1,9 @@
+<h3>Prior Parameters</h3>
+<table cellpadding="2" border="1">
+<tr><th>parameter</th><th>distribution type</th><th>distribution parameters</th></tr>
+<tr><td>Alt</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>ttbar_rate</td><td>gauss</td><td>width = inf; range = [-inf, inf]; mean = 0.0</td></tr>
+<tr><td>modm</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+<tr><td>Fit</td><td>gauss</td><td>width = 1.0; range = [-5.0, 5.0]; mean = 0.0</td></tr>
+</table>
+

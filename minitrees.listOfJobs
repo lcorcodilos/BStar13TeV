@@ -1,0 +1,188 @@
+#--------------------------rate_default----------------------------------
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_default -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_default -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_default -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_default -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_default -n 1 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_default -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_default -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_default -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_default -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_default -n 2 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_default -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_default -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_default -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_default -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_default -n 3 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_default -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_default -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_default -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_default -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_default -n 4 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_default -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_default -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_default -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_default -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_default -n 5 -j 5
+
+
+#--------------------------rate_sideband----------------------------------
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_sideband -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_sideband -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_sideband -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_sideband -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_sideband -n 1 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_sideband -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_sideband -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_sideband -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_sideband -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_sideband -n 2 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_sideband -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_sideband -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_sideband -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_sideband -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_sideband -n 3 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_sideband -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_sideband -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_sideband -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_sideband -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_sideband -n 4 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_sideband -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_sideband -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_sideband -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_sideband -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_sideband -n 5 -j 5
+
+#--------------------------rate_highWmass----------------------------------
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_highWmass -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_highWmass -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_highWmass -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_highWmass -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_highWmass -n 1 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_highWmass -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_highWmass -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_highWmass -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_highWmass -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_highWmass -n 2 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_highWmass -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_highWmass -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_highWmass -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_highWmass -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_highWmass -n 3 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_highWmass -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_highWmass -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_highWmass -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_highWmass -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_highWmass -n 4 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c rate_highWmass -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c rate_highWmass -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c rate_highWmass -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c rate_highWmass -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c rate_highWmass -n 5 -j 5
+
+
+#--------------------------default----------------------------------
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c default -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c default -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c default -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c default -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c default -n 1 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c default -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c default -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c default -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c default -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c default -n 2 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c default -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c default -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c default -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c default -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c default -n 3 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c default -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c default -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c default -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c default -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c default -n 4 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c default -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c default -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c default -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c default -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c default -n 5 -j 5
+
+
+#--------------------------sideband----------------------------------
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c sideband -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c sideband -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c sideband -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c sideband -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c sideband -n 1 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c sideband -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c sideband -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c sideband -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c sideband -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c sideband -n 2 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c sideband -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c sideband -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c sideband -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c sideband -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c sideband -n 3 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c sideband -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c sideband -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c sideband -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c sideband -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c sideband -n 4 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c sideband -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c sideband -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c sideband -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c sideband -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c sideband -n 5 -j 5
+
+#--------------------------highWmass----------------------------------
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c highWmass -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c highWmass -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c highWmass -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c highWmass -n 1 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c highWmass -n 1 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c highWmass -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c highWmass -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c highWmass -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c highWmass -n 2 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c highWmass -n 2 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c highWmass -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c highWmass -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c highWmass -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c highWmass -n 3 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c highWmass -n 3 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c highWmass -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c highWmass -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c highWmass -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c highWmass -n 4 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c highWmass -n 4 -j 5
+
+python ./tardir/TWminitrees.py -s QCDHT500 -g on -c highWmass -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT700 -g on -c highWmass -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1000 -g on -c highWmass -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT1500 -g on -c highWmass -n 5 -j 5
+python ./tardir/TWminitrees.py -s QCDHT2000 -g on -c highWmass -n 5 -j 5

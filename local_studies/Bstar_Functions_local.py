@@ -109,7 +109,7 @@ def LoadCuts(TYPE):
 			'tau32':[0.0,0.65],
 			'tau21':[0.4,1.0],
 			'sjbtag':[0.5426,1.0],
-			'wmass':[130.0,float("inf")],
+			'wmass':[65.0,105.0],
 			'eta1':[0.0,0.8],
 			'eta2':[0.8,2.4],
 			'eta':[0.0,2.4]
@@ -438,11 +438,7 @@ def BTR_Init(ST,CUT,di,setval):
 
 #This is a poorly written function, but I cant think of a better way to do this 
 #It works, but you should be able to just have one input
-def TTR_Init(ST,CUT,SET,RATE,di,ITERATION):
-	ptString = ''
-	if ITERATION != 0:
-		ptString = '_ptSF'+str(ITERATION)
-		
+def TTR_Init(ST,CUT,SET,RATE,di,ptString):
 	rateFolder = ''
 	if RATE != 'tpt':
 		rateFolder = RATE + '/'
@@ -605,7 +601,7 @@ def PDF_Lookup(pdfs , pdfOP ):
 	if pdfOP == "up" :
 		return min(13.0,1.0+sqrt((ilimweight) / (len(limitedpdf))))
 	else :
-	  	return max(-12.0,1.0-sqrt((ilimweight) / (len(limitedpdf))))
+		return max(-12.0,1.0-sqrt((ilimweight) / (len(limitedpdf))))
 #This looks up the b tagging scale factor or uncertainty
 def Trigger_Lookup( H , TRP ):
 	Weight = 1.0
@@ -663,6 +659,7 @@ def PTW_Lookup( GP ):
 		wTbarPt = exp(0.0615-0.0005*genTBpt)
 		return sqrt(wTPt*wTbarPt)
 
+
 # This does the W jet matching requirement by looking up the deltaR separation
 # of the daughter particle from the W axis. If passes, return 1.
 def WJetMatching(GP):
@@ -691,8 +688,23 @@ def WJetMatching(GP):
 		passed = 1
 
 	return passed
+
+			
+
  
- 
+def PU_Lookup(PU , PUP):
+	PUWeight = 1.0
+	PUWeightup = 1.0
+	PUWeightdown = 1.0
+
+	bin1 = PUP[0].FindBin(float(PU))
+
+	PUWeight = PUP[0].GetBinContent(bin1)
+	PUWeightup = PUP[1].GetBinContent(bin1)
+	PUWeightdown = PUP[2].GetBinContent(bin1)
+
+	return [PUWeight,PUWeightup,PUWeightdown]
+
 def Hemispherize(LV1,LV2):
 	tjets = [[],[]]
 	wjets = [[],[]]

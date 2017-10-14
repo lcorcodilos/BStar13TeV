@@ -37,3 +37,19 @@ Look into Rp/f of sideband1 to figure out QCD plateau
 Check your iterations are correct
 
 Compare pileup distributions of QCD vs ttbar
+
+
+Theta does the simultaneous fit
+
+QCD and Pass-fail ratio with ttbar not subtracted
+QCD and Pass-fail ratio with ttbar subtracted twice
+
+QCD MC Disagreement
+- The t-jet is talking to the w-jet
+- 
+
+Last things you did
+- Submitted four different cut selections for rate WITH sjbtag requirement
+- Without sjbtag, rp/f jumped to ~35%
+--- This makes the discrepancy between the modeled Rp/f and the cheat smaller by percentage (and maybe even magnitude?) and so estimate should improve
+- Before you jump the gun, need to see Rp/f WITH the sjbtag requirement and make those plots before proceeding without the requirement
