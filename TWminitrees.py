@@ -2,15 +2,16 @@
 
 
 
-###################################################################
-##								 								 ##
-## Name: TWministrees.py						 						 ##
-## Author: Lucas Corcodilos 						 			 ##
-## Date: 10/10/17						 						 ##
-## Purpose: This program analyzes a possible third jet in the b* ##
-##          candidate event in QCD MC.						 	 ##
-##          									 				 ##
-###################################################################
+######################################################################
+##								 									##
+## Name: TWministrees.py						 					##
+## Author: Lucas Corcodilos 						 			 	##
+## Date: 10/10/17						 						 	##
+## Purpose: This program analyzes a possible third jet in the b* 	##
+##          candidate event in QCD MC. It also creates a mini	 	##
+##          tree that has W tagging applied (to be used w/ Alphabet)##
+##																	##
+######################################################################
 
 import os
 import glob
@@ -207,9 +208,35 @@ nev.SetBinContent(1,B2Gnev)
 
 # Define some extra counting histograms
 candidateCount = TH1I("candidateCount", "candidateCount",1,0,1)
-ThirdJetCount = TH1I("3rdJetCount","3rdJetCount",1,0,1)
+ThirdJetCount = TH1I("thirdJetCount","thirdJetCount",1,0,1)
 
+# Has W requirement. Doesn't restrict top variables. 
 miniTreeVars = {
+	'pt_top':array('d',[0]),
+	'mass_top':array('d',[0]),
+	'SDmass_top':array('d',[0]),
+	'eta_top':array('d',[0]),
+	'phi_top':array('d',[0]),
+	'flavor_top':array('d',[0]),
+	'tau32':array('d',[0]),
+	'sjbtag':array('d',[0]),
+	
+	'pt_w':array('d',[0]),
+	'mass_w':array('d',[0]),
+	'SDmass_w':array('d',[0]),
+	'eta_w':array('d',[0]),
+	'phi_w':array('d',[0]),
+	'flavor_w':array('d',[0]),
+	'tau21':array('d',[0]),
+
+	'mass_tw':array('d',[0]),
+
+	'weight':array('d',[0])}
+
+miniTree = Make_Trees(miniTreeVars,'miniTree')
+
+# Has requirement that there be a 3rd jet and no top tag
+thirdJetTreeVars = {
 	'pt_top':array('d',[0]),
 	'mass_top':array('d',[0]),
 	'SDmass_top':array('d',[0]),
@@ -239,7 +266,8 @@ miniTreeVars = {
 
 	'weight':array('d',[0])}
 
-miniTree = Make_Trees(miniTreeVars)
+thirdJetTree = Make_Trees(thirdJetTreeVars,'thirdJetTree')
+
 treeEntries = tree.GetEntries()
 
 # Design the splitting if necessary
@@ -273,7 +301,7 @@ for entry in range(lowBinEdge,highBinEdge):
 
 	doneAlready = False
 
-	for hemis in ['hemis0','hemis1']:
+	for hemis in ['hemis0']:#,'hemis1']:
 		if hemis == 'hemis0':
 			# Load up the ttree values
 			tVals = {
@@ -376,63 +404,94 @@ for entry in range(lowBinEdge,highBinEdge):
 
 			tmass_cut = tmass[0]<tVals["SDmass"]<tmass[1]
 
-			#Now we start top-tagging.  In this file, we use a sideband based on inverting some top-tagging requirements
-			if tmass_cut:
-				ht = tjet.Perp() + wjet.Perp()
 
-				weight*=weightSFt
+			# if tmass_cut: - Moved lower so we can do W cuts first - LC 10/18/17
+			ht = tjet.Perp() + wjet.Perp()
 
-				if tree.WJetMatchingRequirement == 1:
-					if options.set.find('tW') != -1 or options.set.find('signal') != -1:
-						weight*=wtagsf
+			weight*=weightSFt
 
-
-				if tname != 'none' and options.set!='data' :
-					#Trigger reweighting done here
-					TRW = Trigger_Lookup( ht , TrigPlot )[0]
-
-					weight*=TRW
-
-				if options.ptreweight == "on" and options.set.find('ttbar') != -1:
-					#ttbar pt reweighting done here
-					# Need to grab extra correction from .txt
-					if options.extraPtCorrection:
-						FlatPtSFFile = open(di+'bstar_theta_PtSF_onTOPgroupCorrection.txt','r')
-						FlatPtSFList = FlatPtSFFile.readlines()
-						extraCorrection = float(FlatPtSFList[0])
-						print 'Pt scale correction = ' + str(1+extraCorrection)
-						FlatPtSFFile.close()
-					else:
-						extraCorrection = 0
-
-					PTW = tree.pt_reweight*(1+extraCorrection)
-					weight*=PTW
+			if tree.WJetMatchingRequirement == 1:
+				if options.set.find('tW') != -1 or options.set.find('signal') != -1:
+					weight*=wtagsf
 
 
-				try:
-					tau32val		= 	tVals["tau3"]/tVals["tau2"] 
-					tau21val		= 	wVals["tau2"]/wVals["tau1"]
-				except:
-					continue
+			if tname != 'none' and options.set!='data' :
+				#Trigger reweighting done here
+				TRW = Trigger_Lookup( ht , TrigPlot )[0]
 
-				tau21_cut =  tau21[0]<=tau21val<tau21[1]
-				tau32_cut =  tau32[0]<=tau32val<tau32[1]
+				weight*=TRW
 
-				SJ_csvval = tVals["sjbtag"]
-
-				sjbtag_cut = sjbtag[0]<SJ_csvval<=sjbtag[1]
-
-				if type(wmass[0]) is float:
-					wmass_cut = wmass[0]<=wVals["SDmass"]<wmass[1]
-				elif type(wmass[0]) is list:
-					wmass_cut = wmass[0][0]<=wVals["SDmass"]<wmass[0][1] or wmass[1][0]<=wVals["SDmass"]<wmass[1][1] 
+			if options.ptreweight == "on" and options.set.find('ttbar') != -1:
+				#ttbar pt reweighting done here
+				# Need to grab extra correction from .txt
+				if options.extraPtCorrection:
+					FlatPtSFFile = open(di+'bstar_theta_PtSF_onTOPgroupCorrection.txt','r')
+					FlatPtSFList = FlatPtSFFile.readlines()
+					extraCorrection = float(FlatPtSFList[0])
+					print 'Pt scale correction = ' + str(1+extraCorrection)
+					FlatPtSFFile.close()
 				else:
-					print "wmass type error"
-					continue                        
+					extraCorrection = 0
 
-				FullTop = tau32_cut and sjbtag_cut
-				if wmass_cut:
-					if tau21_cut:
+				PTW = tree.pt_reweight*(1+extraCorrection)
+				weight*=PTW
+
+
+			try:
+				tau32val		= 	tVals["tau3"]/tVals["tau2"] 
+				tau21val		= 	wVals["tau2"]/wVals["tau1"]
+			except:
+				continue
+
+			tau21_cut =  tau21[0]<=tau21val<tau21[1]
+			tau32_cut =  tau32[0]<=tau32val<tau32[1]
+
+			SJ_csvval = tVals["sjbtag"]
+
+			sjbtag_cut = sjbtag[0]<SJ_csvval<=sjbtag[1]
+
+			if type(wmass[0]) is float:
+				wmass_cut = wmass[0]<=wVals["SDmass"]<wmass[1]
+			elif type(wmass[0]) is list:
+				wmass_cut = wmass[0][0]<=wVals["SDmass"]<wmass[0][1] or wmass[1][0]<=wVals["SDmass"]<wmass[1][1] 
+			else:
+				print "wmass type error"
+				continue                        
+
+			if wmass_cut:
+				if tau21_cut:
+					temp_minivariables = {
+						'pt_top':tVals['pt'],
+						'mass_top':tVals['mass'],
+						'SDmass_top':tVals['SDmass'],
+						'eta_top':tVals['eta'],
+						'phi_top':tVals['phi'],
+						'flavor_top':tVals['flavor'],
+						'tau32':tau32val,
+						'sjbtag':SJ_csvval,
+						
+						'pt_w':wVals['pt'],
+						'mass_w':wVals['mass'],
+						'SDmass_w':wVals['SDmass'],
+						'eta_w':wVals['eta'],
+						'phi_w':wVals['phi'],
+						'flavor_w':wVals['flavor'],
+						'tau21':tau21val,
+
+						'mass_tw':(tjet+wjet).M(),
+
+						'weight':weight}
+
+					for tv in miniTreeVars.keys():
+						# try:
+						miniTreeVars[tv][0] = temp_minivariables[tv]
+						# except:
+						# 	print "failed on "+tv
+					miniTree.Fill()
+
+					doneAlready = True
+
+					if tmass_cut: # tmass_cut moved down to here
 						preTopTagCount += 1
 						# check we have a 3rd jet and that we never divide by zero
 						if tree.pt_subsubleading <= 0.0:
@@ -442,7 +501,7 @@ for entry in range(lowBinEdge,highBinEdge):
 
 						has3rdJetCount += 1
 
-						temp_variables = {
+						temp_3rdvariables = {
 							'pt_top':tVals['pt'],
 							'mass_top':tVals['mass'],
 							'SDmass_top':tVals['SDmass'],
@@ -472,14 +531,12 @@ for entry in range(lowBinEdge,highBinEdge):
 
 							'weight':weight}
 
-						for tv in miniTreeVars.keys():
+						for tv in thirdJetTreeVars.keys():
 							# try:
-							miniTreeVars[tv][0] = temp_variables[tv]
+							thirdJetTreeVars[tv][0] = temp_3rdvariables[tv]
 							# except:
 							# 	print "failed on "+tv
-						miniTree.Fill()
-
-						doneAlready = True
+						thirdJetTree.Fill()
 
 candidateCount.SetBinContent(1,preTopTagCount)
 ThirdJetCount.SetBinContent(1,has3rdJetCount)

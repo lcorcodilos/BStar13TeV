@@ -15,7 +15,6 @@
 ##								 ##
 ###################################################################
 
-from DataFormats.FWLite import Runs
 import os
 import array
 import glob
@@ -28,7 +27,6 @@ import subprocess
 import cppyy
 from array import *
 from ROOT import *
-from DataFormats.FWLite import Events, Handle
 #This is the most impostant Function.  Correct information here is essential to obtaining valid results.
 #In order we have Luminosity, top tagging scale factor, cross sections for wprime right,left,mixed,ttbar,qcd, and singletop and their corresponding event numbers
 #If I wanted to access the left handed W' cross section at 1900 GeV I could do Xsecl1900 = LoadConstants()['xsec_wpl']['1900']
@@ -476,17 +474,17 @@ def TTR_Init(ST,CUT,SET,RATE,di,ptString):
 		eta2fit = TF1("eta2fit",'expo(0) + pol0(2)',0,4000)
 		Params = 3
 	if ST == 'QUAD':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+ptString+".txt")
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_pt"+CUT+ptString+".txt")
 		TRBP.seek(0)
 		fit = TF1("fit",'pol2',0,300)
 		Params = 3
 	if ST == 'QUAD_errUp':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+ptString+".txt")
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_pt"+CUT+ptString+".txt")
 		TRBP.seek(0)
 		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
 		Params = 9
 	if ST == 'QUAD_errDown':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+ptString+".txt")
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_pt"+CUT+ptString+".txt")
 		TRBP.seek(0)
 		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
 		Params = 9
@@ -497,12 +495,80 @@ def TTR_Init(ST,CUT,SET,RATE,di,ptString):
 		TBP = TRBP.read()
 	
 	for i in range(0,Params):
-		# try:
+		try:
 			eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
 			eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
-		# except:
-		# 	fit.SetParameter(i,float(TBP.split('\n')[i]) )
+		except:
+			fit.SetParameter(i,float(TBP.split('\n')[i]) )
 
+	try:
+		return [eta1fit.Clone(),eta2fit.Clone()] 
+	except:
+		return [fit.Clone()]
+
+def Alpha_Init(ETA,CUT,SET,di):
+# ETA = split, split_errup/down, full, full_errup/down
+# CUT = default,sideband
+# SET = data, QCD
+# di = grid on or off
+	folder = di+'fitdata/alphabet/'
+	if ETA == 'split':
+		TRBPE1 = open(folder+"Mt_pol2_"+SET+"_eta1_PSET_"+CUT+".txt")
+		TRBPE1.seek(0)
+		TRBPE2 = open(folder+"Mt_pol2_"+SET+"_eta2_PSET_"+CUT+".txt")
+		TRBPE2.seek(0)
+		eta1fit = TF1("eta1fit",'pol2',0,300)
+		eta2fit = TF1("eta2fit",'pol2',0,300)
+		Params = 3
+	if ETA == 'split_errup':
+		TRBPE1 = open(folder+"Mt_pol2_"+SET+"_eta1_PSET_"+CUT+".txt")
+		TRBPE1.seek(0)
+		TRBPE2 = open(folder+"Mt_pol2_"+SET+"_eta2_PSET_"+CUT+".txt")
+		TRBPE2.seek(0)
+		eta1fit = TF1("eta1fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		eta2fit = TF1("eta2fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
+	if ETA == 'split_errdown':
+		TRBPE1 = open(folder+"Mt_pol2_"+SET+"_eta1_PSET_"+CUT+".txt")
+		TRBPE1.seek(0)
+		TRBPE2 = open(folder+"Mt_pol2_"+SET+"_eta2_PSET_"+CUT+".txt")
+		TRBPE2.seek(0)
+		eta1fit = TF1("eta1fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		eta2fit = TF1("eta2fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
+	
+	if ETA == 'full':
+		TRBP = open(folder+"Mt_pol2_"+SET+"_full_PSET_"+CUT+".txt")
+		TRBP.seek(0)
+		eta1fit = TF1("fit",'pol2',0,300)
+		Params = 3
+	if ETA == 'full_errup':
+		TRBP = open(folder+"Mt_pol2_"+SET+"_eta1_PSET_"+CUT+".txt")
+		TRBP.seek(0)
+		fit = TF1("eta1fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
+	if ETA == 'full_errdown':
+		TRBP = open(folder+"Mt_pol2_"+SET+"_eta1_PSET_"+CUT+".txt")
+		TRBP.seek(0)
+		fit = TF1("eta1fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
+
+	# Try to read the imported file
+	try:
+		TBP1 = TRBPE1.read()
+		TBP2 = TRBPE2.read()
+	except:
+		TBP = TRBP.read()
+	
+	# For each parameter, try to set it in the fit (reconstructing the fit)
+	for i in range(0,Params):
+		try:
+			eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
+			eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
+		except:
+			fit.SetParameter(i,float(TBP.split('\n')[i]) )
+
+	# return the fit
 	try:
 		return [eta1fit.Clone(),eta2fit.Clone()] 
 	except:
@@ -663,45 +729,7 @@ def WJetMatching(GP):
 
 	return passed
 
-			
-
-def Initlv(string,post=''):
-	PtHandle 	= 	Handle (  "vector<float> "  )
-	PtLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiPt")
-
-	EtaHandle 	= 	Handle (  "vector<float> "  )
-	EtaLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiEta")
-
-	PhiHandle 	= 	Handle (  "vector<float> "  )
-	PhiLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiPhi")
-
-	MassHandle 	= 	Handle (  "vector<float> "  )
-	MassLabel  	= 	( string+post , string.replace("jets","jet")+"PuppiMass")
-
-	return [[PtHandle,PtLabel],[EtaHandle,EtaLabel],[PhiHandle,PhiLabel],[MassHandle,MassLabel]]
-
-def Makelv(vector,event):
-	event.getByLabel (vector[0][1], vector[0][0])
-	Pt 		= 	vector[0][0].product()
-
-	event.getByLabel (vector[1][1], vector[1][0])
-	Eta 		= 	vector[1][0].product()
-
-	event.getByLabel (vector[2][1], vector[2][0])
-	Phi 		= 	vector[2][0].product()
-
-	event.getByLabel (vector[3][1], vector[3][0])
-	Mass 		= 	vector[3][0].product()
- 
-	lvs = []
-	for i in range(0,len(Pt)):
- 
-		#lvs.append(ROOT.Math.LorentzVector('ROOT::Math::PtEtaPhiM4D<double>')(Pt[i],Eta[i],Phi[i],Mass[i]))
-		lvs.append(TLorentzVector())
-		lvs[i].SetPtEtaPhiM(Pt[i],Eta[i],Phi[i],Mass[i])
-
-	return lvs
- 
+			 
 def PU_Lookup(PU , PUP):
 	PUWeight = 1.0
 	PUWeightup = 1.0
@@ -732,8 +760,8 @@ def Hemispherize(LV1,LV2):
 
 #This is just a quick function to automatically make a tree
 #This is used right now to automatically output branches used to validate the cuts used in a run
-def Make_Trees(Floats):
-	t = TTree("Tree", "Tree");
+def Make_Trees(Floats, treeName='Tree'):
+	t = TTree(treeName, treeName);
 	print "Booking trees"
 	for F in Floats.keys():
 		t.Branch(F, Floats[F], F+"/D")

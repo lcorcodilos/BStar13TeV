@@ -57,6 +57,13 @@ for f in files_to_sum:
 	commands.append('hadd ' + f + " " + f.replace('_PSET','_job*_PSET') )
 	commands.append('mv ' +  f.replace('_PSET','_job*_PSET') + ' temprootfiles/')
 
+# ttbar
+for ptString in ['']:#,'_noExtraPtCorrection','_ptreweight_off']:
+	commands.append('rm rootfiles/'+Lumi+'/TWminitree_weightedttbar_PSET_'+cuts+ptString+'.root')
+	commands.append('python HistoWeight.py -i TWminitree_ttbar_PSET_'+cuts+ptString+'.root -o TWminitree_weightedttbar_PSET_'+cuts+ptString+'.root -n auto -w ' + str(cLumi*xsec_ttbar['PH']))
+	commands.append('mv TWminitree_weightedttbar_PSET_'+cuts+ptString+'.root rootfiles/'+Lumi+'/')
+	commands.append('mv TWminitree_ttbar_PSET_'+cuts+ptString+'.root temprootfiles/')
+
 
 # QCDHT
 commands.append('rm rootfiles/'+Lumi+'/TWminitree_QCD_PSET_'+cuts+'.root')
@@ -69,6 +76,21 @@ commands.append('python HistoWeight.py -i TWminitree_QCDHT2000_PSET_'+cuts+'.roo
 commands.append('hadd TWminitree_QCD_PSET_'+cuts+'.root rootfiles/'+Lumi+'/TWminitree_weightedQCDHT*_PSET_'+cuts+'.root')
 commands.append('mv TWminitree_QCDHT*_PSET_'+cuts+'.root temprootfiles/')
 commands.append('mv TWminitree_QCD_PSET_'+cuts+'.root rootfiles/'+Lumi+'/')
+
+# Singletop
+commands.append('rm rootfiles/'+Lumi+'/TWminitree_singletop_*_PSET_'+cuts+'.root')
+#commands.append('python HistoWeight.py -i TWminitree_singletop_s_PSET_'+cuts+'.root -o TWminitree_singletop_s_PSET_'+cuts+'weighted.root -n auto -w ' + str(cLumi*xsec_st['S']))
+commands.append('python HistoWeight.py -i TWminitree_singletop_t_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWminitree_weightedsingletop_t_PSET_'+cuts+'.root -n auto -w ' + str(cLumi*xsec_st['T']))
+commands.append('python HistoWeight.py -i TWminitree_singletop_tB_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWminitree_weightedsingletop_tB_PSET_'+cuts+'.root -n auto -w ' + str(cLumi*xsec_st['TB']))
+commands.append('python HistoWeight.py -i TWminitree_singletop_tW_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWminitree_weightedsingletop_tW_PSET_'+cuts+'.root -n auto -w ' + str(cLumi*xsec_st['TW']))
+commands.append('python HistoWeight.py -i TWminitree_singletop_tWB_PSET_'+cuts+'.root -o rootfiles/'+Lumi+'/TWminitree_weightedsingletop_tWB_PSET_'+cuts+'.root -n auto -w ' + str(cLumi*xsec_st['TWB']))
+commands.append('hadd TWminitree_singletop_PSET_'+cuts+'.root rootfiles/'+Lumi+'/TWminitree_weightedsingletop_*_PSET_'+cuts+'.root')
+commands.append('mv TWminitree_singletop_*_PSET_'+cuts+'.root temprootfiles/')
+commands.append('mv TWminitree_singletop_PSET_'+cuts+'.root rootfiles/'+Lumi+'/')
+
+# Data
+commands.append('rm rootfiles/'+Lumi+'/TWminitree_data_PSET_'+cuts+'.root')
+commands.append('mv TWminitree_data_PSET_'+cuts+'.root rootfiles/'+Lumi+'/')
 
 
 for s in commands :

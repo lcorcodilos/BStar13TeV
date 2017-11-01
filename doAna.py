@@ -10,17 +10,15 @@ commands2 = []
 
 commands2.append('python grid_analyzer_post.py -c default')
 commands2.append('cd rootfiles/35851pb/')
-commands2.append('python MakeVectorLike.py -c default')
 commands2.append('cd ../../')
 
 commands2.append('python grid_analyzer_post.py -c sideband')
 commands2.append('cd rootfiles/35851pb/')
-commands2.append('python MakeVectorLike.py -c sideband')
 commands2.append('cd ../../')
 
 commands2.append('python grid_analyzer_post.py -c sideband1')
 commands2.append('cd rootfiles/35851pb/')
-commands2.append('python MakeVectorLike.py -c sideband1')
+commands2.append('python MakeVectorLike.py')
 commands2.append('cd ../../')
 
 #commands2.append('python PtReweightStudy.py')

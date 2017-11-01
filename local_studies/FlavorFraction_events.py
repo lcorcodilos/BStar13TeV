@@ -14,53 +14,54 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
 (options, args) = parser.parse_args()
 
 
-# Initialize file list
-files = []
-outfile = TFile('FlavorFraction_QCD.root','recreate')
+# Initialize output file
+outfile = TFile('FlavorFraction_events_'+options.cuts+'.root','recreate')
 
 # Create the pass cuts
 toptag = '((tau32<0.65)&&(sjbtag>0.5426))'
 taggingDict = {'pass':toptag,'fail':'!'+toptag}
 
-# List of files
-fileList = ['../rootfiles/35851pb/TWratefileQCD_PSET_rate_'+options.cuts+'.root',
-			'../rootfiles/35851pb/TWratefileQCD_PSET_'+options.cuts+'.root'
-			]
+for band in ['rate_'+options.cuts,options.cuts]:
+	# Need to go into each QCD set 
+	for HT in ['500','700','1000','1500','2000']:
+		# Open up the file
+		htFile = TFile.Open('../rootfiles/35851pb/TWratefileweightedQCDHT'+HT+'_PSET_'+band+'.root')
+		
+		# Get the scale weight
+		weightTree = htFile.Get('Weight')
+		weightTree.GetEntry(0)
 
-histList = []
+		# Set the weight of 'Tree' as the scale weight
+		htTree = htFile.Get('Tree')
+		htTree.SetWeight(weightTree.weightv)
 
-# Create a list of cuts in same order as files for later reference
-cuts = ['rate_'+options.cuts,options.cuts]
-
-iFile = 0
-
-# For each file...
-for file in fileList:
-	# Setup a TChain to avoid segfaults since all your trees have the same name
-	thisChain = TChain('Tree')
-	thisChain.Add(file)
-
-	# Split into pass and fail distributions
-	for tagging in taggingDict.keys():
-
-		# Define a blank histogram
-		thisHist = TH1F('QCD'+cuts[iFile]+tagging+'_FlavFrac','QCD'+cuts[iFile]+tagging+'_FlavFrac',23,0,22)
-		# Draw onto it
-		thisChain.Draw('abs(flavor)>>QCD'+cuts[iFile]+tagging+'_FlavFrac','weight*('+taggingDict[tagging]+'&&(tpt<600)&&(tpt>400))','goff')#
-
-		histList.append('QCD'+cuts[iFile]+tagging+'_FlavFrac')
-
-		# thisHist.SetMaximum(0.55)
-
-		# Color the pass and fail differently
-		if tagging == 'pass':
-			thisHist.SetLineColor(kRed)
-		elif tagging == 'fail':
-			thisHist.SetLineColor(kBlue)
+		# Split into pass and fail distributions
+		for tagging in taggingDict.keys():
+			# Book a hist
+			tagHist = TH1F('QCDHT'+HT+band+tagging+'_FlavFrac','QCDHT'+HT+band+tagging+'_FlavFrac',22,0,22)
+			# Draw onto it
+			htTree.Draw('abs(flavor)>>QCDHT'+HT+band+tagging+'_FlavFrac','weight*('+taggingDict[tagging]+'&&(tpt>600))','goff') #&&(tpt>400)
 			
-		thisHist.Write()
-	
-	iFile+=1
+			# Color the pass and fail differently
+			if tagging == 'pass':	
+				tagHist.SetLineColor(kRed)
+			elif tagging == 'fail':
+				tagHist.SetLineColor(kBlue)
+
+			outfile.cd()
+			tagHist.Write()
+
+	# Now need to access each HT set and add them together
+	outfile.cd()
+	totTagHist = TH1F('QCD'+band+'pass_FlavFrac','QCD'+band+'pass_FlavFrac',22,0,22)
+	totAntitagHist = TH1F('QCD'+band+'fail_FlavFrac','QCD'+band+'fail_FlavFrac',22,0,22)
+
+	for HT in ['500','700','1000','1500','2000']:
+		totTagHist.Add(outfile.Get('QCDHT'+HT+band+'pass_FlavFrac'))
+		totAntitagHist.Add(outfile.Get('QCDHT'+HT+band+'fail_FlavFrac'))
+
+	totTagHist.Write()
+	totAntitagHist.Write()
 
 cSB = TCanvas('SB','SB',700,800)
 cSB.Divide(1,2)
@@ -119,6 +120,7 @@ SBRpf.Divide(SBRpfFail)
 
 cTotal.cd(1)
 SBRpf.SetTitle('R_{P/F} '+options.cuts)
+SBRpf.GetXaxis().SetTitle('PDG ID')
 SBRpf.Draw('hist')
 
 SBPassEst = SBFail.Clone('QCD'+options.cuts+'PassEstimated_FlavFrac')
@@ -130,7 +132,7 @@ SBPass.SetLineColor(kRed)
 SBPassEst.SetLineColor(kViolet-6)
 SBPass.SetTitle('QCD MC Flavor Fraction Pass and Estimated distributions - '+options.cuts)
 
-leg2.AddEntry(SBPassNorm,'pass')
+leg2.AddEntry(SBPass,'pass')
 leg2.AddEntry(SBPassEst,'estimate')
 
 SBPass.Draw('histE')

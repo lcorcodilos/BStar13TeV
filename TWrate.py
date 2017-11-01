@@ -269,6 +269,20 @@ pteta2pretag          = TH1D("pteta2pretag",           "t Probe pt in 0.8<Eta<2.
 pteta1          = TH1D("pteta1",           "t pt in 0<Eta<0.8",             400,  0,  2000 )
 pteta2          = TH1D("pteta2",           "t pt in 0.8<Eta<2.4",             400,  0,  2000 )
 
+# NEW
+pteta1pretagH0          = TH1D("pteta1pretagH0",           "t Probe pt in 0<Eta<0.8",             400,  0,  2000 )
+pteta2pretagH0          = TH1D("pteta2pretagH0",           "t Probe pt in 0.8<Eta<2.4",             400,  0,  2000 )
+
+pteta1H0          = TH1D("pteta1H0",           "t pt in 0<Eta<0.8",             400,  0,  2000 )
+pteta2H0          = TH1D("pteta2H0",           "t pt in 0.8<Eta<2.4",             400,  0,  2000 )
+
+pteta1pretagH1          = TH1D("pteta1pretagH1",           "t Probe pt in 0<Eta<0.8",             400,  0,  2000 )
+pteta2pretagH1          = TH1D("pteta2pretagH1",           "t Probe pt in 0.8<Eta<2.4",             400,  0,  2000 )
+
+pteta1H1          = TH1D("pteta1H1",           "t pt in 0<Eta<0.8",             400,  0,  2000 )
+pteta2H1          = TH1D("pteta2H1",           "t pt in 0.8<Eta<2.4",             400,  0,  2000 )
+#
+
 Mpre          = TH1D("Mpre",           "top mass",             400,  105,  210 )
 Mpre.Sumw2()
 
@@ -458,6 +472,10 @@ for entry in range(lowBinEdge,highBinEdge):
 		elif hemis == 'hemis1' and doneAlready == True:
 			continue
 
+		# # Check if there's a third jet
+		# if tree.pt_subsubleading > 0:
+		# 	continue
+
 		# Remake the lorentz vectors
 		tjet = TLorentzVector()
 		tjet.SetPtEtaPhiM(tVals["pt"],tVals["eta"],tVals["phi"],tVals["mass"])
@@ -565,6 +583,7 @@ for entry in range(lowBinEdge,highBinEdge):
 						#Extract tags and probes for the average b tagging rate here 
 						#We use two eta regions 
 						preTop.Fill((tjet+wjet).M(),weight)
+						doneAlready = True
 
 						if eta1_cut:
 							eta1Count += 1
@@ -577,6 +596,13 @@ for entry in range(lowBinEdge,highBinEdge):
 								Mtwfaileta1.Fill((tjet+wjet).M(),weight)
 								ptFullEtaFail.Fill(tjet.Perp(),weight)
 								MtvsptFaileta1.Fill(tjet.Perp(),tjet.M(),weight)
+
+								if hemis == 'hemis0':
+									pteta1pretagH0.Fill(tjet.Perp(),weight)
+								elif hemis == 'hemis1':
+									pteta1pretagH1.Fill(tjet.Perp(),weight)
+
+
 							if FullTop :
 								MpostFull.Fill(tjet.M(),weight)
 								MtwtptcomparepostSB1e1.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
@@ -586,6 +612,11 @@ for entry in range(lowBinEdge,highBinEdge):
 		 						Mtwpasseta1.Fill((tjet+wjet).M(),weight)
 								ptFullEtaPass.Fill(tjet.Perp(),weight)
 								MtvsptPasseta1.Fill(tjet.Perp(),tjet.M(),weight)
+
+								if hemis == 'hemis0':
+									pteta1H0.Fill(tjet.Perp(),weight)
+								elif hemis == 'hemis1':
+									pteta1H1.Fill(tjet.Perp(),weight)
 
 								passedCount += 1
 								if tree.pt_subsubleading > 0.0:
@@ -602,6 +633,12 @@ for entry in range(lowBinEdge,highBinEdge):
 								Mtwfaileta2.Fill((tjet+wjet).M(),weight)
 								ptFullEtaFail.Fill(tjet.Perp(),weight)
 								MtvsptFaileta2.Fill(tjet.Perp(),tjet.M(),weight)
+
+								if hemis == 'hemis0':
+									pteta2pretagH0.Fill(tjet.Perp(),weight)
+								elif hemis == 'hemis1':
+									pteta2pretagH1.Fill(tjet.Perp(),weight)
+
 							if FullTop :
 								MpostFull.Fill(tjet.M(),weight)
 								MtwtptcomparepostSB1e2.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
@@ -611,6 +648,11 @@ for entry in range(lowBinEdge,highBinEdge):
 								Mtwpasseta2.Fill((tjet+wjet).M(),weight)
 								ptFullEtaPass.Fill(tjet.Perp(),weight)
 								MtvsptPasseta2.Fill(tjet.Perp(),tjet.M(),weight)
+
+								if hemis == 'hemis0':
+									pteta2H0.Fill(tjet.Perp(),weight)
+								elif hemis == 'hemis1':
+									pteta2H1.Fill(tjet.Perp(),weight)
 
 								passedCount += 1
 								if tree.pt_subsubleading > 0.0:
@@ -631,7 +673,6 @@ for entry in range(lowBinEdge,highBinEdge):
 							tree_vars[tv][0] = temp_variables[tv]
 						NewTree.Fill()
 
-						doneAlready = True
 hEta1Count.SetBinContent(1,eta1Count)
 hEta2Count.SetBinContent(1,eta2Count)
 

@@ -38,7 +38,7 @@ parser.add_option('-u', '--ptreweight', metavar='F', type='string', action='stor
 				  dest		=	'ptreweight',
 				  help		=	'on or off')
 parser.add_option('--noExtraPtCorrection', metavar='F', action='store_false',
-				  default=False,
+				  default=True,
 				  dest='extraPtCorrection',
 				  help='Call to turn off extraPtCorrection')
 parser.add_option('-b', '--blinded', metavar='F', type='string', action='store',
@@ -659,7 +659,7 @@ for i in range(0, iterations):
 		QCDMm=abs((DataBEMmup.GetBinContent(ibin)-DataBEMmdown.GetBinContent(ibin))/2)
 
 
-		QCDsys=sqrt(QCDMm*QCDMm+ QCDfit*QCDfit+ QCDfit1*QCDfit1) #+QCDfit2*QCDfit2)
+		QCDsys=sqrt(QCDMm*QCDMm+ QCDfit1*QCDfit1+ QCDfit*QCDfit) #+QCDfit2*QCDfit2)
 		QCDerror= sqrt(QCDstat*QCDstat+QCDsys*QCDsys)
 		TTerrorup=sqrt(TTstat*TTstat+TTnormUp*TTnormUp)
 		TTerrordown=sqrt(TTstat*TTstat+TTnormDown*TTnormDown)
@@ -869,7 +869,7 @@ for i in range(0, iterations):
 		QCDup = DataBE.Clone()
 		QCDdown = DataBE.Clone()
 		for ibin in range(1,DataBE.GetNbinsX()+1):
-			QCDfiterr=abs(BEfiterrh.GetBinContent(ibin))
+			# QCDfiterr=abs(BEfiterrh.GetBinContent(ibin))
 			QCDnominal=abs(DataBE.GetBinContent(ibin))
 			QCDup.SetBinContent(ibin,(QCDnominal + QCDfiterr))
 			QCDdown.SetBinContent(ibin,(QCDnominal - QCDfiterr))

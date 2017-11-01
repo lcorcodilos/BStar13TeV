@@ -10,7 +10,7 @@ fi
 # save current directory
 export CURRENTDIR=`pwd -P`
 
-export RUNMANYPATH=$1
+export RUNMANYPATH=``
 shift
 export COMMANDFILE=$1
 shift
@@ -23,7 +23,7 @@ shift
 export CopyDirectory=$1
 
 # figure out which directory runManySections.py is in
-export RUNMANYSCRIPT=$RUNMANYPATH"/runManySections.py"
+export RUNMANYSCRIPT=$RUNMANYPATH"./runManySections.py"
 
 echo script, $RUNMANYSCRIPT
 
@@ -49,6 +49,7 @@ echo Environment command: "$SETUPENV"
 eval $SETUPENV
 cd $CURRENTDIR
 
+
 # If we are on a system that has the 'storage.xml' file, tell
 # runManySections.py use it.
 export REPLACE=' '
@@ -73,3 +74,4 @@ if [ -n "$CopyDirectory" ] ; then
    echo copy command ${COPYCOMMAND} >> $LOG 2>&1
    eval $COPYCOMMAND
 fi
+

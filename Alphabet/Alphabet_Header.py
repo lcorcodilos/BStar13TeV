@@ -16,55 +16,133 @@ def AlphabetSlicer(plot, bins, cut, which, center): # Takes a 2D plot and measur
 	# cut = Value to differentiate pass from fail. Should be on the y-axis of plot
 	# which = ">" or "<", to tell you which way the cut goes
 	# center = the x-var is recentered about the middle of the blinded region. This tells you where. You can leave it as 0 if you want.
-        x = []
-        y = []
-        exl = []
-        eyl = []
-        exh = []
-        eyh = []  # ALL OF THESE ARE THE COMPONENTS OF A TGraphAsymmErrors object.
-        hx = []
-        hy = []
-        ehx = []
-        ehy = []
+	x = []
+	y = []
+	exl = []
+	eyl = []
+	exh = []
+	eyh = []  # ALL OF THESE ARE THE COMPONENTS OF A TGraphAsymmErrors object.
+	hx = []
+	hy = []
+	ehx = []
+	ehy = []
 
-        for b in bins: # loop through the bins (bins are along the mass axis and should contain a gap for the sigreg)
-                passed = 0
-                failed = 0
-                for i in range(plot.GetNbinsX()):  # Get pass/failed
-                        for j in range(plot.GetNbinsY()):
-                                if plot.GetXaxis().GetBinCenter(i) < b[1] and plot.GetXaxis().GetBinCenter(i) > b[0]:
-				    if which == ">":
-                                        if plot.GetYaxis().GetBinCenter(j) < cut:
-                                                failed = failed + plot.GetBinContent(i,j)
-                                        else:
-                                                passed = passed + plot.GetBinContent(i,j)
-				    if which == "<":
-                                        if plot.GetYaxis().GetBinCenter(j) > cut:
-                                                failed = failed + plot.GetBinContent(i,j)
-                                        else:
-                                                passed = passed + plot.GetBinContent(i,j)
-                if passed < 0:
-                        passed = 0
-                if failed < 0:
-                        failed = 0
-                if passed == 0 or failed == 0:
-                        continue
-                x.append((float((b[0]+b[1])/2.)-center))  # do the math in these steps (calculate error)
-                exl.append(float((b[1]-b[0])/2.))
-                exh.append(float((b[1]-b[0])/2.))
-                y.append(passed/(failed))      # NOTE: negative bins are not corrected, if you're getting negative values your bins are too fine.
-                ep = math.sqrt(passed)
-                ef = math.sqrt(failed)
-                err = (passed/(failed))*((ep/passed)+(ef/(failed)))
-                eyh.append(err)
-                if (passed/failed) - err > 0.:
-                        eyl.append(err)
-                else:
-                        eyl.append(passed/failed)
-        G = TGraphAsymmErrors(len(x), scipy.array(x), scipy.array(y), scipy.array(exl), scipy.array(exh), scipy.array
-(eyl), scipy.array(eyh))
-        return G  # Returns a TGAE which you can fit or plot.
+	for b in bins: # loop through the bins (bins are along the mass axis and should contain a gap for the sigreg)
+		passed = 0
+		failed = 0
+		for i in range(plot.GetNbinsX()):  # Get pass/failed
+			for j in range(plot.GetNbinsY()):
+				if (plot.GetXaxis().GetBinCenter(i) < b[1]) and (plot.GetXaxis().GetBinCenter(i) > b[0]):
+					if which == ">":
+						if plot.GetYaxis().GetBinCenter(j) < cut:
+							failed = failed + plot.GetBinContent(i,j)
+						else:
+							passed = passed + plot.GetBinContent(i,j)
+					if which == "<":
+						if plot.GetYaxis().GetBinCenter(j) > cut:
+							failed = failed + plot.GetBinContent(i,j)
+						else:
+							passed = passed + plot.GetBinContent(i,j)
+		if passed < 0:
+			passed = 0
+		if failed < 0:
+			failed = 0
+		if passed == 0 or failed == 0:
+			continue
 
+		x.append((float((b[0]+b[1])/2.)-center))  # do the math in these steps (calculate error)
+		exl.append(float((b[1]-b[0])/2.))
+		exh.append(float((b[1]-b[0])/2.))
+		y.append(passed/(failed))      # NOTE: negative bins are not corrected, if you're getting negative values your bins are too fine.
+		ep = math.sqrt(passed)
+		ef = math.sqrt(failed)
+		err = (passed/(failed))*((ep/passed)+(ef/(failed)))
+		eyh.append(err)
+		if (passed/failed) - err > 0.:
+			eyl.append(err)
+		else:
+			eyl.append(passed/failed)
+	for i in x:
+		print i
+	G = TGraphAsymmErrors(len(x), scipy.array(x), scipy.array(y), scipy.array(exl), scipy.array(exh), scipy.array(eyl), scipy.array(eyh))
+	return G  # Returns a TGAE which you can fit or plot.
+
+def Alphabet3DSlicer(plot, bins, cut1, which1, cut2, which2, center): # Takes a 3D plot and measures the Pass/Fail ratios in given bins
+	# plot = 3D plot to perform the measurment on
+	# bins = list of bins to measure the P/F ratio in (each bin will yield a A/B point
+	# cut = Value to differentiate pass from fail. Should be on the y and z-axes of plot
+	# which1(2) = ">" or "<", to tell you which way the cut goes
+	# center = the x-var is recentered about the middle of the blinded region. This tells you where. You can leave it as 0 if you want.
+	x = []
+	y = []
+	exl = []
+	eyl = []
+	exh = []
+	eyh = []  # ALL OF THESE ARE THE COMPONENTS OF A TGraphAsymmErrors object.
+	hx = []
+	hy = []
+	ehx = []
+	ehy = []
+
+	for b in bins: # loop through the bins (bins are along the mass axis and should contain a gap for the sigreg)
+		passed = 0
+		failed = 0
+		for i in range(plot.GetNbinsX()):  # Get pass/failed
+			for j in range(plot.GetNbinsY()):
+				for k in range(plot.GetNbinsZ()):
+					if (plot.GetXaxis().GetBinCenter(i) < b[1]) and (plot.GetXaxis().GetBinCenter(i) > b[0]):
+						# Four different filling options based on cut directions. Inequality signs in strings should match what is in if statements
+						if which1 == ">":
+							if which2 == ">":
+								# If both cuts pass, fill passed - else fill fail
+								if (plot.GetYaxis().GetBinCenter(j) > cut1) and (plot.GetZaxis().GetBinCenter(k) > cut2):
+									passed = passed + plot.GetBinContent(i,j,k)
+								else:
+									failed = failed + plot.GetBinContent(i,j,k)
+
+							elif which2 == '<':
+								# If both cuts pass, fill passed - else fill fail
+								if (plot.GetYaxis().GetBinCenter(j) > cut1) and (plot.GetZaxis().GetBinCenter(k) < cut2):
+									passed = passed + plot.GetBinContent(i,j,k)
+								else:
+									failed = failed + plot.GetBinContent(i,j,k)
+
+						if which1 == "<":
+							if which2 == '>':
+								if (plot.GetYaxis().GetBinCenter(j) < cut1) and (plot.GetZaxis().GetBinCenter(k) > cut2):
+									passed = passed + plot.GetBinContent(i,j,k)
+								else:
+									failed = failed + plot.GetBinContent(i,j,k)
+
+							elif which2 == '<':
+								if (plot.GetYaxis().GetBinCenter(j) < cut1) and (plot.GetZaxis().GetBinCenter(k) < cut2):
+									passed = passed + plot.GetBinContent(i,j,k)
+								else:
+									failed = failed + plot.GetBinContent(i,j,k)
+
+		if passed < 0:
+			passed = 0
+		if failed < 0:
+			failed = 0
+		if passed == 0 or failed == 0:
+			continue
+
+		x.append((float((b[0]+b[1])/2.)-center))  # do the math in these steps (calculate error)
+		exl.append(float((b[1]-b[0])/2.))
+		exh.append(float((b[1]-b[0])/2.))
+		y.append(passed/(failed))      # NOTE: negative bins are not corrected, if you're getting negative values your bins are too fine.
+		ep = math.sqrt(passed)
+		ef = math.sqrt(failed)
+		err = (passed/(failed))*((ep/passed)+(ef/(failed)))
+		eyh.append(err)
+		if (passed/failed) - err > 0.:
+			eyl.append(err)
+		else:
+			eyl.append(passed/failed)
+	for i in x:
+		print i
+	G = TGraphAsymmErrors(len(x), scipy.array(x), scipy.array(y), scipy.array(exl), scipy.array(exh), scipy.array(eyl), scipy.array(eyh))
+	return G  # Returns a TGAE which you can fit or plot.
 
 def AlphabetFitter(G, F): # Linear fit to output of above function, fitting with form F
 	# Want an arbitrary F: Need to provide conversion from Fit to the Error: use Converter.

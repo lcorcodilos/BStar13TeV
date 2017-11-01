@@ -25,21 +25,30 @@ class Alphabetizer:
 		self.DP = Dist_Plus
 		self.DM = Dist_Minus
 	def SetRegions(self, var_array, presel):
-	# var_array = [x var, y var, x n bins, x min, x max, y n bins, y min, y max]
+	# var_array = [x var, y var, z var, x n bins, x min, x max, y n bins, y min, y max, z n bins, z min, z max]
 		self.X = var_array[0]
-		self.Pplots = TH2F("added"+self.name, "", var_array[2],var_array[3],var_array[4],var_array[5],var_array[6],var_array[7])
-		self.Mplots = TH2F("subbed"+self.name, "", var_array[2],var_array[3],var_array[4],var_array[5],var_array[6],var_array[7])
+		self.Pplots = TH3F("added"+self.name, "", var_array[3],var_array[4],var_array[5],var_array[6],var_array[7],var_array[8],var_array[9],var_array[10],var_array[11])
+		self.Mplots = TH3F("subbed"+self.name, "",var_array[3],var_array[4],var_array[5],var_array[6],var_array[7],var_array[8],var_array[9],var_array[10],var_array[11])
 		for i in self.DP:
-			quick2dplot(i.File, i.Tree, self.Pplots, var_array[0], var_array[1], presel, i.weight)
+			quick3dplot(i.File, i.Tree, self.Pplots, var_array[0], var_array[1], var_array[2], presel, i.weight)
 		for j in self.DM:
-			quick2dplot(j.File, j.Tree, self.Mplots, var_array[0], var_array[1], presel, j.weight)
-		self.TwoDPlot = self.Pplots.Clone("TwoDPlot_"+self.name)
-		self.TwoDPlot.Add(self.Mplots, -1.)
+			quick3dplot(j.File, j.Tree, self.Mplots, var_array[0], var_array[1], var_array[2], presel, j.weight)
+		self.ThreeDPlot = self.Pplots.Clone("ThreeDPlot_"+self.name)
+		self.ThreeDPlot.Add(self.Mplots, -1.)
 	def GetRates(self, cut, bins, truthbins, center, FIT):
 		self.center = center
 		self.G = AlphabetSlicer(self.TwoDPlot, bins, cut[0], cut[1], center) # makes the A/B slices
 		if len(truthbins)>0:
 			self.truthG = AlphabetSlicer(self.TwoDPlot, truthbins, cut[0], cut[1], center) # makes the A/B slices
+		else:
+			self.truthG = None
+		self.Fit = FIT # reads the right class in, should be initialized and set up already
+		AlphabetFitter(self.G, self.Fit) # creates all three distributions (nominal, up, down)
+	def Get3DRates(self, cut1, cut2, bins, truthbins, center, FIT):
+		self.center = center
+		self.G = Alphabet3DSlicer(self.ThreeDPlot, bins, cut1[0], cut1[1], cut2[0], cut2[1], center) # makes the A/B/C slices
+		if len(truthbins)>0:
+			self.truthG = Alphabet3DSlicer(self.ThreeDPlot, truthbins, cut1[0], cut1[1], cut2[0], cut2[1], center) # makes the A/B/C slices
 		else:
 			self.truthG = None
 		self.Fit = FIT # reads the right class in, should be initialized and set up already

@@ -50,6 +50,10 @@ parser.add_option('-t', '--ttsub', metavar='F', type='string', action='store',
 				  default	=	'on',
 				  dest		=	'ttsub',
 				  help		=	'on, off, or double')
+parser.add_option('-H', '--hemis', metavar='F', type='string', action='store',
+				  default	=	'',
+				  dest		=	'hemis',
+				  help		=	'blank, H0, or H1')
 parser.add_option('-i', '--iteration', metavar='F', type='int', action='store',
 				  default	=	-1,
 				  dest		=	'iteration',
@@ -136,32 +140,32 @@ elif options.set=='data':
 #Make a bunch of txt files to store the fit parameters
 saveout = sys.stdout
 
-Outf1   =   open("fitdata/pol2input"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf2   =   open("fitdata/pol2input"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf4   =   open("fitdata/pol4input"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf5   =   open("fitdata/pol4input"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf7   =   open("fitdata/pol0input"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf8   =   open("fitdata/pol0input"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf10   =   open("fitdata/newfitinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf11   =   open("fitdata/newfitinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf13   =   open("fitdata/newfiterrorinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf14   =   open("fitdata/newfiterrorinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf16   =   open("fitdata/bpinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf17   =   open("fitdata/bpinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf19   =   open("fitdata/bperrorinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf20   =   open("fitdata/bperrorinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf22   =   open("fitdata/pol3input"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf23   =   open("fitdata/pol3input"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf25   =   open("fitdata/expoconinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf26   =   open("fitdata/expoconinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf28   =   open("fitdata/expoconerrorinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf29   =   open("fitdata/expoconerrorinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf31   =   open("fitdata/expolininput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf32   =   open("fitdata/expolininput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf34   =   open("fitdata/expolinerrorinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
-Outf35   =   open("fitdata/expolinerrorinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+".txt", "w")
+Outf1   =   open("fitdata/pol2input"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf2   =   open("fitdata/pol2input"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf4   =   open("fitdata/pol2errorinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf5   =   open("fitdata/pol2errorinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf7   =   open("fitdata/pol0input"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf8   =   open("fitdata/pol0input"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf10   =   open("fitdata/newfitinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf11   =   open("fitdata/newfitinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf13   =   open("fitdata/newfiterrorinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf14   =   open("fitdata/newfiterrorinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf16   =   open("fitdata/bpinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf17   =   open("fitdata/bpinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf19   =   open("fitdata/bperrorinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf20   =   open("fitdata/bperrorinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf22   =   open("fitdata/pol3input"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf23   =   open("fitdata/pol3input"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf25   =   open("fitdata/expoconinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf26   =   open("fitdata/expoconinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf28   =   open("fitdata/expoconerrorinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf29   =   open("fitdata/expoconerrorinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf31   =   open("fitdata/expolininput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf32   =   open("fitdata/expolininput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf34   =   open("fitdata/expolinerrorinput"+setstr+"eta1_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
+Outf35   =   open("fitdata/expolinerrorinput"+setstr+"eta2_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".txt", "w")
 if options.set == "QCD":
-	MMout    =   open('fitdata/ModMass_pol3_PSET_'+options.cuts+ttsubString+ptTTString+'.txt','w')
+	MMout    =   open('fitdata/ModMass_pol3_PSET_'+options.cuts+ttsubString+ptTTString+options.hemis+'.txt','w')
 sto = sys.stdout  
 
 
@@ -198,7 +202,7 @@ fsingletop = TFile(rootdir+"TWratefilesingletop"+"_PSET_"+options.cuts+ptItStrin
 
 if options.set == 'QCD':
 
-	output1 = ROOT.TFile( "ModMassFile_"+options.cuts+ptTTString+".root", "recreate" )
+	output1 = ROOT.TFile( "ModMassFile_"+options.cuts+ptTTString+options.hemis+".root", "recreate" )
 	output1.cd()
 
 	ModM = fdata.Get("MpostFull")
@@ -237,30 +241,30 @@ if options.set == 'QCD':
 #TFile(rootdir+"TWratefileweightedsignalright1400_PSET_"+options.cuts+".root"),
 #]
 
-output = TFile( "plots/TWrate_Maker_"+setstr+"_"+Lumi+"_PSET_"+options.cuts+ttsubString+ptTTString+".root", "recreate" )
+output = TFile( "plots/TWrate_Maker_"+setstr+"_"+Lumi+"_PSET_"+options.cuts+ttsubString+ptTTString+options.hemis+".root", "recreate" )
 output.cd()
 
 # Get numerators and denominators for each eta region
 
-neta1 = fdata.Get("pteta1")
-deta1 = fdata.Get("pteta1pretag")
+neta1 = fdata.Get("pteta1"+options.hemis)
+deta1 = fdata.Get("pteta1pretag"+options.hemis)
 
-neta2 = fdata.Get("pteta2")
-deta2 = fdata.Get("pteta2pretag")
+neta2 = fdata.Get("pteta2"+options.hemis)
+deta2 = fdata.Get("pteta2pretag"+options.hemis)
 
 # Ditto for ttbar and single top
 
-ttneta1 = fttbar.Get("pteta1")
-ttdeta1 = fttbar.Get("pteta1pretag")
+ttneta1 = fttbar.Get("pteta1"+options.hemis)
+ttdeta1 = fttbar.Get("pteta1pretag"+options.hemis)
 
-ttneta2 = fttbar.Get("pteta2")
-ttdeta2 = fttbar.Get("pteta2pretag")
+ttneta2 = fttbar.Get("pteta2"+options.hemis)
+ttdeta2 = fttbar.Get("pteta2pretag"+options.hemis)
 
-stneta1 = fsingletop.Get("pteta1")
-stdeta1 = fsingletop.Get("pteta1pretag")
+stneta1 = fsingletop.Get("pteta1"+options.hemis)
+stdeta1 = fsingletop.Get("pteta1pretag"+options.hemis)
 
-stneta2 = fsingletop.Get("pteta2") 
-stdeta2 = fsingletop.Get("pteta2pretag")
+stneta2 = fsingletop.Get("pteta2"+options.hemis) 
+stdeta2 = fsingletop.Get("pteta2pretag"+options.hemis)
 
 ntot1 = ttneta1.Integral() + neta1.Integral() + stneta1.Integral()
 ntot2 = ttneta2.Integral() + neta2.Integral() + stneta2.Integral()
@@ -794,7 +798,7 @@ print str(p33)
 #The rest of this file makes the 3d mistag rates (parameterized in pt,eta,Mtw)
 
 
-output1 = ROOT.TFile( "Tagrate"+setstr+"2D_"+options.cuts+ttsubString+ptTTString+".root", "recreate" )
+output1 = ROOT.TFile( "Tagrate"+setstr+"2D_"+options.cuts+ttsubString+ptTTString+options.hemis+".root", "recreate" )
 output2 = ROOT.TFile( "plots/"+options.cuts+"/Tagrate"+setstr+"2Ddelta.root", "recreate" )
 
 output = ROOT.TFile( "plots/"+options.cuts+"/Tagrate"+setstr+"Slices.root", "recreate" )

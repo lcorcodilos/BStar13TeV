@@ -14,6 +14,7 @@ gStyle.SetOptStat(0)
 # 				  help		=	'Cuts type (ie default, rate, etc)')
 # (options, args) = parser.parse_args()
 
+
 # Create an output file
 outfile = TFile('3rdJetHists.root','recreate')
 outfile.cd()
@@ -27,13 +28,7 @@ passedW3rdJetCounts = {'rate_sideband':0,'rate_default':0,'rate_highWmass':0,'si
 # Start by making some histograms and storing them in outfile
 #
 for cut in cuts:
-	file = TFile('../rootfiles/35851pb/TWminitree_QCD_PSET_'+cut+'.root','open')
-	tree = file.Get("Tree")
-
-	# topJetHist2D = TH2F('topJetHist2D_'+cut,'top jet '+cut,16,0,2*math.pi,24,-2.4,2.4)
-	# WJetHist2D = TH2F('WJetHist2D_'+cut,'W jet '+cut,16,0,2*math.pi,24,-2.4,2.4)
-	# thirdJetHist2D = TH2F('thirdJetHist2D_'+cut,'3rd jet '+cut,16,0,2*math.pi,24,-2.4,2.4)
-
+	# Book some cut specific histograms
 	topJetHist1DPass = TH1F('topJetHist1DPass_'+cut,'Pass top jet '+cut,16,0,2*math.pi)
 	topJetHist1DFail = TH1F('topJetHist1DFail_'+cut,'Fail top jet '+cut,16,0,2*math.pi)
 
@@ -41,46 +36,57 @@ for cut in cuts:
 	thirdJetHist1DFail = TH1F('thirdJetHist1DFail_'+cut,'Fail 3rd jet '+cut,16,0,2*math.pi)
 
 	passedW3rdJetCount = 0
-	for entry in range(tree.GetEntries()):
-		tree.GetEntry(entry)
+	for HT in ['500','700','1000','1500','2000']:
+		# Open the file
+		htFile = TFile.Open('../rootfiles/35851pb/TWminitree_weightedQCDHT'+HT+'_PSET_'+cut+'.root')
+		
+		# Get the scale weight to apply when filling
+		weightTree = htFile.Get('Weight')
+		weightTree.GetEntry(0)
 
-		topptcut = (tree.pt_top < 600) and (tree.pt_top > 400)
+		# Get Tree
+		htTree = htFile.Get('thirdJetTree')
+		
+		for entry in range(htTree.GetEntries()):
+			htTree.GetEntry(entry)
 
-		if topptcut:
-			toptag = (tree.tau32 < 0.65) and (tree.sjbtag < 0.5426)
+			topptcut = (htTree.pt_top < 600) and (htTree.pt_top > 400)
 
-			# Need to do a trick so that we can easily see the top and W
-			# Will set wjet so it's always at pi/2 but then need to adjust the position of the top and 3rd jet
-			# Can't just take abs(wjet.phi()-tjet.phi()) for example because say the W is at phi = 0, then a tjet
-			# at either 2pi/3 or 4pi/3 will return the same value for abs(wjet.phi()-tjet.phi()). Doing this will
-			# make it look like there's an imbalance of the third jet that prefers values < pi
+			if topptcut:
+				toptag = (htTree.tau32 < 0.65) and (htTree.sjbtag < 0.5426)
 
-			wjet_OldPhi = tree.phi_w
-			wjet_NewPhi = 0
-			rotation = wjet_NewPhi - wjet_OldPhi
-			
-			tjet_OldPhi = tree.phi_top
-			tjet_NewPhi = tjet_OldPhi + rotation
-			if tjet_NewPhi > 2*math.pi:
-				tjet_NewPhi = tjet_NewPhi - 2*math.pi
-			elif tjet_NewPhi < 0:
-				tjet_NewPhi = 2*math.pi + tjet_NewPhi
+				# Need to do a trick so that we can easily see the top and W
+				# Will set wjet so it's always at pi/2 but then need to adjust the position of the top and 3rd jet
+				# Can't just take abs(wjet.phi()-tjet.phi()) for example because say the W is at phi = 0, then a tjet
+				# at either 2pi/3 or 4pi/3 will return the same value for abs(wjet.phi()-tjet.phi()). Doing this will
+				# make it look like there's an imbalance of the third jet that prefers values < pi
 
-			thirdjet_OldPhi = tree.phi_3
-			thirdjet_NewPhi = thirdjet_OldPhi + rotation
-			if thirdjet_NewPhi > 2*math.pi:
-				thirdjet_NewPhi = thirdjet_NewPhi - 2*math.pi
-			elif thirdjet_NewPhi < 0:
-				thirdjet_NewPhi = 2*math.pi + thirdjet_NewPhi
+				wjet_OldPhi = htTree.phi_w
+				wjet_NewPhi = 0
+				rotation = wjet_NewPhi - wjet_OldPhi
+				
+				tjet_OldPhi = htTree.phi_top
+				tjet_NewPhi = tjet_OldPhi + rotation
+				if tjet_NewPhi > 2*math.pi:
+					tjet_NewPhi = tjet_NewPhi - 2*math.pi
+				elif tjet_NewPhi < 0:
+					tjet_NewPhi = 2*math.pi + tjet_NewPhi
 
-			if toptag:
-				topJetHist1DPass.Fill(tjet_NewPhi,tree.weight)
-				thirdJetHist1DPass.Fill(thirdjet_NewPhi,tree.weight)
-				passedW3rdJetCounts[cut] += 1
+				thirdjet_OldPhi = htTree.phi_3
+				thirdjet_NewPhi = thirdjet_OldPhi + rotation
+				if thirdjet_NewPhi > 2*math.pi:
+					thirdjet_NewPhi = thirdjet_NewPhi - 2*math.pi
+				elif thirdjet_NewPhi < 0:
+					thirdjet_NewPhi = 2*math.pi + thirdjet_NewPhi
 
-			else:
-				topJetHist1DFail.Fill(tjet_NewPhi,tree.weight)
-				thirdJetHist1DFail.Fill(thirdjet_NewPhi,tree.weight)
+				if toptag:
+					topJetHist1DPass.Fill(tjet_NewPhi, weightTree.weightv*htTree.weight)
+					thirdJetHist1DPass.Fill(thirdjet_NewPhi, weightTree.weightv*htTree.weight)
+					passedW3rdJetCounts[cut] += 1
+
+				else:
+					topJetHist1DFail.Fill(tjet_NewPhi, weightTree.weightv*htTree.weight)
+					thirdJetHist1DFail.Fill(thirdjet_NewPhi, weightTree.weightv*htTree.weight)
 
 	outfile.cd()
 
@@ -150,6 +156,7 @@ for reg in WmassRegions:
 	cAll.cd(1)
 
 	# Need to draw the hist lines first as 'copies' and then do the error bars to get the filling right
+	topPass.SetMaximum(1.3*topPass.GetMaximum())
 	topPass.DrawCopy('hist')
 	topEst.DrawCopy('samehist')
 	topEst.SetFillColor(kBlue)
@@ -163,6 +170,7 @@ for reg in WmassRegions:
 
 	cAll.cd(2)
 
+	thirdPass.SetMaximum(1.3*thirdPass.GetMaximum())
 	thirdPass.DrawCopy('hist')
 	thirdEst.DrawCopy('samehist')
 	thirdEst.SetFillColor(kBlue)
@@ -185,8 +193,8 @@ for reg in WmassRegions:
 	#
 	if reg != 'highWmass':
 		ratefile = TFile.Open('../rootfiles/35851pb/TWratefileQCD_PSET_'+reg+'.root')
-		ratetree = ratefile.Get('Tree')
-		totalTopTags = float(ratetree.GetEntries())
-		passedW3rdJetCount = float(passedW3rdJetCounts[reg])
-		percent3rd = passedW3rdJetCount/totalTopTags*100
-		print 'Percent of events top-tagged events with a 3rd jet: ' + str(percent3rd)
+		ratePassHist = ratefile.Get('MpostFull')
+		totalTopTags = float(ratePassHist.Integral())
+		passed3rdJetCount = float(thirdPass.Integral())
+		percent3rd = passed3rdJetCount/totalTopTags*100
+		print 'Percent of pre-tagged events with a 3rd jet: ' + str(percent3rd)

@@ -61,8 +61,10 @@ Queue %(numSections)s\n'''
 # CMSSW variables
 cmsswFNALbashrc = '/uscmst1/prod/sw/cms/bashrc'
 cmsswEnvFNAL = 'cd %%s; . %s prod; eval `scramv1 runtime -sh`; cd -' % cmsswFNALbashrc
-cmsswEnvCERN = 'cd %s; eval `scramv1 runtime -sh`; cd -'
-
+#cmsswEnvCERN = 'cd %s; eval `scramv1 runtime -sh`; cd -'
+SAstr = os.environ['SCRAM_ARCH']
+CMstr = os.environ['SRT_CMSSW_VERSION_SCRAMRTDEL']
+cmsswEnvCERN = 'export SCRAM_ARCH='+SAstr+'; eval `scramv1 project CMSSW '+CMstr+'` ; cd '+CMstr+'/src ; eval `scramv1 runtime -sh`; cd -'
 storageXml = '$(CMS_PATH)/SITECONF/local/PhEDEx/storage.xml'
 storageProtocals = ['dcap']
 
@@ -346,7 +348,7 @@ class SectionInfoCollection (object):
         if os.path.exists (cmsswFNALbashrc):
             self.env = cmsswEnvFNAL % base
         else:
-            self.env = cmsswEnvCERN % base
+            self.env = cmsswEnvCERN
 
 
     def bashname (self):

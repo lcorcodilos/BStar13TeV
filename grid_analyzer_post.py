@@ -143,10 +143,11 @@ for l in range(len(lumiList)):
 		commands.append('python HistoWeight.py -i TWanalyzerttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root -n auto -w ' + str(lumi*xsec_ttbar['PH']))
 		commands.append('mv TWanalyzerttbar_Trigger_nominal_none_'+p+'_PSET_'+cuts+var+'.root temprootfiles/')
 	# if options.cuts == 'sideband1':
-	for p in ['_noExtraPtCorrection','_ptreweight_off']:
-		commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_PSET_'+cuts+p+'.root')
-		commands.append('python HistoWeight.py -i TWanalyzerttbar_Trigger_nominal_none_PSET_'+cuts+p+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_PSET_'+cuts+p+'.root -n auto -w ' + str(lumi*xsec_ttbar['PH']))
-		commands.append('mv TWanalyzerttbar_Trigger_nominal_none_PSET_'+cuts+p+'.root temprootfiles/')
+	if options.ttsub == 'on':
+		for p in ['_noExtraPtCorrection','_ptreweight_off']:
+			commands.append('rm rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_PSET_'+cuts+p+'.root')
+			commands.append('python HistoWeight.py -i TWanalyzerttbar_Trigger_nominal_none_PSET_'+cuts+p+'.root -o rootfiles/'+Lumi[l]+'/TWanalyzerweightedttbar_Trigger_nominal_none_PSET_'+cuts+p+'.root -n auto -w ' + str(lumi*xsec_ttbar['PH']))
+			commands.append('mv TWanalyzerttbar_Trigger_nominal_none_PSET_'+cuts+p+'.root temprootfiles/')
 
 for l in range(len(lumiList)):
 	lumi = lumiList[l]

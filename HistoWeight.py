@@ -25,6 +25,11 @@ parser.add_option('-n', '--nev', metavar='F', type='string', action='store',
                   dest		=	'nev',
                   help		=	'default or auto')
 
+parser.add_option('-t', '--scalettree', metavar='F', type='string', action='store',
+                  default	=	'off',
+                  dest		=	'scalettree',
+                  help		=	'on or off - scales weight branch of Tree')
+
 parser.add_option('-o', '--outputf', metavar='F', type='string', action='store',
                   default	=	'NULL_OUTPUT',
                   dest		=	'outputf',
@@ -54,7 +59,7 @@ Good=True
 # Multiply original weight by the new # of event weight
 weight*=evweight
 
-
+# First see if you already have a flat reweight value stored in a Weight tree
 try :
 	# Initialize array 'reweight' with one entry of zero
 	reweight = array('d',[0.])
@@ -66,7 +71,7 @@ try :
 	weighttree.GetEntry(0)
 	print "reweighting. Previous weight " +  str(reweight[0])
 
-
+# if not, set the reweight to 1
 except :
 	# Initialize reweight with one entry of one
 	reweight =array('d',[1.])
@@ -86,9 +91,22 @@ for i in range(0,len(D)):
 		#print "scaled " + str(a.GetName())
 	except:
 		if  a.GetName() != 'Weight':
-			# if the object is not the weight tree 
-			print "not scaling " + str(a.GetName()) 
-			a.CloneTree().Write()
+			# if the object is not the Weight tree 
+			
+			# Going to multiply all of the individual event weights by the scaled amount
+			if a.GetName() == 'Tree' and options.scalettree == 'on':
+				print "scaling " + str(a.GetName()) 
+				treeCopy = a.CloneTree()
+				scaledWeight = array('d',[0])
+				treeCopy.Branch('scaledWeight',scaledWeight,'scaledWeight/D')
+				treeCopy.GetEntries()
+				for entry in treeCopy:
+					scaledWeight[0] = treeCopy.weight*(weight/reweight[0])
+					treeCopy.Fill()
+
+			else:
+				print "not scaling " + str(a.GetName()) 
+				a.CloneTree().Write()
 
 # If the file is NOT empty
 if Good:

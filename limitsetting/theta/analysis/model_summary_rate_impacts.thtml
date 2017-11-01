@@ -9,8 +9,8 @@
 <h2>Observable 'mt_allhad'</h2>
 <table cellpadding="2" border="1">
 <tr><th>process / nuisance parameter</th><th>Alt (gauss)</th><th>Fit (gauss)</th><th>modm (gauss)</th><th>ttbar_rate (gauss)</th></tr>
-<tr><td>qcd</td><td><sup>+1.39</sup><sub>-1.39</sub> (s) </td><td><sup>+1.65</sup><sub>-1.65</sub> (s) </td><td><sup>-0.99</sup><sub>+0.99</sub> (s) </td><td>---</td></tr>
+<tr><td>qcd</td><td><sup>+1.00</sup><sub>-1.00</sub> (s) </td><td><sup>+1.53</sup><sub>-1.53</sub> (s) </td><td><sup>+3.35</sup><sub>-3.35</sub> (s) </td><td>---</td></tr>
 <tr><td>ttbar</td><td>---</td><td>---</td><td>---</td><td>&#xb1;150.00 (r)</td></tr>
-<tr><td>ttqcd</td><td><sup>-1.99</sup><sub>+1.99</sub> (s) </td><td><sup>-0.84</sup><sub>+0.84</sub> (s) </td><td><sup>-1.03</sup><sub>+1.03</sub> (s) </td><td>&#x2213;60.00 (r)</td></tr>
+<tr><td>ttqcd</td><td><sup>-2.16</sup><sub>+2.16</sub> (s) </td><td><sup>-0.85</sup><sub>+0.85</sub> (s) </td><td><sup>+1.63</sup><sub>-1.63</sub> (s) </td><td>&#x2213;60.00 (r)</td></tr>
 </table>
 

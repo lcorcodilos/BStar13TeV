@@ -18,14 +18,21 @@ def quickplot(File, tree, plot, var, Cut, Weight): # Fills  a plot from a file (
         temp = plot.Clone("temp") # Allows to add multiple distributions to the plot
         chain = ROOT.TChain(tree)
         chain.Add(File)
-        chain.Draw(var+">>"+"temp", Weight+"*"+Cut, "goff") # Actual plotting (and making of the cut + Weighing if necsr)
+        chain.Draw(var+">>"+"temp", Weight+"*("+Cut+')', "goff") # Actual plotting (and making of the cut + Weighing if necsr)
         plot.Add(temp)
 
 def quick2dplot(File, tree, plot, var, var2, Cut, Weight): # Same as above, but 2D plotter
         temp = plot.Clone("temp")
         chain = ROOT.TChain(tree)
         chain.Add(File)
-        chain.Draw(var2+":"+var+">>"+"temp", Weight+"*"+Cut, "goff")
+        chain.Draw(var2+":"+var+">>"+"temp", Weight+"*("+Cut+')', "goff")
+        plot.Add(temp)
+
+def quick3dplot(File, tree, plot, var, var2, var3, Cut, Weight): # Same as above, but 3D plotter
+        temp = plot.Clone("temp")
+        chain = ROOT.TChain(tree)
+        chain.Add(File)
+        chain.Draw(var3+':'+var2+":"+var+">>"+"temp", Weight+"*("+Cut+')', "goff")
         plot.Add(temp)
 
 def FindAndSetMax(someset):

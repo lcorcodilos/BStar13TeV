@@ -1,16 +1,16 @@
 python grid_analyzer_post.py -c default
 cd rootfiles/35851pb/
-python MakeVectorLike.py -c default
+python MakeVectorLike.py
 cd ../../
 
 python grid_analyzer_post.py -c sideband
 cd rootfiles/35851pb/
-python MakeVectorLike.py -c sideband
+#python MakeVectorLike.py -c sideband
 cd ../../
 
 python grid_analyzer_post.py -c sideband1
 cd rootfiles/35851pb/
-python MakeVectorLike.py -c sideband1
+#python MakeVectorLike.py -c sideband1
 cd ../../
 
 python TWanalyzer_plotter.py -s QCD -c default -v kinematics

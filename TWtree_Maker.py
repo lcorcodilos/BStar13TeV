@@ -169,6 +169,10 @@ gROOT.Macro(di+"rootlogon.C")
 import Bstar_Functions	
 from Bstar_Functions import *
 
+import Bstar_Functions_EDM	
+from Bstar_Functions_EDM import *
+
+
 jobs=int(options.jobs)
 if jobs != 1:
 	num=int(options.num)

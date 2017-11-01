@@ -109,7 +109,7 @@ def LoadCuts(TYPE):
 			'tau32':[0.0,0.65],
 			'tau21':[0.4,1.0],
 			'sjbtag':[0.5426,1.0],
-			'wmass':[65.0,105.0],
+			'wmass':[130.0,float("inf")],
 			'eta1':[0.0,0.8],
 			'eta2':[0.8,2.4],
 			'eta':[0.0,2.4]
@@ -143,21 +143,7 @@ def LoadCuts(TYPE):
 			'eta2':[0.8,2.4],
 			'eta':[0.0,2.4]
 			}
-	if TYPE=='rate_lowWmass':
-		return  {
-			'wpt':[400.0,float("inf")],
-			'tpt':[400.0,float("inf")],
-			'dy':[0.0,1.8],
-			'tmass':[105.0,210.0],
-			'tau32':[0.0,0.65],
-			'tau21':[0.0,0.4],
-			'sjbtag':[0.5426,1.0],
-			'wmass':[30.0,65.0],
-			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4],
-			'eta':[0.0,2.4]
-			}
-	if TYPE=='rate_highWmass':
+	if TYPE=='highWmass':
 		return  {
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
@@ -171,21 +157,7 @@ def LoadCuts(TYPE):
 			'eta2':[0.8,2.4],
 			'eta':[0.0,2.4]
 			}
-	if TYPE=='rate_lowWmass1':
-		return  {
-			'wpt':[400.0,float("inf")],
-			'tpt':[400.0,float("inf")],
-			'dy':[0.0,1.8],
-			'tmass':[105.0,210.0],
-			'tau32':[0.0,0.65],
-			'tau21':[0.4,1.0],
-			'sjbtag':[0.5426,1.0],
-			'wmass':[30.0,65.0],
-			'eta1':[0.0,0.8],
-			'eta2':[0.8,2.4],
-			'eta':[0.0,2.4]
-			}
-	if TYPE=='rate_highWmass1':
+	if TYPE=='rate_highWmass':
 		return  {
 			'wpt':[400.0,float("inf")],
 			'tpt':[400.0,float("inf")],
@@ -502,17 +474,17 @@ def TTR_Init(ST,CUT,SET,RATE,di,ptString):
 		eta2fit = TF1("eta2fit",'expo(0) + pol0(2)',0,4000)
 		Params = 3
 	if ST == 'QUAD':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+ptString+".txt")
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_pt"+CUT+ptString+".txt")
 		TRBP.seek(0)
 		fit = TF1("fit",'pol2',0,300)
 		Params = 3
 	if ST == 'QUAD_errUp':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+ptString+".txt")
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_pt"+CUT+ptString+".txt")
 		TRBP.seek(0)
 		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
 		Params = 9
 	if ST == 'QUAD_errDown':
-		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_"+CUT+ptString+".txt")
+		TRBP = open(di+"Alphabet/fn_bstar_QUAD_"+SET+"_pt"+CUT+ptString+".txt")
 		TRBP.seek(0)
 		fit = TF1("fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
 		Params = 9
@@ -523,12 +495,80 @@ def TTR_Init(ST,CUT,SET,RATE,di,ptString):
 		TBP = TRBP.read()
 	
 	for i in range(0,Params):
-		# try:
+		try:
 			eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
 			eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
-		# except:
-		# 	fit.SetParameter(i,float(TBP.split('\n')[i]) )
+		except:
+			fit.SetParameter(i,float(TBP.split('\n')[i]) )
 
+	try:
+		return [eta1fit.Clone(),eta2fit.Clone()] 
+	except:
+		return [fit.Clone()]
+
+def Alpha_Init(ETA,CUT,SET,di):
+# ETA = split, split_errup/down, full, full_errup/down
+# CUT = default,sideband
+# SET = data, QCD
+# di = grid on or off
+	folder = di+'fitdata/alphabet/'
+	if ETA == 'split':
+		TRBPE1 = open(folder+"Mt_pol2_"+SET+"_eta1_PSET_"+CUT+".txt")
+		TRBPE1.seek(0)
+		TRBPE2 = open(folder+"Mt_pol2_"+SET+"_eta2_PSET_"+CUT+".txt")
+		TRBPE2.seek(0)
+		eta1fit = TF1("eta1fit",'pol2',0,300)
+		eta2fit = TF1("eta2fit",'pol2',0,300)
+		Params = 3
+	if ETA == 'split_errup':
+		TRBPE1 = open(folder+"Mt_pol2_"+SET+"_eta1_PSET_"+CUT+".txt")
+		TRBPE1.seek(0)
+		TRBPE2 = open(folder+"Mt_pol2_"+SET+"_eta2_PSET_"+CUT+".txt")
+		TRBPE2.seek(0)
+		eta1fit = TF1("eta1fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		eta2fit = TF1("eta2fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
+	if ETA == 'split_errdown':
+		TRBPE1 = open(folder+"Mt_pol2_"+SET+"_eta1_PSET_"+CUT+".txt")
+		TRBPE1.seek(0)
+		TRBPE2 = open(folder+"Mt_pol2_"+SET+"_eta2_PSET_"+CUT+".txt")
+		TRBPE2.seek(0)
+		eta1fit = TF1("eta1fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		eta2fit = TF1("eta2fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
+	
+	if ETA == 'full':
+		TRBP = open(folder+"Mt_pol2_"+SET+"_full_PSET_"+CUT+".txt")
+		TRBP.seek(0)
+		eta1fit = TF1("fit",'pol2',0,300)
+		Params = 3
+	if ETA == 'full_errup':
+		TRBP = open(folder+"Mt_pol2_"+SET+"_eta1_PSET_"+CUT+".txt")
+		TRBP.seek(0)
+		fit = TF1("eta1fit",'[0]+ [1]*x + [2]*x*x + sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
+	if ETA == 'full_errdown':
+		TRBP = open(folder+"Mt_pol2_"+SET+"_eta1_PSET_"+CUT+".txt")
+		TRBP.seek(0)
+		fit = TF1("eta1fit",'[0]+ [1]*x + [2]*x*x - sqrt(([3]*[3]) + (2*x*[6]) + (x*x*[4]*[4]) + (2*x*x*[7]) + (2*x*x*x*[8]) + (x*x*x*x*[5]*[5]))',0,300)
+		Params = 9
+
+	# Try to read the imported file
+	try:
+		TBP1 = TRBPE1.read()
+		TBP2 = TRBPE2.read()
+	except:
+		TBP = TRBP.read()
+	
+	# For each parameter, try to set it in the fit (reconstructing the fit)
+	for i in range(0,Params):
+		try:
+			eta1fit.SetParameter(i,float(TBP1.split('\n')[i]) )
+			eta2fit.SetParameter(i,float(TBP2.split('\n')[i]) )
+		except:
+			fit.SetParameter(i,float(TBP.split('\n')[i]) )
+
+	# return the fit
 	try:
 		return [eta1fit.Clone(),eta2fit.Clone()] 
 	except:
@@ -689,9 +729,7 @@ def WJetMatching(GP):
 
 	return passed
 
-			
-
- 
+			 
 def PU_Lookup(PU , PUP):
 	PUWeight = 1.0
 	PUWeightup = 1.0
@@ -722,8 +760,8 @@ def Hemispherize(LV1,LV2):
 
 #This is just a quick function to automatically make a tree
 #This is used right now to automatically output branches used to validate the cuts used in a run
-def Make_Trees(Floats):
-	t = TTree("Tree", "Tree");
+def Make_Trees(Floats, treeName='Tree'):
+	t = TTree(treeName, treeName);
 	print "Booking trees"
 	for F in Floats.keys():
 		t.Branch(F, Floats[F], F+"/D")
