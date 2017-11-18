@@ -1,0 +1,9 @@
+NOTES:
+	self.Fit = TF1("fit", self.FitFunc, self.varf.bins[0], self.varf.bins[-1])
+	self.FitResults = self.R.Fit(self.Fit)
+	self.EG = TGraphErrors(1000)
+	for i in range(1000):
+		self.EG.SetPoint(i, self.varf.bins[0] + i*(self.varf.bins[-1]- self.varf.bins[0])/1000., 0)
+		TVirtualFitter.GetFitter().GetConfidenceIntervals(self.EG)
+	Ndof = self.Fit.GetNDF()
+	Chi2 = self.Fit.GetChisquare()

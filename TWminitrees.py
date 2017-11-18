@@ -230,6 +230,7 @@ miniTreeVars = {
 	'tau21':array('d',[0]),
 
 	'mass_tw':array('d',[0]),
+	'ht':array('d',[0]),
 
 	'weight':array('d',[0])}
 
@@ -301,7 +302,7 @@ for entry in range(lowBinEdge,highBinEdge):
 
 	doneAlready = False
 
-	for hemis in ['hemis0']:#,'hemis1']:
+	for hemis in ['hemis0','hemis1']:
 		if hemis == 'hemis0':
 			# Load up the ttree values
 			tVals = {
@@ -406,7 +407,7 @@ for entry in range(lowBinEdge,highBinEdge):
 
 
 			# if tmass_cut: - Moved lower so we can do W cuts first - LC 10/18/17
-			ht = tjet.Perp() + wjet.Perp()
+			ht = tjet.Perp() + wjet.Perp() + tree.pt_subsubleading
 
 			weight*=weightSFt
 
@@ -458,7 +459,7 @@ for entry in range(lowBinEdge,highBinEdge):
 				print "wmass type error"
 				continue                        
 
-			if wmass_cut:
+			if True:
 				if tau21_cut:
 					temp_minivariables = {
 						'pt_top':tVals['pt'],
@@ -479,6 +480,7 @@ for entry in range(lowBinEdge,highBinEdge):
 						'tau21':tau21val,
 
 						'mass_tw':(tjet+wjet).M(),
+						'ht':ht,
 
 						'weight':weight}
 

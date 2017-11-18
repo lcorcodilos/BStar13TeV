@@ -397,10 +397,10 @@ if options.Alphabet == "on":
 	TTR_errUp = []
 	TTR_errDown = []
 
-	for ptCuts in ['400-600','600-1000','1000-1800']:
-		TTR.append(TTR_Init('QUAD',ptCuts,setstr,options.rate,di,''))
-		TTR_errUp.append(TTR_Init('QUAD_errUp',ptCuts,setstr,options.rate,di,''))
-		TTR_errDown.append(TTR_Init('QUAD_errDown',ptCuts,setstr,options.rate,di,''))
+	for MtwCuts in ['800-1200','1200-1500','1500-3000']:
+		TTR.append(TTR_Init('QUAD',MtwCuts,setstr,options.rate,di,''))
+		TTR_errUp.append(TTR_Init('QUAD_errUp',MtwCuts,setstr,options.rate,di,''))
+		TTR_errDown.append(TTR_Init('QUAD_errDown',MtwCuts,setstr,options.rate,di,''))
 
 	fittitles = []
 

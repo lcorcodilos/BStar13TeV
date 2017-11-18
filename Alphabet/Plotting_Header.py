@@ -16,9 +16,12 @@ def writeplot(myTree, plot, var, Cut, Weight): # Fills a plot from a file (needs
 
 def quickplot(File, tree, plot, var, Cut, Weight): # Fills  a plot from a file (needs to have a TTree called "tree"...)
         temp = plot.Clone("temp") # Allows to add multiple distributions to the plot
+        # thisFile = TFile.Open(File)
+        # thisTree = thisFile.Get(tree)
         chain = ROOT.TChain(tree)
         chain.Add(File)
         chain.Draw(var+">>"+"temp", Weight+"*("+Cut+')', "goff") # Actual plotting (and making of the cut + Weighing if necsr)
+        # thisTree.Draw(var+">>"+"temp", Weight+"*("+Cut+')', "goff")
         plot.Add(temp)
 
 def quick2dplot(File, tree, plot, var, var2, Cut, Weight): # Same as above, but 2D plotter

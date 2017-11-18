@@ -72,9 +72,9 @@ class QuadraticFit:
 	self.ErrDn.SetParameter(8, fitter.GetCovarianceMatrixElement(1,2))
     def MakeConvFactor(self, var, center):
 		X = var + "-" + str(center)
-		self.ConvFact = "({0:2.9f} + (({3})*{1:2.9f}) + (({3})*({3})*{2:2.9f}))".format(self.ErrUp.GetParameter(0),self.ErrUp.GetParameter(1),self.ErrUp.GetParameter(2),X)
-		self.ConvFactUp = "({0:2.9f} + (({9})*{1:2.9f}) + (({9})*({9})*{2:2.9f}) + (({3:2.9f}*{3:2.9f}) + (2*({9})*{6:2.9f}) + (({9})*({9})*{4:2.9f}*{4:2.9f}) + (2*({9})*({9})*{7:2.9f}) + (2*({9})*({9})*({9})*{8:2.9f}) + (({9})*({9})*({9})*({9})*{5:2.9f}*{5:2.9f}))^0.5)".format(self.ErrUp.GetParameter(0),self.ErrUp.GetParameter(1),self.ErrUp.GetParameter(2),self.ErrUp.GetParameter(3),self.ErrUp.GetParameter(4),self.ErrUp.GetParameter(5),self.ErrUp.GetParameter(6),self.ErrUp.GetParameter(7),self.ErrUp.GetParameter(8),X)
-		self.ConvFactDn = "({0:2.9f} + (({9})*{1:2.9f}) + (({9})*({9})*{2:2.9f}) - (({3:2.9f}*{3:2.9f}) + (2*({9})*{6:2.9f}) + (({9})*({9})*{4:2.9f}*{4:2.9f}) + (2*({9})*({9})*{7:2.9f}) + (2*({9})*({9})*({9})*{8:2.9f}) + (({9})*({9})*({9})*({9})*{5:2.9f}*{5:2.9f}))^0.5)".format(self.ErrUp.GetParameter(0),self.ErrUp.GetParameter(1),self.ErrUp.GetParameter(2),self.ErrUp.GetParameter(3),self.ErrUp.GetParameter(4),self.ErrUp.GetParameter(5),self.ErrUp.GetParameter(6),self.ErrUp.GetParameter(7),self.ErrUp.GetParameter(8),X)
+		self.ConvFact = "({0:2.12f} + (({3})*{1:2.12f}) + (({3})*({3})*{2:2.12f}))".format(self.ErrUp.GetParameter(0),self.ErrUp.GetParameter(1),self.ErrUp.GetParameter(2),X)
+		self.ConvFactUp = "({0:2.12f} + (({9})*{1:2.12f}) + (({9})*({9})*{2:2.12f}) + (({3:2.12f}*{3:2.12f}) + (({9})*({9})*{4:2.12f}*{4:2.12f}) + (({9})*({9})*({9})*({9})*{5:2.12f}*{5:2.12f}) + (2*({9})*{6:2.12f}) + (2*({9})*({9})*{7:2.12f}) + (2*({9})*({9})*({9})*{8:2.12f}))^0.5)".format(self.ErrUp.GetParameter(0),self.ErrUp.GetParameter(1),self.ErrUp.GetParameter(2),self.ErrUp.GetParameter(3),self.ErrUp.GetParameter(4),self.ErrUp.GetParameter(5),self.ErrUp.GetParameter(6),self.ErrUp.GetParameter(7),self.ErrUp.GetParameter(8),X)
+		self.ConvFactDn = "({0:2.12f} + (({9})*{1:2.12f}) + (({9})*({9})*{2:2.12f}) - (({3:2.12f}*{3:2.12f}) + (({9})*({9})*{4:2.12f}*{4:2.12f}) + (({9})*({9})*({9})*({9})*{5:2.12f}*{5:2.12f}) + (2*({9})*{6:2.12f}) + (2*({9})*({9})*{7:2.12f}) + (2*({9})*({9})*({9})*{8:2.12f}))^0.5)".format(self.ErrUp.GetParameter(0),self.ErrUp.GetParameter(1),self.ErrUp.GetParameter(2),self.ErrUp.GetParameter(3),self.ErrUp.GetParameter(4),self.ErrUp.GetParameter(5),self.ErrUp.GetParameter(6),self.ErrUp.GetParameter(7),self.ErrUp.GetParameter(8),X)
 
 
 #### CUBIC ####
@@ -86,5 +86,4 @@ class QuadraticFit:
 #### GAUSSIAN ####
 
 #CUSTOM =========--------------=============------------=============-------------===============
-
 

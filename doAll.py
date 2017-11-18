@@ -40,6 +40,8 @@ for s in commands1 :
 	print 'executing ' + s
 	subprocess.call( [s], shell=True )
 
+
+subprocess.call(["sed -i '' 's/anaAlpha.listOfJobs/ana.listOfJobs/g' grid_analyzer_sub.csh"], shell=True)
 subprocess.call(['sh grid_analyzer_sub.csh'], shell=True)
 WaitForJobs('ana')
 

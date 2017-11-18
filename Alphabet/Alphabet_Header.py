@@ -56,7 +56,7 @@ def AlphabetSlicer(plot, bins, cut, which, center): # Takes a 2D plot and measur
 		y.append(passed/(failed))      # NOTE: negative bins are not corrected, if you're getting negative values your bins are too fine.
 		ep = math.sqrt(passed)
 		ef = math.sqrt(failed)
-		err = (passed/(failed))*((ep/passed)+(ef/(failed)))
+		err = (passed/failed)*math.sqrt((ep/passed)**2+(ef/failed)**2)
 		eyh.append(err)
 		if (passed/failed) - err > 0.:
 			eyl.append(err)
@@ -133,7 +133,7 @@ def Alphabet3DSlicer(plot, bins, cut1, which1, cut2, which2, center): # Takes a 
 		y.append(passed/(failed))      # NOTE: negative bins are not corrected, if you're getting negative values your bins are too fine.
 		ep = math.sqrt(passed)
 		ef = math.sqrt(failed)
-		err = (passed/(failed))*((ep/passed)+(ef/(failed)))
+		err = (passed/failed)*math.sqrt((ep/passed)**2+(ef/failed)**2)
 		eyh.append(err)
 		if (passed/failed) - err > 0.:
 			eyl.append(err)
@@ -144,12 +144,102 @@ def Alphabet3DSlicer(plot, bins, cut1, which1, cut2, which2, center): # Takes a 
 	G = TGraphAsymmErrors(len(x), scipy.array(x), scipy.array(y), scipy.array(exl), scipy.array(exh), scipy.array(eyl), scipy.array(eyh))
 	return G  # Returns a TGAE which you can fit or plot.
 
+def AlphabetNDSlicer(DP,DM,var, varCuts, passCuts, presel, bins):
+	# LC 11/1/17
+	# Does the job of AlphabetSlicer in N-dimensions by avoiding a multi-dimensional histogram
+	# to define cut regions (which is an inexact method!) and instead using TCuts
+	# DP - distribution plus
+	# DM - distribution minus
+	# var - tree variable that we want to look at in range we want to see it
+	# varCuts - cuts for blinded region, ex '(mass_top<105)||(mass_top>210)'
+	# passCuts - cuts to define 'pass'; a string like '(sjbtag>0.5426)&&(tau32<0.65)'
+	# presel - preselection that's always applied
+	# bins - bins for var (can be truth in which case varCuts needs to be inverted)
+	RatePassP = TH1F('PassPlus_'+var,'PassPlus_'+var,len(bins)-1,bins)
+	RateFailP = TH1F('FailPlus_'+var,'FailPlus_'+var,len(bins)-1,bins)
+	RatePassM = TH1F('PassMinus_'+var,'PassMinus_'+var,len(bins)-1,bins)
+	RateFailM = TH1F('FailMinus_'+var,'FailMinus_'+var,len(bins)-1,bins)
+	# RatePassP.Sumw2() 
+	# RateFailP.Sumw2()
+	# RatePassM.Sumw2()
+	# RateFailM.Sumw2()
+
+	# Fill pass and fail distribtions for plus and minus sets
+	for i in DP:
+		tempFile = TFile.Open(i.File)
+		tempTree = tempFile.Get(i.Tree)
+
+		tempPassP = TH1F('tempPassP','tempPassP',len(bins)-1,bins)
+		tempFailP = TH1F('tempFailP','tempFailP',len(bins)-1,bins)
+		tempPassP.Sumw2()
+		tempFailP.Sumw2()
+
+		tempTree.Draw(var+'>>tempPassP',i.weight+'*(('+passCuts+')&&('+presel+')&&('+varCuts+'))','goff e')
+		tempTree.Draw(var+'>>tempFailP',i.weight+'*(!('+passCuts+')&&('+presel+')&&('+varCuts+'))','goff e')
+
+		RatePassP.Add(tempPassP,1.)
+		RateFailP.Add(tempFailP,1.)
+	for i in DM:
+		tempFile = TFile.Open(i.File)
+		tempTree = tempFile.Get(i.Tree)
+
+		tempPassM = TH1F('tempPassM','tempPassM',len(bins)-1,bins)
+		tempFailM = TH1F('tempFailM','tempFailM',len(bins)-1,bins)
+		tempPassM.Sumw2()
+		tempFailM.Sumw2()
+
+
+		tempTree.Draw(var+'>>tempPassM',i.weight+'*(('+passCuts+')&&('+presel+')&&('+varCuts+'))','goff e')
+		tempTree.Draw(var+'>>tempFailM',i.weight+'*(!('+passCuts+')&&('+presel+')&&('+varCuts+'))','goff e')
+		RatePassM.Add(tempPassM,1.)
+		RateFailM.Add(tempFailM,1.)
+
+	# Subtract away the minus distributions
+
+	RatePass = RatePassP.Clone()
+	RatePass.Add(RatePassM,-1)
+	RateFail = RateFailP.Clone()
+	RateFail.Add(RateFailM,-1)
+
+	Rpf = RatePass.Clone()
+	Rpf.Divide(RateFail)
+
+	# Now need to build a TGAE that supports doing a fit
+	x = [float((bins[i]+bins[i+1])/2.) for i in range(0,len(bins)-1) if Rpf.GetBinContent(i+1) > 0]
+	exl = [float((bins[i+1]-bins[i])/2.) for i in range(0,len(bins)-1) if Rpf.GetBinContent(i+1) > 0]
+	exh = exl
+	y = [Rpf.GetBinContent(i) for i in range(1,len(bins)) if Rpf.GetBinContent(i) > 0]
+	# ep = [math.sqrt(RatePass.GetBinContent(i)) for i in range(1,len(bins))]
+	# ef = [math.sqrt(RateFail.GetBinContent(i)) for i in range(1,len(bins))]
+	# eyh = [Rpf.GetBinContent(i+1)*math.sqrt((ep[i]/RatePass.GetBinContent(i+1))**2+(ef[i]/RateFail.GetBinContent(i+1))**2) if (RatePass.GetBinContent(i+1)>0. and RateFail.GetBinContent(i+1)>0.) else 0 for i in range(0,len(bins)-1)]
+	eyh = [Rpf.GetBinError(i) for i in range(1,len(bins)) if Rpf.GetBinContent(i) > 0]
+	eyl = eyh
+	nbinsx = len(x)
+
+
+	G = TGraphAsymmErrors(nbinsx, scipy.array(x), scipy.array(y), scipy.array(exl), scipy.array(exh), scipy.array(eyl), scipy.array(eyh))
+
+	return G
+
 def AlphabetFitter(G, F): # Linear fit to output of above function, fitting with form F
 	# Want an arbitrary F: Need to provide conversion from Fit to the Error: use Converter.
 	G.Fit(F.fit, F.Opt)
 	fitter = TVirtualFitter.GetFitter()
 	F.Converter(fitter)
 
+# ONLY WORKS WITH &&
+def MakeCuts(listOfCuts, notStatus=''):
+	if notStatus == '':
+		out = '('
+	elif notStatus == 'not':
+		out = '!('
+	for icut in range(len(listOfCuts)):
+		out+= listOfCuts[icut]
+		# if not on last item
+		if icut != len(listOfCuts)-1:
+			out+= '&&'
+	out+=')'
+	return out
 
 #RooDataHist pred("pred", "Prediction from SB", RooArgList( x ), h_SR_Prediction);
 #RooFitResult * r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save());

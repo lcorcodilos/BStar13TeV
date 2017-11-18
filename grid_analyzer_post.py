@@ -29,6 +29,10 @@ parser.add_option('-t', '--ttsub', metavar='F', type='string', action='store',
 				  default	=	'on',
 				  dest		=	'ttsub',
 				  help		=	'on, off, or double')
+parser.add_option('-q', '--justqcd', metavar='F', type='string', action='store',
+				  default	=	'off',
+				  dest		=	'justqcd',
+				  help		=	'on, off')
 
  
 (options, args) = parser.parse_args()
@@ -118,7 +122,8 @@ if options.ttsub == 'on' or options.ttsub == 'off':
 
 	commands.append('mv TWanalyzerQCDHT*_Trigger_nominal_*_PSET_'+cuts+'.root temprootfiles/')
 
-
+if options.justqcd == 'on':
+	quit()
 
 for l in range(len(lumiList)):
 	lumi = lumiList[l]

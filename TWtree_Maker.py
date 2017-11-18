@@ -186,16 +186,6 @@ else:
 
 files = Load_Ntuples(options.set,di)
 
-# Just using the ttbar pileup for all MC
-# if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
-# 	settype = 'ttbar'
-# elif (options.set.find('QCD') != -1):
-# 	settype ='ttbar'
-# 	run_b_SF = False
-# else :
-# 	settype = options.set
-
-# print 'The type of set is ' + settype
 
 # We select all the events:    
 events = Events (files)
@@ -226,9 +216,9 @@ nevLabel  	= 	( "counter" , "nevr")
 
 totnev = 0
 for run in runs:
-		run.getByLabel (nevLabel,nevHandle )
-		nev 		= 	nevHandle.product() 
-		totnev+=nev[0]
+	run.getByLabel (nevLabel,nevHandle )
+	nev 		= 	nevHandle.product() 
+	totnev+=nev[0]
 print "Total unfiltered events in selection: ",totnev
 
 
