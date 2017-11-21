@@ -144,7 +144,7 @@ def Alphabet3DSlicer(plot, bins, cut1, which1, cut2, which2, center): # Takes a 
 	G = TGraphAsymmErrors(len(x), scipy.array(x), scipy.array(y), scipy.array(exl), scipy.array(exh), scipy.array(eyl), scipy.array(eyh))
 	return G  # Returns a TGAE which you can fit or plot.
 
-def AlphabetNDSlicer(DP,DM,var, varCuts, passCuts, presel, bins):
+def AlphabetNDSlicer(DP,DM,var, varCuts, passCuts, presel, bins, center):
 	# LC 11/1/17
 	# Does the job of AlphabetSlicer in N-dimensions by avoiding a multi-dimensional histogram
 	# to define cut regions (which is an inexact method!) and instead using TCuts
@@ -155,6 +155,7 @@ def AlphabetNDSlicer(DP,DM,var, varCuts, passCuts, presel, bins):
 	# passCuts - cuts to define 'pass'; a string like '(sjbtag>0.5426)&&(tau32<0.65)'
 	# presel - preselection that's always applied
 	# bins - bins for var (can be truth in which case varCuts needs to be inverted)
+	# center - usually 0. Allows you to recent the Rpf
 	RatePassP = TH1F('PassPlus_'+var,'PassPlus_'+var,len(bins)-1,bins)
 	RateFailP = TH1F('FailPlus_'+var,'FailPlus_'+var,len(bins)-1,bins)
 	RatePassM = TH1F('PassMinus_'+var,'PassMinus_'+var,len(bins)-1,bins)
@@ -195,7 +196,6 @@ def AlphabetNDSlicer(DP,DM,var, varCuts, passCuts, presel, bins):
 		RateFailM.Add(tempFailM,1.)
 
 	# Subtract away the minus distributions
-
 	RatePass = RatePassP.Clone()
 	RatePass.Add(RatePassM,-1)
 	RateFail = RateFailP.Clone()
@@ -204,8 +204,10 @@ def AlphabetNDSlicer(DP,DM,var, varCuts, passCuts, presel, bins):
 	Rpf = RatePass.Clone()
 	Rpf.Divide(RateFail)
 
+	Rpf.Draw()
+
 	# Now need to build a TGAE that supports doing a fit
-	x = [float((bins[i]+bins[i+1])/2.) for i in range(0,len(bins)-1) if Rpf.GetBinContent(i+1) > 0]
+	x = [float((bins[i]+bins[i+1])/2.-center) for i in range(0,len(bins)-1) if Rpf.GetBinContent(i+1) > 0]
 	exl = [float((bins[i+1]-bins[i])/2.) for i in range(0,len(bins)-1) if Rpf.GetBinContent(i+1) > 0]
 	exh = exl
 	y = [Rpf.GetBinContent(i) for i in range(1,len(bins)) if Rpf.GetBinContent(i) > 0]
@@ -215,7 +217,6 @@ def AlphabetNDSlicer(DP,DM,var, varCuts, passCuts, presel, bins):
 	eyh = [Rpf.GetBinError(i) for i in range(1,len(bins)) if Rpf.GetBinContent(i) > 0]
 	eyl = eyh
 	nbinsx = len(x)
-
 
 	G = TGraphAsymmErrors(nbinsx, scipy.array(x), scipy.array(y), scipy.array(exl), scipy.array(exh), scipy.array(eyl), scipy.array(eyh))
 

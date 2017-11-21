@@ -55,9 +55,19 @@ for  opt,value in options.__dict__.items():
 print "=================="
 print ""
 
-### DEFINE THE DISTRIBUTIONS YOU WANT TO USE:
+# ------ Define the set of cuts (pt, dy, and tau21 already applied)-------
+if options.cuts.find('default') != -1:
+	wmass_cut = '(mass_w>65.)&&(mass_w<105.)'
+elif options.cuts.find('sideband') != -1:
+	wmass_cut = '(mass_w>30.)&&(mass_w<65.)'
 
-# DISTRIBUTIONS YOU WANT TO ESTIMATE:
+tmass_cut = '(mass_top>105)&&(mass_top<210)'
+tau32_cut = '(tau32<0.65)'
+sjbtag_cut = '(sjbtag>0.5426)'
+mtw_cut = '(mass_tw>'+options.mtwcuts.split(',')[0]+'.)&&(mass_tw<'+options.mtwcuts.split(',')[1]+'.)'
+
+
+# --------- Define the distributions to use -------------------------------
 
 DistsWeWantToEstimate = []
 # FORMAT IS:
@@ -102,16 +112,10 @@ elif options.set == "QCD":
 		DistsWeWantToEstimate.append(QCDHT2000)
 		QCDdir+='HT2000/'
 
-
 	# Don't have any dists to ignore with QCD MC
 	DistsWeWantToIgnore = []
 
-if options.cuts.find('default') != -1:
-	wmass_cut = '(mass_w>65)&&(mass_w<105)'
-elif options.cuts.find('sideband') != -1:
-	wmass_cut = '(mass_w>30)&&(mass_w<65)'
-
-
+# ------------------------------------------------------------------------
 # Before proceeding, need to reweight our dists to cross section, lumi, and number of events
 # The weighting for this is stored in the TWminitree file, just need to grab and apply using the below
 # function from Distribution_Header.py -LC 10/14/17
@@ -123,74 +127,55 @@ if options.set == 'QCD':
 for distI in DistsWeWantToIgnore:
 	distI.bstarReweight()
 
+# Create instance of Alphabetizer class
 Bstar = Alphabetizer("Bstar", DistsWeWantToEstimate, DistsWeWantToIgnore)
 
-# apply a preselection to the trees:
-# Don't have any for W side because the minitrees already do this
-print '(mass_tw>'+options.mtwcuts.split(',')[0]+')&&(mass_tw<'+options.mtwcuts.split(',')[1]+')'
-presel = '('+wmass_cut+')&&(mass_tw>'+options.mtwcuts.split(',')[0]+')&&(mass_tw<'+options.mtwcuts.split(',')[1]+')'
+# Define some selections - MakeCuts connects cuts with '&&'
+presel = MakeCuts([wmass_cut,mtw_cut])
+selection = MakeCuts([sjbtag_cut,tau32_cut])
+tag = selection + '&&' + presel
+antitag = MakeCuts([sjbtag_cut,tau32_cut],'not') + '&&' + presel
 
-# Do some binning
-bins = array('d',[50,60,70,90,105,210,230,260,300])
+print 'Presel 		= ' + presel
+print 'Selection 	= ' + selection
+print 'Tag 		= ' + tag
+print 'Antitag 	= ' + antitag
+
+# -------------------- Do some binning -----------------------------------
+bins = array('d',[50,60,70,90,105,210,230,260])
 truthbins = []
 if options.set == "QCD":
-	#Assuming here that the truth bins need to be around the region where we are looking for the tagrate -LC
 	truthbins = array('d',[105,110,120,130,140,150,160,170,180,190,200,210])
 	# truthbins = array('d',[165,170,175,180])
 elif options.set == "data":
 	truthbins = []
 
+# ---------------- Define a folder to save in ----------------------------
+if options.qcdsample == 'all':
+	printDir = 'results/'+options.cuts+'/'
+else:
+	printDir = 'results/'+options.cuts+'/QCDbreakdown/'+QCDdir
+
+# --------------- Create a 2D plot of tau32 v Mt -------------------------
 c2D = TCanvas('c2D','c2D',800,700)
 c2D.SetRightMargin(0.15)
-# Setup selection, tag, and antitag and do the 2D plot
-if options.selection == 'full':
-	selection 	= '(sjbtag>0.5426)&&(tau32<0.65)'
-	tag 		= "(sjbtag>0.5426)&&(tau32<0.65)&&"+presel#+'&&(mass_top>105)&&(mass_top<210)'
-	antitag 	= "!((sjbtag>0.5426)&&(tau32<0.65))&&"+presel#+'&&(mass_top>105)&&(mass_top<210)'
 
-	Bstar.SetRegions(['mass_top','tau32',25,50,300,20,0,1],'('+presel+')')
-	Bstar.TwoDPlot.GetYaxis().SetTitle('#tau_{32}')
-	Bstar.TwoDPlot.GetXaxis().SetTitle('M_{Top}')
-	Bstar.TwoDPlot.SetTitle(options.qcdsample+' - Mtw ['+options.mtwcuts+']')
-	Bstar.TwoDPlot.Draw('COLZ')
-	if options.qcdsample == 'all':
-		printDir = 'results/'+options.cuts+'/'
-	else:
-		printDir = 'results/'+options.cuts+'/QCDbreakdown/'+QCDdir
-	c2D.Print(printDir +'MtvsTau32_Mtw'+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+'.png','png')
+Bstar.SetRegions(['mass_top','tau32',25,50,300,20,0,1],'('+presel+')')
+Bstar.TwoDPlot.GetYaxis().SetTitle('#tau_{32}')
+Bstar.TwoDPlot.GetXaxis().SetTitle('M_{Top}')
+Bstar.TwoDPlot.SetTitle(options.qcdsample+' - Mtw ['+options.mtwcuts+']')
+Bstar.TwoDPlot.Draw('COLZ')
 
-elif options.selection == 'tau32_off':
-	selection 	= '(sjbtag>0.5426)'
-	tag 		= "(sjbtag>0.5426)&&"+presel+'&&(mass_top>105)&&(mass_top<210)'
-	antitag 	= "!((sjbtag>0.5426))&&"+presel+'&&(mass_top>105)&&(mass_top<210)'
-	
-	Bstar.SetRegions(['mass_top','sjbtag',21,165,180,20,0,1],'('+presel+')')
-	Bstar.TwoDPlot.GetYaxis().SetTitle('Sub jet b-tag')
-	Bstar.TwoDPlot.GetXaxis().SetTitle('M_{Top}')
-	Bstar.TwoDPlot.SetTitle(options.qcdsample+' - Mtw ['+options.mtwcuts+']')
-	Bstar.TwoDPlot.Draw('COLZ')
-	printDir = 'results/'+options.cuts+'/MtvsSJbtag/'+QCDdir
-	c2D.Print(printDir +'MtvsSJbtag_Mtw'+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+'.png','png')
+c2D.Print(printDir +'MtvsTau32_Mtw'+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+'.png','png')
 
-elif options.selection == 'sjbtag_off':
-	selection 	= '(tau32<0.5)'
-	tag 		= "(tau32<0.5)&&"+presel+'&&(mass_top>105)&&(mass_top<210)'
-	antitag 	= "!((tau32<0.5))&&"+presel+'&&(mass_top>105)&&(mass_top<210)'
+# ------------- Now Make the fit based on the Mt sideband ----------------
+center = 175
+# This should do everything
+quadfit = '[0]+[1]*(x+'+str(center)+')+[2]*(x+'+str(center)+')**2'
+# newfit = '[0]*exp((-(x-[1])**2)/[2]+[3]*x)' # Gaussian divided by decaying exponential
+newfit = '[0]*exp([1]*(x+'+str(center)+'))'
+Bstar.doRatesFlexFit('mass_top','!('+tmass_cut+')',selection,presel,bins,truthbins,newfit,center)
 
-	Bstar.SetRegions(['mass_top','tau32',21,165,180,20,0,1],'('+presel+')')
-	Bstar.TwoDPlot.GetYaxis().SetTitle('#tau_{32}')
-	Bstar.TwoDPlot.GetXaxis().SetTitle('M_{Top}')
-	Bstar.TwoDPlot.SetTitle(options.qcdsample+' - Mtw ['+options.mtwcuts+']')
-	Bstar.TwoDPlot.Draw('COLZ')
-	printDir = 'results/'+options.cuts+'/MtvsTau32_noSJbtag/'+QCDdir
-	c2D.Print(printDir +'MtvsTau32_noSJbtag_Mtw'+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+'.png','png')
-
-
-center = 0
-F = QuadraticFit([0.0], 50-center, 310-center, "quadfit", "EMRFNEX0")
-
-
-Bstar.doRates('mass_top','(mass_top<105)||(mass_top>210)',selection,presel,bins,truthbins,F)
 
 ###### TESTING CODE FOR THE FIT ###########################
 # onesT = TTree('onesT','onesT')
@@ -238,34 +223,26 @@ Bstar.doRates('mass_top','(mass_top<105)||(mass_top>210)',selection,presel,bins,
 
 ########## END TESTING CODE ###############################
 
-
+# ------------ Plot the fit -------------------------------
 C1 = TCanvas("C1", "", 800, 600)
 C1.cd()
 
-Bstar.G.SetMaximum(0.5)
-Bstar.G.Draw("AP")
+Bstar.EG.SetMaximum(0.5)
+Bstar.EG.Draw("AP")
+Bstar.G.Draw('p same')
 
-Bstar.G.SetTitle('Alphabet R_{P/F} - '+options.set+options.qcdsample+' - M_{tW} '+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1])
-Bstar.G.GetXaxis().SetTitle("M_{top} (GeV)")
-Bstar.G.GetYaxis().SetTitle("N_{passed}/N_{failed}")
-Bstar.Fit.fit.Draw("same")
-Bstar.Fit.ErrUp.SetLineStyle(2)
-Bstar.Fit.ErrUp.Draw("same")
-Bstar.Fit.ErrDn.SetLineStyle(2)
-Bstar.Fit.ErrDn.Draw("same")
+Bstar.EG.SetTitle('Alphabet R_{P/F} - '+options.set+' - M_{tW} '+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1])
+Bstar.EG.GetXaxis().SetTitle("M_{top} (GeV)")
+Bstar.EG.GetYaxis().SetTitle("N_{passed}/N_{failed}")
+
 if Bstar.truthG != None:
 	Bstar.truthG.Draw("same")
 leg = TLegend(0.15,0.7,0.35,0.9)
 leg.SetTextSize(.025)
 leg.SetLineColor(0)
 leg.SetFillColor(0)
-#leg.SetHeader("cut @ #tau_{2}/#tau_{1} < 0.5")
 leg.AddEntry(Bstar.G, "events used in fit", "PL")
-leg.AddEntry(Bstar.Fit.fit, "fit", "L")
-leg.AddEntry(Bstar.Fit.ErrUp, "fit errors", "L")
 leg.Draw()
-
-# raw_input('waiting')
 
 C1.Print(printDir+"fit_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".pdf")
 C1.Print(printDir+"fit_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".png")
@@ -291,7 +268,7 @@ myFile = TFile(printDir+"Alphabet"+options.set+'_'+options.cuts+"_Mtw_"+options.
 myFile.cd()
 
 # Make the estimated distributions
-Bstar.MakeEst(var_array2, 'mass_top',antitag, tag, center)
+Bstar.MakeEstFlexFit(var_array2, 'mass_top',antitag, tag, center)
 
 # now we can plot (maybe I should add some auto-plotting Bstar.Fit.fittions?)
 hbins = var_array2[1:]
@@ -301,8 +278,8 @@ MtwDistributions = TFile(printDir+"Mtw_Distributions_"+options.set+'_'+options.m
 MtwDistributions.cd()
 for i in Bstar.hists_MSR+Bstar.hists_MSR_SUB+Bstar.hists_EST+Bstar.hists_EST_SUB+Bstar.hists_ATAG:
 	i.Write()
-for i in Bstar.hists_EST_UP + Bstar.hists_EST_DN:
-	i.Write()
+# for i in Bstar.hists_EST_UP + Bstar.hists_EST_DN:
+# 	i.Write()
 
 AT = TH1F('AT','',hbins[0],hbins[1], hbins[2])
 for i in Bstar.hists_ATAG:
@@ -329,28 +306,28 @@ for i in Bstar.hists_MSR_SUB:
 	N.Add(i,1.)
 for i in Bstar.hists_EST_SUB:
 	N.Add(i,-1.)
-# We can do the same thing for the Up and Down shapes:
-NU = TH1F("QCD_Up", "", hbins[0],hbins[1], hbins[2])
-for i in Bstar.hists_EST_UP:
-	NU.Add(i,1.)
-for i in Bstar.hists_MSR_SUB:
-	NU.Add(i,1.)
-for i in Bstar.hists_EST_SUB_UP:
-	NU.Add(i,-1.)
-ND = TH1F("QCD_Down", "", hbins[0],hbins[1], hbins[2])
-for i in Bstar.hists_EST_DN:
-	ND.Add(i,1.)
-for i in Bstar.hists_MSR_SUB:
-	ND.Add(i,1.)
-for i in Bstar.hists_EST_SUB_DN:
-	ND.Add(i,-1.)
+# # We can do the same thing for the Up and Down shapes:
+# NU = TH1F("QCD_Up", "", hbins[0],hbins[1], hbins[2])
+# for i in Bstar.hists_EST_UP:
+# 	NU.Add(i,1.)
+# for i in Bstar.hists_MSR_SUB:
+# 	NU.Add(i,1.)
+# for i in Bstar.hists_EST_SUB_UP:
+# 	NU.Add(i,-1.)
+# ND = TH1F("QCD_Down", "", hbins[0],hbins[1], hbins[2])
+# for i in Bstar.hists_EST_DN:
+# 	ND.Add(i,1.)
+# for i in Bstar.hists_MSR_SUB:
+# 	ND.Add(i,1.)
+# for i in Bstar.hists_EST_SUB_DN:
+# 	ND.Add(i,-1.)
 
 vartitle = "M_{tW} (GeV)"
 
-NU.SetLineColor(kBlack)
-ND.SetLineColor(kBlack)
-NU.SetLineStyle(2)
-ND.SetLineStyle(2)
+# NU.SetLineColor(kBlack)
+# ND.SetLineColor(kBlack)
+# NU.SetLineStyle(2)
+# ND.SetLineStyle(2)
 N.SetLineColor(kBlack)
 N.SetFillColor(kPink+3)
 
@@ -371,16 +348,16 @@ leg2.SetLineColor(0)
 leg2.SetFillColor(0)
 leg2.AddEntry(V, "Data in tag region", "PL")
 leg2.AddEntry(N, "Data prediction", "F")
-leg2.AddEntry(NU, "uncertainty", "F")
+# leg2.AddEntry(NU, "uncertainty", "F")
 
 
-FindAndSetMax([V,N, NU, ND])
+FindAndSetMax([V,N])#, NU, ND])
 C3 = TCanvas("C3", "", 800, 600)
 C3.cd()
 N.Draw("Hist")
 V.Draw("same E0")
-NU.Draw("same")
-ND.Draw("same")
+# NU.Draw("same")
+# ND.Draw("same")
 leg2.Draw()
 C3.Print(printDir+"bkg_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".pdf")
 C3.Print(printDir+"bkg_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".png")
@@ -388,27 +365,27 @@ C3.Print(printDir+"bkg_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+op
 myFile.cd()
 N.Write()
 V.Write()
-NU.Write()
-ND.Write()
+# NU.Write()
+# ND.Write()
 myFile.Write()
 myFile.Close()
 
 
-f = open("transfer_fn.txt",'a')
-f.write("{\n")
-f.write("\n\tfirst = "+str(Bstar.Fit.fit.GetParameter(0))+";")
-f.write("\n\tfirstErr = "+str(Bstar.Fit.fit.GetParErrors()[0])+";")
-f.write("\n\tsecond = "+str(Bstar.Fit.fit.GetParameter(1))+";")
-f.write("\n\tsecondErr = "+str(Bstar.Fit.fit.GetParErrors()[1])+";")
-f.write("\n\tthird = "+str(Bstar.Fit.fit.GetParameter(2))+";")
-f.write("\n\tthirdErr = "+str(Bstar.Fit.fit.GetParErrors()[2])+";")
-f.write("\n}\n")
+# f = open("transfer_fn.txt",'a')
+# f.write("{\n")
+# f.write("\n\tfirst = "+str(Bstar.Fit.fit.GetParameter(0))+";")
+# f.write("\n\tfirstErr = "+str(Bstar.Fit.fit.GetParErrors()[0])+";")
+# f.write("\n\tsecond = "+str(Bstar.Fit.fit.GetParameter(1))+";")
+# f.write("\n\tsecondErr = "+str(Bstar.Fit.fit.GetParErrors()[1])+";")
+# f.write("\n\tthird = "+str(Bstar.Fit.fit.GetParameter(2))+";")
+# f.write("\n\tthirdErr = "+str(Bstar.Fit.fit.GetParErrors()[2])+";")
+# f.write("\n}\n")
 
 g = open(printDir+"fn_bstar_QUAD_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".txt",'w')
-for i in range(9):
+for i in range(Bstar.Fit.GetNpar()):
 	# Tecnically grabs parameters from errUp but the first three are the same as in the nominal fit
 	# and the next 6 are identital to ErrDown (it's the equation they are put in that's different)
-	g.write(str(Bstar.Fit.ErrUp.GetParameter(i))+"\n")
+	g.write(str(Bstar.Fit.GetParameter(i))+"\n")
 
 
 # MtwDistributions = TFile.Open("Mtw_Distributions_"+options.set+"_"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".root")

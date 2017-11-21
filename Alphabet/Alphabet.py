@@ -71,8 +71,39 @@ class Alphabetizer:
 		self.Fit = fitFunc # reads the right class in, should be initialized and set up already
 		AlphabetFitter(self.G, self.Fit) # creates all three distributions (nominal, up, down)
 
+	def doRatesFlexFit(self, var, varCuts, passCuts, presel, bins, truthbins, fitFunc, center=0):
+		# LC 11/14/17
+		# Same as doRates but with more flexible fit
+
+		self.G = AlphabetNDSlicer(self.DP, self.DM, var, varCuts, passCuts, presel, bins, center)
+		if len(truthbins)>0:
+			self.truthG = AlphabetNDSlicer(self.DP, self.DM, var, '!('+varCuts+')', passCuts, presel, truthbins, center) # makes the A/B/C slices
+		else:
+			self.truthG = None
+
+		# Now do the fitting
+		self.fitFunc = fitFunc
+		print str(bins[0]-center) + ', ' + str(bins[-1]-center)
+		self.Fit = TF1("fit", self.fitFunc, bins[0]-center, bins[-1]-center)
+		self.FitResults = self.G.Fit(self.Fit)
+
+		self.G.Draw()
+		raw_input('waiting')
+
+
+		self.EG = TGraphErrors(1000)
+		for i in range(1000):
+			self.EG.SetPoint(i, bins[0]-center + i*(bins[-1]- bins[0])/1000., 0)
+		TVirtualFitter.GetFitter().GetConfidenceIntervals(self.EG)
+		self.EG.SetLineColorAlpha(kRed,0.2)
+		self.Ndof = self.Fit.GetNDF()
+		self.Chi2 = self.Fit.GetChisquare()
+
+	
+
+
 	# DOESN'T WORK WITH CURRENT FITTING CODE
-	def MakeEst(self, var_array, rate_var, antitag, tag, center):
+	def MakeEst(self, var_array, rate_var, antitag, tag, center=0):
 	# makes an estimate in a region, based on an anti-tag region, of that variable in all dists
 	# var_array - array for what we are plotting 
 	# rate_var - var in which the rate was made
@@ -119,6 +150,39 @@ class Alphabetizer:
 			self.hists_EST_SUB_DN.append(temphistD)
 			self.hists_ATAG.append(temphistA)
 
+	def MakeEstFlexFit(self, var_array, rate_var, antitag, tag, center=0):
+	# makes an estimate in a region, based on an anti-tag region, of that variable in all dists
+	# var_array - array for what we are plotting 
+	# rate_var - var in which the rate was made
+		print self.fitFunc
+		fitString = CustomFit2String(rate_var,self.Fit,self.fitFunc,str(center))
+		print 'Fit = ' + fitString
+		self.hists_EST = []
+		self.hists_EST_SUB = []
+		self.hists_MSR = []
+		self.hists_MSR_SUB = []
+		self.hists_ATAG = []
+		for i in self.DP:
+			temphist = TH1F("Hist_VAL"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
+			temphistN = TH1F("Hist_NOMINAL"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
+			temphistA = TH1F("Hist_ATAG"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
+			quickplot(i.File, i.Tree, temphist, var_array[0], tag, i.weight)
+			quickplot(i.File, i.Tree, temphistN, var_array[0], antitag, "("+i.weight+"*"+fitString+")")
+			quickplot(i.File, i.Tree, temphistA, var_array[0], antitag, i.weight)
+			self.hists_MSR.append(temphist)
+			self.hists_EST.append(temphistN)
+			self.hists_ATAG.append(temphistA) 
+		for i in self.DM:
+			temphist = TH1F("Hist_SUB_VAL"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
+			temphistN = TH1F("Hist_SUB_NOMINAL"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
+			temphistA = TH1F("Hist_SUB_ATAG"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
+			quickplot(i.File, i.Tree, temphist, var_array[0], tag, i.weight)
+			quickplot(i.File, i.Tree, temphistN, var_array[0], antitag, "("+i.weight+"*"+fitString+")")
+			quickplot(i.File, i.Tree, temphistA, var_array[0], antitag, i.weight)
+			self.hists_MSR_SUB.append(temphist)
+			self.hists_EST_SUB.append(temphistN)
+			self.hists_ATAG.append(temphistA)
+
 	def MakeEstVariable(self, variable, binBoundaries, antitag, tag):
 		# makes an estimate in a region, based on an anti-tag region, of that variable in all dists
 		# self.Fit.MakeConvFactor(self.X, self.center)
@@ -161,3 +225,45 @@ class Alphabetizer:
 			self.hists_EST_SUB_UP.append(temphistU)
 			self.hists_EST_SUB_DN.append(temphistD)
 	
+def CustomFit2String(var,fit,fitFunc,center):
+	# Need to convert the fitFunc (of form '[0]+[1]*x...') to a string
+	# with the actual parameters in for [0],[1], etc and 'x' replace with our var
+	thisFitFunc = '('
+	
+	# Need to have our own find algo to avoid messing up exp when 'x' gets replaced with var
+	# .find cannot be used with .replace because .find only finds the index of the first instance and
+	# .replace replaces all instances. Can't pick and choose instances then.
+
+	# Build an index of all 'real x's
+	xIndex = []
+	for ichar in range(len(fitFunc)):
+		char = fitFunc[ichar]
+		if char == "x" and fitFunc[ichar-1] != 'e' and fitFunc[ichar+1] != 'p':
+			xIndex.append(ichar)
+
+	# Now build a new string with any 'real' x replaced by var
+	for ix in range(len(xIndex)):
+		# If on the first value, start at 0, end at first x
+		if ix == 0:
+			start = 0
+			stop = xIndex[ix]
+		# otherwise, start IN FRONT of the ix-1 value (+1 because you don't want to include the x)
+		else:
+			start = xIndex[ix-1]+1
+			stop = xIndex[ix]
+		# need to grab left side of string and then rebuild the string
+		leftside = fitFunc[start:stop]
+
+		thisFitFunc += leftside + '(' + var + '-' + str(center) + ')'
+		print thisFitFunc
+	# Finish up by adding the final right side
+	thisFitFunc += fitFunc[xIndex[-1]+1:]
+
+	# Now swap in the parameter values
+	pars = []
+	for ipar in range(fit.GetNpar()):
+		thisPar = str(fit.GetParameter(ipar))
+		thisFitFunc = thisFitFunc.replace('['+str(ipar)+']','('+thisPar+')')
+
+	return thisFitFunc+')'
+
