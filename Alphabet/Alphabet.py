@@ -8,6 +8,7 @@ import optparse
 import ROOT
 from ROOT import *
 import scipy
+import numpy
 
 # Our functions:
 import Alphabet_Header
@@ -83,23 +84,109 @@ class Alphabetizer:
 
 		# Now do the fitting
 		self.fitFunc = fitFunc
-		print str(bins[0]-center) + ', ' + str(bins[-1]-center)
-		self.Fit = TF1("fit", self.fitFunc, bins[0]-center, bins[-1]-center)
-		self.FitResults = self.G.Fit(self.Fit)
+		# If we have something with an exponential
+		if self.fitFunc.find('exp') != -1:
+			paramGuesses, paramUpperLims, paramLowerLims = self.fitParamGuess(self.G,bins,truthbins, center)
+			self.Fit = TF1("fit", self.fitFunc, bins[0]-center, bins[-1]-center)
+			self.Fit.SetParameter(0,paramGuesses[0])
+			self.Fit.SetParameter(1,paramGuesses[1])
+			self.Fit.SetParameter(2,paramGuesses[2])
+			self.Fit.SetParLimits(0,paramLowerLims[0],paramUpperLims[0])
+			self.Fit.SetParLimits(1,paramLowerLims[1],paramUpperLims[1])
+			self.Fit.SetParLimits(2,paramLowerLims[2],paramUpperLims[2])
+			self.FitResults = self.G.Fit(self.Fit,'BRME')
 
-		self.G.Draw()
-		raw_input('waiting')
+			# If the fit is bad, try a different set of points
+			if self.Fit.GetChisquare() > 4.0:
+				paramGuesses2, paramUpperLims2, paramLowerLims2 = self.fitParamGuess(self.G,bins,truthbins, center, True)
+				self.Fit2 = TF1("fit", self.fitFunc, bins[0]-center, bins[-1]-center)
+				self.Fit2.SetParameter(0,paramGuesses2[0])
+				self.Fit2.SetParameter(1,paramGuesses2[1])
+				self.Fit2.SetParameter(2,paramGuesses2[2])
+				self.Fit2.SetParLimits(0,paramLowerLims2[0],paramUpperLims2[0])
+				self.Fit2.SetParLimits(1,paramLowerLims2[1],paramUpperLims2[1])
+				self.Fit2.SetParLimits(2,paramLowerLims2[2],paramUpperLims2[2])
+				self.Fit2Results = self.G.Fit(self.Fit2,'BRME')
+				
+				# Check they aren't worse than the ones before
+				if self.Fit2.GetChisquare() < self.Fit.GetChisquare():
+					self.Fit = self.Fit2
+					print 'Found a better fit by switching points'
 
+		else:
+			self.Fit = TF1("fit", self.fitFunc, bins[0]-center, bins[-1]-center)
+			self.FitResults = self.G.Fit(self.Fit)
 
+		self.EH = TH1F('EH','EH',1000,bins[0]-center,bins[-1]-center)
 		self.EG = TGraphErrors(1000)
 		for i in range(1000):
 			self.EG.SetPoint(i, bins[0]-center + i*(bins[-1]- bins[0])/1000., 0)
+			self.EH.SetBinContent(i,0)
 		TVirtualFitter.GetFitter().GetConfidenceIntervals(self.EG)
+		TVirtualFitter.GetFitter().GetConfidenceIntervals(self.EH)
 		self.EG.SetLineColorAlpha(kRed,0.2)
 		self.Ndof = self.Fit.GetNDF()
 		self.Chi2 = self.Fit.GetChisquare()
 
+		
+
 	
+	def fitParamGuess(self, graph, bins, truthbins, center, trydiff=False):
+		# Creates parameter guess by taking three points and solving the equation
+		# for the three parameters for those points.
+		# ONLY WORKS FOR GAUSSIAN OVER DECAYING EXPONENTIAL
+		# fitFunc - string of the fit with parameters in [] form
+		# graph - the graph of the three points (should just be self.G)
+		# bins and truthbins - same as doRatesFlexFit, used to determine the third point to use 
+
+		# First pick the points to evaluate
+		xpoint1 = (bins[0]+bins[1])/2 - center # second point
+		xpoint2 = (bins[4]+bins[3])/2 - center # fourth point
+		# Will try two different 3rd points because sometimes the fit is really bad with one or the other
+		# Will only try second config if Chi2 of first is > 4
+		if trydiff == False:
+			xpoint3 = (bins[bins.index(truthbins[-1])+1] + truthbins[-1])/2 - center # first point after truth gap
+		elif trydiff == True:
+			xpoint3 = (bins[-1]+bins[-2])/2 - center # last point
+
+		for xpoint in [xpoint1,xpoint2,xpoint3]:
+			print '['+str(xpoint)+', '+str(graph.Eval(xpoint))+']'
+
+
+		# ASSUMES FUNCTION OF FORM a*exp(x*b-x**2*c) - will solve using numpy.linalg.solve(a,b)
+		# where a*x=b
+		# Technically we solve ln(y) = -c*x**2 + b*x + a
+		aMatrix = numpy.array([[1,xpoint1,-(xpoint1**2)],[1,xpoint2,-(xpoint2**2)],[1,xpoint3,-(xpoint3**2)]])
+		bVector = numpy.array([math.log(graph.Eval(xpoint1)),math.log(graph.Eval(xpoint2)),math.log(graph.Eval(xpoint3))])
+		sol = numpy.linalg.solve(aMatrix,bVector)
+
+		# Solution is ordered [log(a),b,c] so need to take e^a to get final values
+		paramGuesses = [math.exp(sol[0]),sol[1],sol[2]]
+		print paramGuesses
+		paramUpperLims = []
+		paramLowerLims = []
+		for p in paramGuesses:
+			if p <=0:
+				print 'A parameter is less than zero and shouldnt be! ' + str(p)
+				p = -1*p
+				print 'Changed to ' + str(p)
+			# Do some upper limits based on the order of the parameter (lower limts can just be 0)
+
+			# This was tested in isolated environment and works
+			# Example - 160 returns 1000 and 0.005 returns 0.01
+			# order = 1.
+			# if p > order:
+			# 	while p > order:
+			# 		thisOrder = int(order*10)
+			# 		order = order*10.
+			# elif p < order:
+			# 	while p < order:
+			# 		thisOrder = order
+			# 		order = order/10.
+			# paramUpperLims.append(thisOrder)
+			paramUpperLims.append(2.*p)
+			paramLowerLims.append(0.*p)
+		return paramGuesses, paramUpperLims, paramLowerLims
 
 
 	# DOESN'T WORK WITH CURRENT FITTING CODE

@@ -393,14 +393,15 @@ else:
 #Load up the average t-tagging rates -- Takes parameters from text file and makes a function
 #CHANGE BACK
 if options.Alphabet == "on":
-	TTR = []
-	TTR_errUp = []
-	TTR_errDown = []
+	TagFiles = [] 
+	RpfFits = []
+	ErrHists = []
 
-	for MtwCuts in ['800-1200','1200-1500','1500-3000']:
-		TTR.append(TTR_Init('QUAD',MtwCuts,setstr,options.rate,di,''))
-		TTR_errUp.append(TTR_Init('QUAD_errUp',MtwCuts,setstr,options.rate,di,''))
-		TTR_errDown.append(TTR_Init('QUAD_errDown',MtwCuts,setstr,options.rate,di,''))
+	for MtwCuts in ['800-1000','1000-1200','1200-1400','1400-1600','1600-4000']:
+		thisFile = TFile.Open(di+'Alphabet/results/'+options.cuts+'/Alphabet'+setstr+'_'+options.cuts+'_Mtw_'+MtwCuts+'.root')
+		TagFiles.append(thisFile)
+		RpfFits.append(thisFile.Get('fit'))
+		ErrHists.append(thisFile.Get('EH'))
 
 	fittitles = []
 
@@ -1216,18 +1217,27 @@ for entry in range(lowBinEdge,highBinEdge):
 								if sjbtag_cut:
 									Mtw_cut9.Fill(MtopW,weight)
 									# Grab the pass/fail ratio at the last second for efficiency
-									if tjet.Perp() > 400 and tjet.Perp() < 600:
-										TTRweight = bkg_weight_mass(tjet,TTR[0],eta)
-										TTRweighterrup = bkg_weight_mass(tjet,TTR_errUp[0],eta)
-										TTRweighterrdown = bkg_weight_mass(tjet,TTR_errDown[0],eta)
-									elif tjet.Perp() > 600 and tjet.Perp() < 1000:
-										TTRweight = bkg_weight_mass(tjet,TTR[1],eta)
-										TTRweighterrup = bkg_weight_mass(tjet,TTR_errUp[1],eta)
-										TTRweighterrdown = bkg_weight_mass(tjet,TTR_errDown[1],eta)
-									elif tjet.Perp() > 1000:
-										TTRweight = bkg_weight_mass(tjet,TTR[2],eta)
-										TTRweighterrup = bkg_weight_mass(tjet,TTR_errUp[2],eta)
-										TTRweighterrdown = bkg_weight_mass(tjet,TTR_errDown[2],eta)
+									if MtopW > 800 and MtopW < 1000:
+										TTRweight = RpfFits[0].Eval(tjet.M())
+										TTRweighterrup = TTRweight + ErrHists[0].GetBinError(ErrHists[0].GetXaxis().FindBin(tjet.M()))
+										TTRweighterrdown = TTRweight - ErrHists[0].GetBinError(ErrHists[0].GetXaxis().FindBin(tjet.M()))
+									elif MtopW > 1000 and MtopW < 1200:
+										TTRweight = RpfFits[1].Eval(tjet.M())
+										TTRweighterrup = TTRweight + ErrHists[1].GetBinError(ErrHists[1].GetXaxis().FindBin(tjet.M()))
+										TTRweighterrdown = TTRweight - ErrHists[1].GetBinError(ErrHists[1].GetXaxis().FindBin(tjet.M()))
+									elif MtopW > 1200 and MtopW < 1400:
+										TTRweight = RpfFits[2].Eval(tjet.M())
+										TTRweighterrup = TTRweight + ErrHists[2].GetBinError(ErrHists[2].GetXaxis().FindBin(tjet.M()))
+										TTRweighterrdown = TTRweight - ErrHists[2].GetBinError(ErrHists[2].GetXaxis().FindBin(tjet.M()))
+									elif MtopW > 1400 and MtopW < 1600:
+										TTRweight = RpfFits[3].Eval(tjet.M())
+										TTRweighterrup = TTRweight + ErrHists[3].GetBinError(ErrHists[3].GetXaxis().FindBin(tjet.M()))
+										TTRweighterrdown = TTRweight - ErrHists[3].GetBinError(ErrHists[3].GetXaxis().FindBin(tjet.M()))
+									elif MtopW > 1600 and MtopW < 4000:
+										TTRweight = RpfFits[4].Eval(tjet.M())
+										TTRweighterrup = TTRweight + ErrHists[4].GetBinError(ErrHists[4].GetXaxis().FindBin(tjet.M()))
+										TTRweighterrdown = TTRweight - ErrHists[4].GetBinError(ErrHists[4].GetXaxis().FindBin(tjet.M()))
+
 
 									if not tau32_cut:
 									# Start generating the QCD estimate using the pass/fail ratio 

@@ -5,17 +5,7 @@ import subprocess
 
 commands1 = []
 commands1.append('cd Alphabet')
-
-commands1.append('rm results/*')
-commands1.append('python Bstar_Alphabet.py -s QCD -p 800,1200')
-commands1.append('python Bstar_Alphabet.py -s QCD -p 1200,1500')
-commands1.append('python Bstar_Alphabet.py -s QCD -p 1500,3000')
-commands1.append('python Bstar_Alphabet.py -s data -p 800,1200')
-commands1.append('python Bstar_Alphabet.py -s data -p 1200,1500')
-commands1.append('python Bstar_Alphabet.py -s data -p 1500,3000')
-
-
-
+commands1.append('source allAlpha.csh')
 for s in commands1 :
 	print 'executing ' + s
 	subprocess.call( [s], shell=True )

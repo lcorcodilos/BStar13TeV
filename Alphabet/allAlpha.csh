@@ -1,6 +1,8 @@
-python doAlphabet.py -c default -q all
-python doAlphabet.py -c sideband -q all
-# python doAlphabet.py -c sideband -q HT700
-# python doAlphabet.py -c sideband -q HT1000
-# python doAlphabet.py -c sideband -q HT1500
-# python doAlphabet.py -c sideband -q HT2000
+python doAlphabet.py -c default -s QCD
+python doAlphabet.py -c sideband -s QCD
+python doAlphabet.py -c rate_default -s QCD
+
+python doAlphabet.py -c default -s data
+python doAlphabet.py -c sideband -s data
+python doAlphabet.py -c rate_default -s data
+
