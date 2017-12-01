@@ -459,7 +459,7 @@ for entry in range(lowBinEdge,highBinEdge):
 				print "wmass type error"
 				continue                        
 
-			if True:
+			if wmass_cut:
 				if tau21_cut:
 					temp_minivariables = {
 						'pt_top':tVals['pt'],

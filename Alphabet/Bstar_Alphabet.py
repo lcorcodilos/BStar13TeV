@@ -59,11 +59,16 @@ for  opt,value in options.__dict__.items():
 print "=================="
 print ""
 
+# Turns off plotting
+ROOT.gROOT.SetBatch(True)
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+
+
 # ------ Define the set of cuts (pt, dy, and tau21 already applied)-------
-if options.cuts.find('default') != -1:
-	wmass_cut = '(mass_w>65.)&&(mass_w<105.)'
-elif options.cuts.find('sideband') != -1:
-	wmass_cut = '(mass_w>30.)&&(mass_w<65.)'
+# if options.cuts.find('default') != -1:
+# 	wmass_cut = '(mass_w>65.)&&(mass_w<105.)'
+# elif options.cuts.find('sideband') != -1:
+# 	wmass_cut = '(mass_w>30.)&&(mass_w<65.)'
 
 tmass_cut = '(mass_top>105)&&(mass_top<210)'
 tau32_cut = '(tau32<0.65)'
@@ -135,10 +140,10 @@ for distI in DistsWeWantToIgnore:
 Bstar = Alphabetizer("Bstar", DistsWeWantToEstimate, DistsWeWantToIgnore)
 
 # Define some selections - MakeCuts connects cuts with '&&'
-presel = MakeCuts([wmass_cut,mtw_cut])
+presel = mtw_cut
 selection = MakeCuts([sjbtag_cut,tau32_cut])
-tag = selection + '&&' + presel
-antitag = MakeCuts([sjbtag_cut,tau32_cut],'not') + '&&' + presel
+tag = MakeCuts([selection,presel,tmass_cut])
+antitag = MakeCuts([sjbtag_cut,tau32_cut],'not') + '&&' + MakeCuts([presel,tmass_cut])
 
 print 'Presel 		= ' + presel
 print 'Selection 	= ' + selection
@@ -268,8 +273,8 @@ if options.estimate == 'on':
 	# var we want to look at:
 	mtw_bins = (int(options.mtwcuts.split(',')[1])-int(options.mtwcuts.split(',')[0]))/100
 	# var_array2 = ["mass_tw", mtw_bins,float(options.mtwcuts.split(',')[0]),float(options.mtwcuts.split(',')[1])]
-	# var_array2 = ['mass_tw',40,500,4000]
-	var_array2 = ['mass_top',23,70,300]
+	var_array2 = ['mass_tw',35,500,4000]
+	# var_array2 = ['mass_top',23,70,300]
 
 	# Make the estimated distributions
 	Bstar.MakeEstFlexFit(var_array2, 'mass_top',antitag, tag, center)

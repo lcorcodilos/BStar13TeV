@@ -19,7 +19,7 @@ parser.add_option('-s', '--set', metavar='F', type='string', action='store',
 				dest          =       'set',
 				help          =       'data or QCD')
 parser.add_option('-p', '--mtwcuts', metavar='F', type='string', action='store',
-				default		=	'800,1000,1200,1400,1600,4000',
+				default		=	'500,1100,1300,1500,1700,4000',
 				dest		=	'mtwcuts',
 				help		=	'Mtw cuts, low to high, separated by a comma')
 parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
@@ -45,6 +45,10 @@ parser.add_option('-e', '--estimate', metavar='F', type='string', action='store'
 # parse the input into a list of strings
 cutList = options.mtwcuts.split(',')
 
+# Turns off plotting
+ROOT.gROOT.SetBatch(True)
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+
 if options.make == 'on':
 	# Run alphabet for the different mass ranges determined by the option
 	commands1 = []
@@ -67,12 +71,13 @@ if options.estimate == 'on':
 		else:
 			if os.path.exists('results/'+options.cuts+'/Alphabet'+options.set+'_'+options.cuts+'_Mtw_'+cutList[icut]+'-'+cutList[icut+1]+'.root'):
 				inFiles.append(TFile.Open('results/'+options.cuts+'/Alphabet'+options.set+'_'+options.cuts+'_Mtw_'+cutList[icut]+'-'+cutList[icut+1]+'.root'))
-				print 'results/'+options.cuts+'/Alphabet'+options.set+'_'+options.cuts+'_Mtw_'+cutList[icut]+'-'+cutList[icut+1]+'.root'
 			else:
 				print 'File missing. Skipping results/'+options.cuts+'/Alphabet'+options.set+'_'+options.cuts+'_Mtw_'+cutList[icut]+'-'+cutList[icut+1]+'.root'		
 
-	totV = TH1F('FullMtwV','Alphabet estimate in full Mtw - '+options.cuts,23,70,300)
-	totN = TH1F('FullMtwN','Alphabet estimate in full Mtw - '+options.cuts,23,70,300)
+	# totV = TH1F('FullMtwV','Alphabet estimate in full Mtw - '+options.cuts,23,70,300)
+	# totN = TH1F('FullMtwN','Alphabet estimate in full Mtw - '+options.cuts,23,70,300)
+	totV = TH1F('FullMtwV','Alphabet estimate in full Mtw - '+options.cuts,35,500,4000)
+	totN = TH1F('FullMtwN','Alphabet estimate in full Mtw - '+options.cuts,35,500,4000)
 	# totNup = TH1F('FullMtwNup','Alphabet estimate in full Mtw - '+options.cuts,25,50,300)
 	# totNdown = TH1F('FullMtwNdown','Alphabet estimate in full Mtw - '+options.cuts,25,50,300)
 

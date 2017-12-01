@@ -384,11 +384,14 @@ tpt = Cuts['tpt']
 # var = ""
 # if options.var == "kinematics":
 # 	var = "_kin"
+alphaString = ''
+if options.Alphabet == 'on':
+	alphaString = 'alphabet_on'
 
 if jobs != 1:
-	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+ttsubString+ptTTString+".root", "recreate" )
+	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+ttsubString+ptTTString+alphaString+".root", "recreate" )
 else:
-	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_PSET_"+options.cuts+ttsubString+ptTTString+".root", "recreate" )
+	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_PSET_"+options.cuts+ttsubString+ptTTString+alphaString+".root", "recreate" )
 
 #Load up the average t-tagging rates -- Takes parameters from text file and makes a function
 #CHANGE BACK
@@ -397,12 +400,15 @@ if options.Alphabet == "on":
 	RpfFits = []
 	ErrHists = []
 
-	for MtwCuts in ['800-1000','1000-1200','1200-1400','1400-1600','1600-4000']:
+	for MtwCuts in ['500-1100','1100-1300','1300-1500','1500-1700','1700-4000']:#['800-1000','1000-1200','1200-1400','1400-1600','1600-4000']:
+		print 'opening ' + di+'Alphabet/results/'+options.cuts+'/Alphabet'+setstr+'_'+options.cuts+'_Mtw_'+MtwCuts+'.root'
 		thisFile = TFile.Open(di+'Alphabet/results/'+options.cuts+'/Alphabet'+setstr+'_'+options.cuts+'_Mtw_'+MtwCuts+'.root')
 		TagFiles.append(thisFile)
+		print 'Getting fit'
 		RpfFits.append(thisFile.Get('fit'))
 		ErrHists.append(thisFile.Get('EH'))
 
+	print 'Got all fits'
 	fittitles = []
 
 elif options.Alphabet == "off":
@@ -496,8 +502,8 @@ Mtw_cut1    = TH1F("Mtw_cut1",  "mass of tw after wpt cut", 140, 500, 4000)
 Mtw_cut2    = TH1F("Mtw_cut2",  "mass of tw after tpt cut", 140, 500, 4000)
 Mtw_cut3    = TH1F("Mtw_cut3",  "mass of tw after dy cut", 140, 500, 4000)
 Mtw_cut4    = TH1F("Mtw_cut4",  "mass of tw after tmass cut", 140, 500, 4000)
-Mtw_cut5    = TH1F("Mtw_cut5",  "mass of tw after wmass cut", 140, 500, 4000)
-Mtw_cut6    = TH1F("Mtw_cut6",  "mass of tw after tau21 cut", 140, 500, 4000)
+Mtw_cut5    = TH1F("Mtw_cut5",  "mass of tw after tau21 cut", 140, 500, 4000)
+Mtw_cut6    = TH1F("Mtw_cut6",  "mass of tw after wmass cut", 140, 500, 4000)
 Mtw_cut7    = TH1F("Mtw_cut7",  "mass of tw after eta1 cut", 140, 500, 4000)
 Mtw_cut8    = TH1F("Mtw_cut8",  "mass of tw after eta2 cut", 140, 500, 4000)
 Mtw_cut9    = TH1F("Mtw_cut9",  "mass of tw after sjbtag cut", 140, 500, 4000)
@@ -955,10 +961,10 @@ for entry in range(lowBinEdge,highBinEdge):
 
 					FullTop = sjbtag_cut and tau32_cut
 
-					if wmass_cut:
+					if tau21_cut:
 						Mtw_cut5.Fill(MtopW,weight)
 
-						if tau21_cut:
+						if wmass_cut:
 							Mtw_cut6.Fill(MtopW,weight)
 
 					# Get the extrapolation uncertainty
@@ -968,7 +974,7 @@ for entry in range(lowBinEdge,highBinEdge):
 
 							# We've done the preselection and the W and top masses are orthogonal which means
 							# our tagged W can't be a top so we don't have to check the other hemi configuration
-							# doneAlready = True
+							doneAlready = True
 
 # ------------------- Now going to split into alphabet and tagrate parts -----------------
 							if options.Alphabet == "off":
@@ -1214,127 +1220,125 @@ for entry in range(lowBinEdge,highBinEdge):
 								massw = 1
 								masswHist.Fill(massw)									
 
-								if sjbtag_cut:
-									Mtw_cut9.Fill(MtopW,weight)
-									# Grab the pass/fail ratio at the last second for efficiency
-									if MtopW > 800 and MtopW < 1000:
-										TTRweight = RpfFits[0].Eval(tjet.M())
-										TTRweighterrup = TTRweight + ErrHists[0].GetBinError(ErrHists[0].GetXaxis().FindBin(tjet.M()))
-										TTRweighterrdown = TTRweight - ErrHists[0].GetBinError(ErrHists[0].GetXaxis().FindBin(tjet.M()))
-									elif MtopW > 1000 and MtopW < 1200:
-										TTRweight = RpfFits[1].Eval(tjet.M())
-										TTRweighterrup = TTRweight + ErrHists[1].GetBinError(ErrHists[1].GetXaxis().FindBin(tjet.M()))
-										TTRweighterrdown = TTRweight - ErrHists[1].GetBinError(ErrHists[1].GetXaxis().FindBin(tjet.M()))
-									elif MtopW > 1200 and MtopW < 1400:
-										TTRweight = RpfFits[2].Eval(tjet.M())
-										TTRweighterrup = TTRweight + ErrHists[2].GetBinError(ErrHists[2].GetXaxis().FindBin(tjet.M()))
-										TTRweighterrdown = TTRweight - ErrHists[2].GetBinError(ErrHists[2].GetXaxis().FindBin(tjet.M()))
-									elif MtopW > 1400 and MtopW < 1600:
-										TTRweight = RpfFits[3].Eval(tjet.M())
-										TTRweighterrup = TTRweight + ErrHists[3].GetBinError(ErrHists[3].GetXaxis().FindBin(tjet.M()))
-										TTRweighterrdown = TTRweight - ErrHists[3].GetBinError(ErrHists[3].GetXaxis().FindBin(tjet.M()))
-									elif MtopW > 1600 and MtopW < 4000:
-										TTRweight = RpfFits[4].Eval(tjet.M())
-										TTRweighterrup = TTRweight + ErrHists[4].GetBinError(ErrHists[4].GetXaxis().FindBin(tjet.M()))
-										TTRweighterrdown = TTRweight - ErrHists[4].GetBinError(ErrHists[4].GetXaxis().FindBin(tjet.M()))
+								Mtw_cut9.Fill(MtopW,weight)
+								# Grab the pass/fail ratio at the last second for efficiency
+								if MtopW > 500 and MtopW < 1100:
+									TTRweight = RpfFits[0].Eval(tjet.M())
+									TTRweighterrup = TTRweight + ErrHists[0].GetBinError(ErrHists[0].GetXaxis().FindBin(tjet.M()))
+									TTRweighterrdown = TTRweight - ErrHists[0].GetBinError(ErrHists[0].GetXaxis().FindBin(tjet.M()))
+								elif MtopW > 1100 and MtopW < 1300:
+									TTRweight = RpfFits[1].Eval(tjet.M())
+									TTRweighterrup = TTRweight + ErrHists[1].GetBinError(ErrHists[1].GetXaxis().FindBin(tjet.M()))
+									TTRweighterrdown = TTRweight - ErrHists[1].GetBinError(ErrHists[1].GetXaxis().FindBin(tjet.M()))
+								elif MtopW > 1300 and MtopW < 1500:
+									TTRweight = RpfFits[2].Eval(tjet.M())
+									TTRweighterrup = TTRweight + ErrHists[2].GetBinError(ErrHists[2].GetXaxis().FindBin(tjet.M()))
+									TTRweighterrdown = TTRweight - ErrHists[2].GetBinError(ErrHists[2].GetXaxis().FindBin(tjet.M()))
+								elif MtopW > 1500 and MtopW < 1700:
+									TTRweight = RpfFits[3].Eval(tjet.M())
+									TTRweighterrup = TTRweight + ErrHists[3].GetBinError(ErrHists[3].GetXaxis().FindBin(tjet.M()))
+									TTRweighterrdown = TTRweight - ErrHists[3].GetBinError(ErrHists[3].GetXaxis().FindBin(tjet.M()))
+								elif MtopW > 1700:
+									TTRweight = RpfFits[4].Eval(tjet.M())
+									TTRweighterrup = TTRweight + ErrHists[4].GetBinError(ErrHists[4].GetXaxis().FindBin(tjet.M()))
+									TTRweighterrdown = TTRweight - ErrHists[4].GetBinError(ErrHists[4].GetXaxis().FindBin(tjet.M()))
+
+								if not FullTop:
+								# Start generating the QCD estimate using the pass/fail ratio 
+								# on events that fail the tau32 cut
+									fillSpec = [MtopW, tjet.Eta(), wjet.Eta(), tjet.Perp(), wjet.Perp(), tjet.Perp()+wjet.Perp(), tjet.Phi(), wjet.Phi(), abs(tjet.Phi()-wjet.Phi())]
+	
+									arr_count = 0
+									for spec in fillSpec:
+										for ifit in range(0,len(fittitles)):
+											tempweight = bkg_weight_mass(tjet,fits[ifit],eta)
+											QCDbkg_ARR[arr_count].Fill(spec,tempweight*weight*massw) 
+											arr_count+=1
+	
+									QCDbkg.Fill(MtopW,TTRweight*weight*massw)
+									QCDbkgh.Fill(MtopW,TTRweighterrup*weight*massw)
+									QCDbkgl.Fill(MtopW,TTRweighterrdown*weight*massw)
+
+									QCDbkgMwStack.Fill(wjet.M(),TTRweight*weight*massw)
+
+									QCDbkgET.Fill(tjet.Eta(),TTRweight*weight*massw)
+									QCDbkgETh.Fill(tjet.Eta(),TTRweighterrup*weight*massw)
+									QCDbkgETl.Fill(tjet.Eta(),TTRweighterrdown*weight*massw)
+
+									QCDbkgEW.Fill(wjet.Eta(),TTRweight*weight*massw)
+									QCDbkgEWh.Fill(wjet.Eta(),TTRweighterrup*weight*massw)
+									QCDbkgEWl.Fill(wjet.Eta(),TTRweighterrdown*weight*massw)
+
+									QCDbkgPT.Fill(tjet.Perp(),TTRweight*weight*massw)
+									QCDbkgPTh.Fill(tjet.Perp(),TTRweighterrup*weight*massw)
+									QCDbkgPTl.Fill(tjet.Perp(),TTRweighterrdown*weight*massw)
+
+									QCDbkgPW.Fill(wjet.Perp(),TTRweight*weight*massw)
+									QCDbkgPWh.Fill(wjet.Perp(),TTRweighterrup*weight*massw)
+									QCDbkgPWl.Fill(wjet.Perp(),TTRweighterrdown*weight*massw)
+
+									QCDbkgPTW.Fill((tjet+wjet).Perp(),TTRweight*weight*massw)
+									QCDbkgPTWh.Fill((tjet+wjet).Perp(),TTRweighterrup*weight*massw)
+									QCDbkgPTWl.Fill((tjet+wjet).Perp(),TTRweighterrdown*weight*massw)
+
+									QCDbkgPhT.Fill(tjet.Phi(),TTRweight*weight*massw)
+									QCDbkgPhTh.Fill(tjet.Phi(),TTRweighterrup*weight*massw)
+									QCDbkgPhTl.Fill(tjet.Phi(),TTRweighterrdown*weight*massw)
+
+									QCDbkgPhW.Fill(wjet.Phi(),TTRweight*weight*massw)
+									QCDbkgPhWh.Fill(wjet.Phi(),TTRweighterrup*weight*massw)
+									QCDbkgPhWl.Fill(wjet.Phi(),TTRweighterrdown*weight*massw)
+
+									QCDbkgdPhi.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweight*weight*massw)  
+									QCDbkgdPhih.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweighterrup*weight*massw)
+									QCDbkgdPhil.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweighterrdown*weight*massw)
+
+									QCDbkgMt.Fill(tjet.M(),TTRweight*weight*massw)
+									QCDbkgMth.Fill(tjet.M(),TTRweighterrup*weight*massw)
+									QCDbkgMtl.Fill(tjet.M(),TTRweighterrdown*weight*massw)
+
+								if FullTop:
+									Mtw_cut10.Fill(MtopW,weight)
+													
+									# if (MtopW>2400):
+									#	goodEvents.append( [ tree.object().id().run(), tree.object().id().luminosityBlock(), tree.object().id().event(),  ] )
+									Mtw.Fill(MtopW,weight) 
+
+									MwStack.Fill(wjet.M(),weight)
+
+									Mtwtrigup.Fill(MtopW,weighttrigup)
+									Mtwtrigdown.Fill(MtopW,weighttrigdown)
+									MtwWup.Fill(MtopW,weightSFwup) 
+									MtwWdown.Fill(MtopW,weightSFwdown) 
+
+									EtaTop.Fill(tjet.Eta(),weight)
+									EtaW.Fill(wjet.Eta(),weight)
+								
+									PtTop.Fill(tjet.Perp(),weight)
+									PtW.Fill(wjet.Perp(),weight)
+									PtTopW.Fill((tjet+wjet).Perp(),weight)
+
+								
+									PhiTop.Fill(tjet.Phi(),weight)
+									PhiW.Fill(wjet.Phi(),weight)
+									dPhi.Fill(abs(tjet.Phi()-wjet.Phi()),weight)
+
+									Mt.Fill(tjet.M(),weight)
+
+									temp_variables = {"wpt":wjet.Perp(),
+											"wmass":wVals["SDmass"],
+											"tpt":tjet.Perp(),
+											"tmass":tVals["SDmass"],
+											"tau32":tau32val,
+											"tau21":tau21val,
+											"sjbtag":SJ_csvval,
+											"flavor":tVals["flavor"],
+											"weight":weight }
 
 
-									if not tau32_cut:
-									# Start generating the QCD estimate using the pass/fail ratio 
-									# on events that fail the tau32 cut
-										fillSpec = [MtopW, tjet.Eta(), wjet.Eta(), tjet.Perp(), wjet.Perp(), tjet.Perp()+wjet.Perp(), tjet.Phi(), wjet.Phi(), abs(tjet.Phi()-wjet.Phi())]
-		
-										arr_count = 0
-										for spec in fillSpec:
-											for ifit in range(0,len(fittitles)):
-												tempweight = bkg_weight_mass(tjet,fits[ifit],eta)
-												QCDbkg_ARR[arr_count].Fill(spec,tempweight*weight*massw) 
-												arr_count+=1
-		
-										QCDbkg.Fill(MtopW,TTRweight*weight*massw)
-										QCDbkgh.Fill(MtopW,TTRweighterrup*weight*massw)
-										QCDbkgl.Fill(MtopW,TTRweighterrdown*weight*massw)
-
-										QCDbkgMwStack.Fill(wjet.M(),TTRweight*weight*massw)
-
-										QCDbkgET.Fill(tjet.Eta(),TTRweight*weight*massw)
-										QCDbkgETh.Fill(tjet.Eta(),TTRweighterrup*weight*massw)
-										QCDbkgETl.Fill(tjet.Eta(),TTRweighterrdown*weight*massw)
-
-										QCDbkgEW.Fill(wjet.Eta(),TTRweight*weight*massw)
-										QCDbkgEWh.Fill(wjet.Eta(),TTRweighterrup*weight*massw)
-										QCDbkgEWl.Fill(wjet.Eta(),TTRweighterrdown*weight*massw)
-
-										QCDbkgPT.Fill(tjet.Perp(),TTRweight*weight*massw)
-										QCDbkgPTh.Fill(tjet.Perp(),TTRweighterrup*weight*massw)
-										QCDbkgPTl.Fill(tjet.Perp(),TTRweighterrdown*weight*massw)
-
-										QCDbkgPW.Fill(wjet.Perp(),TTRweight*weight*massw)
-										QCDbkgPWh.Fill(wjet.Perp(),TTRweighterrup*weight*massw)
-										QCDbkgPWl.Fill(wjet.Perp(),TTRweighterrdown*weight*massw)
-
-										QCDbkgPTW.Fill((tjet+wjet).Perp(),TTRweight*weight*massw)
-										QCDbkgPTWh.Fill((tjet+wjet).Perp(),TTRweighterrup*weight*massw)
-										QCDbkgPTWl.Fill((tjet+wjet).Perp(),TTRweighterrdown*weight*massw)
-
-										QCDbkgPhT.Fill(tjet.Phi(),TTRweight*weight*massw)
-										QCDbkgPhTh.Fill(tjet.Phi(),TTRweighterrup*weight*massw)
-										QCDbkgPhTl.Fill(tjet.Phi(),TTRweighterrdown*weight*massw)
-
-										QCDbkgPhW.Fill(wjet.Phi(),TTRweight*weight*massw)
-										QCDbkgPhWh.Fill(wjet.Phi(),TTRweighterrup*weight*massw)
-										QCDbkgPhWl.Fill(wjet.Phi(),TTRweighterrdown*weight*massw)
-
-										QCDbkgdPhi.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweight*weight*massw)  
-										QCDbkgdPhih.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweighterrup*weight*massw)
-										QCDbkgdPhil.Fill(abs(tjet.Phi()-wjet.Phi()),TTRweighterrdown*weight*massw)
-
-										QCDbkgMt.Fill(tjet.M(),TTRweight*weight*massw)
-										QCDbkgMth.Fill(tjet.M(),TTRweighterrup*weight*massw)
-										QCDbkgMtl.Fill(tjet.M(),TTRweighterrdown*weight*massw)
-
-									if tau32_cut:
-										Mtw_cut10.Fill(MtopW,weight)
-														
-										# if (MtopW>2400):
-										#	goodEvents.append( [ tree.object().id().run(), tree.object().id().luminosityBlock(), tree.object().id().event(),  ] )
-										Mtw.Fill(MtopW,weight) 
-
-										MwStack.Fill(wjet.M(),weight)
-
-										Mtwtrigup.Fill(MtopW,weighttrigup)
-										Mtwtrigdown.Fill(MtopW,weighttrigdown)
-										MtwWup.Fill(MtopW,weightSFwup) 
-										MtwWdown.Fill(MtopW,weightSFwdown) 
-
-										EtaTop.Fill(tjet.Eta(),weight)
-										EtaW.Fill(wjet.Eta(),weight)
-									
-										PtTop.Fill(tjet.Perp(),weight)
-										PtW.Fill(wjet.Perp(),weight)
-										PtTopW.Fill((tjet+wjet).Perp(),weight)
-
-									
-										PhiTop.Fill(tjet.Phi(),weight)
-										PhiW.Fill(wjet.Phi(),weight)
-										dPhi.Fill(abs(tjet.Phi()-wjet.Phi()),weight)
-
-										Mt.Fill(tjet.M(),weight)
-
-										temp_variables = {"wpt":wjet.Perp(),
-												"wmass":wVals["SDmass"],
-												"tpt":tjet.Perp(),
-												"tmass":tVals["SDmass"],
-												"tau32":tau32val,
-												"tau21":tau21val,
-												"sjbtag":SJ_csvval,
-												"flavor":tVals["flavor"],
-												"weight":weight }
-
-
-										for tv in tree_vars.keys():
-											tree_vars[tv][0] = temp_variables[tv]
-										NewTree.Fill()
+									for tv in tree_vars.keys():
+										tree_vars[tv][0] = temp_variables[tv]
+									NewTree.Fill()
 
 
 hEta1Count.SetBinContent(1,eta1Count)

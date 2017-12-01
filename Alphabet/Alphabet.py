@@ -122,8 +122,8 @@ class Alphabetizer:
 		for i in range(1000):
 			self.EG.SetPoint(i, bins[0]-center + i*(bins[-1]- bins[0])/1000., 0)
 			self.EH.SetBinContent(i,0)
-		TVirtualFitter.GetFitter().GetConfidenceIntervals(self.EG)
-		TVirtualFitter.GetFitter().GetConfidenceIntervals(self.EH)
+		TVirtualFitter.GetFitter().GetConfidenceIntervals(self.EG,0.68)
+		TVirtualFitter.GetFitter().GetConfidenceIntervals(self.EH,0.68)
 		self.EG.SetLineColorAlpha(kRed,0.2)
 		self.Ndof = self.Fit.GetNDF()
 		self.Chi2 = self.Fit.GetChisquare()
