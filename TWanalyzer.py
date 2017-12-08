@@ -387,6 +387,26 @@ tpt = Cuts['tpt']
 alphaString = ''
 if options.Alphabet == 'on':
 	alphaString = 'alphabet_on'
+	MtwBinSides = []
+	# Have to grab the Mtw bins from the Alphabet output file
+	binsFile = TFile.Open(di+'Alphabet/results/'+options.cuts+'/MtwvsBkg_'+setstr+'.root')
+	binsHist = binsFile.Get('binsHist')
+	for ibin in range(binsHist.GetXaxis().GetNbins()+1):
+		# Store the ints in a list
+		MtwBinSides.append(binsHist.GetXaxis().GetBinLowEdge(ibin+1))
+	# Need a list of strings so we can grab the fit files
+	# Need a list of pairs of ints so we can make the cuts
+	print MtwBinSides
+	sMtwCuts = []
+	iMtwCuts = []
+	for iside in range(0,len(MtwBinSides)-1):
+		lowWall = int(MtwBinSides[iside])
+		highWall = int(MtwBinSides[iside+1])
+		sMtwCuts.append(str(lowWall)+'-'+str(highWall))
+		iMtwCuts.append([lowWall,highWall])
+
+	print sMtwCuts
+	print iMtwCuts
 
 if jobs != 1:
 	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+tnameformat+"_"+mod+pustr+pstr+mmstr+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+ttsubString+ptTTString+alphaString+".root", "recreate" )
@@ -400,7 +420,7 @@ if options.Alphabet == "on":
 	RpfFits = []
 	ErrHists = []
 
-	for MtwCuts in ['500-1100','1100-1300','1300-1500','1500-1700','1700-4000']:#['800-1000','1000-1200','1200-1400','1400-1600','1600-4000']:
+	for MtwCuts in sMtwCuts:
 		print 'opening ' + di+'Alphabet/results/'+options.cuts+'/Alphabet'+setstr+'_'+options.cuts+'_Mtw_'+MtwCuts+'.root'
 		thisFile = TFile.Open(di+'Alphabet/results/'+options.cuts+'/Alphabet'+setstr+'_'+options.cuts+'_Mtw_'+MtwCuts+'.root')
 		TagFiles.append(thisFile)
@@ -467,6 +487,9 @@ if options.Alphabet == "off":
 
 preAntiTag = TH1F("preAntiTag",     "Antitag distribution before R p/f weighting",     	  	      140, 500, 4000 )
 preAntiTag.Sumw2()
+
+Antitag = TH1F("Antitag",     "Antitag distribution before R p/f weighting",     	  	      140, 500, 4000 )
+Antitag.Sumw2()
 
 MwStack		= TH1F("MwStack",	"top candidate mass for stack",		100,   105, 210 )
 QCDbkgMwStack	= TH1F("QCDbkgMwStack", "QCD background for top mass",		100, 105, 210 )
@@ -720,6 +743,7 @@ tree_vars = {	"wpt":array('d',[0.]),
 				"tau21":array('d',[0.]),
 				"sjbtag":array('d',[0.]),
 				"flavor":array('d',[0.]),
+				"mtw":array('d',[0.]),
 				"weight":array('d',[0.])}
 
 NewTree = Make_Trees(tree_vars)
@@ -1222,26 +1246,13 @@ for entry in range(lowBinEdge,highBinEdge):
 
 								Mtw_cut9.Fill(MtopW,weight)
 								# Grab the pass/fail ratio at the last second for efficiency
-								if MtopW > 500 and MtopW < 1100:
-									TTRweight = RpfFits[0].Eval(tjet.M())
-									TTRweighterrup = TTRweight + ErrHists[0].GetBinError(ErrHists[0].GetXaxis().FindBin(tjet.M()))
-									TTRweighterrdown = TTRweight - ErrHists[0].GetBinError(ErrHists[0].GetXaxis().FindBin(tjet.M()))
-								elif MtopW > 1100 and MtopW < 1300:
-									TTRweight = RpfFits[1].Eval(tjet.M())
-									TTRweighterrup = TTRweight + ErrHists[1].GetBinError(ErrHists[1].GetXaxis().FindBin(tjet.M()))
-									TTRweighterrdown = TTRweight - ErrHists[1].GetBinError(ErrHists[1].GetXaxis().FindBin(tjet.M()))
-								elif MtopW > 1300 and MtopW < 1500:
-									TTRweight = RpfFits[2].Eval(tjet.M())
-									TTRweighterrup = TTRweight + ErrHists[2].GetBinError(ErrHists[2].GetXaxis().FindBin(tjet.M()))
-									TTRweighterrdown = TTRweight - ErrHists[2].GetBinError(ErrHists[2].GetXaxis().FindBin(tjet.M()))
-								elif MtopW > 1500 and MtopW < 1700:
-									TTRweight = RpfFits[3].Eval(tjet.M())
-									TTRweighterrup = TTRweight + ErrHists[3].GetBinError(ErrHists[3].GetXaxis().FindBin(tjet.M()))
-									TTRweighterrdown = TTRweight - ErrHists[3].GetBinError(ErrHists[3].GetXaxis().FindBin(tjet.M()))
-								elif MtopW > 1700:
-									TTRweight = RpfFits[4].Eval(tjet.M())
-									TTRweighterrup = TTRweight + ErrHists[4].GetBinError(ErrHists[4].GetXaxis().FindBin(tjet.M()))
-									TTRweighterrdown = TTRweight - ErrHists[4].GetBinError(ErrHists[4].GetXaxis().FindBin(tjet.M()))
+								for iband in range(len(iMtwCuts)):
+									band = iMtwCuts[iband]
+									if MtopW > band[0] and MtopW < band[1]:
+										TTRweight = RpfFits[iband].Eval(tjet.M())
+										TTRweighterrup = TTRweight + ErrHists[iband].GetBinError(ErrHists[iband].GetXaxis().FindBin(tjet.M()))
+										TTRweighterrdown = TTRweight - ErrHists[iband].GetBinError(ErrHists[iband].GetXaxis().FindBin(tjet.M()))
+										break
 
 								if not FullTop:
 								# Start generating the QCD estimate using the pass/fail ratio 
@@ -1255,6 +1266,8 @@ for entry in range(lowBinEdge,highBinEdge):
 											QCDbkg_ARR[arr_count].Fill(spec,tempweight*weight*massw) 
 											arr_count+=1
 	
+									Antitag.Fill(MtopW,weight*massw)
+
 									QCDbkg.Fill(MtopW,TTRweight*weight*massw)
 									QCDbkgh.Fill(MtopW,TTRweighterrup*weight*massw)
 									QCDbkgl.Fill(MtopW,TTRweighterrdown*weight*massw)
@@ -1333,6 +1346,7 @@ for entry in range(lowBinEdge,highBinEdge):
 											"tau21":tau21val,
 											"sjbtag":SJ_csvval,
 											"flavor":tVals["flavor"],
+											'mtw':MtopW,
 											"weight":weight }
 
 

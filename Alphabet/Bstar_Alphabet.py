@@ -35,6 +35,10 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
 				default       =       'default',
 				dest          =       'cuts',
 				help          =       'Cuts type (ie default, rate, etc)')
+parser.add_option('-C', '--cheat', metavar='F', type='string', action='store',
+				default       =       'off',
+				dest          =       'cheat',
+				help          =       'Turns the top mass blinding on and off - can also be narrow')
 parser.add_option('-q', '--qcdsample', metavar='F', type='string', action='store',
 				default       =       'all',
 				dest          =       'qcdsample',
@@ -47,6 +51,14 @@ parser.add_option('-e', '--estimate', metavar='F', type='string', action='store'
 				default       =       'off',
 				dest          =       'estimate',
 				help          =       'run the estimate or not')
+parser.add_option('-f', '--f', metavar='F', type='string', action='store',
+				default       =       'lin',
+				dest          =       'fit',
+				help          =       'fit of Rp/f(mt) - lin,quad,new')
+parser.add_option('-D', '--run2d', metavar='F', type='string', action='store',
+				default       =       'off',
+				dest          =       'run2d',
+				help          =       'run the 2D fit or or not')
 
 (options, args) = parser.parse_args()
 
@@ -65,12 +77,18 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 
 # ------ Define the set of cuts (pt, dy, and tau21 already applied)-------
-# if options.cuts.find('default') != -1:
-# 	wmass_cut = '(mass_w>65.)&&(mass_w<105.)'
-# elif options.cuts.find('sideband') != -1:
-# 	wmass_cut = '(mass_w>30.)&&(mass_w<65.)'
+if options.cuts.find('default') != -1:
+	wmass_cut = '(SDmass_w>65.)&&(SDmass_w<105.)'
+elif options.cuts.find('sideband') != -1:
+	wmass_cut = '(SDmass_w>30.)&&(SDmass_w<65.)'
 
-tmass_cut = '(mass_top>105)&&(mass_top<210)'
+tSDmass_cut = '(SDmass_top>105)&&(SDmass_top<210)'
+if options.cheat == 'off':
+	tmass_cut = '!((mass_top>105)&&(mass_top<210))'
+elif options.cheat == 'narrow':
+	tmass_cut = '!((mass_top>155)&&(mass_top<195))'
+elif options.cheat == 'on':
+	tmass_cut = '(1)'
 tau32_cut = '(tau32<0.65)'
 sjbtag_cut = '(sjbtag>0.5426)'
 mtw_cut = '(mass_tw>'+options.mtwcuts.split(',')[0]+'.)&&(mass_tw<'+options.mtwcuts.split(',')[1]+'.)'
@@ -142,8 +160,8 @@ Bstar = Alphabetizer("Bstar", DistsWeWantToEstimate, DistsWeWantToIgnore)
 # Define some selections - MakeCuts connects cuts with '&&'
 presel = mtw_cut
 selection = MakeCuts([sjbtag_cut,tau32_cut])
-tag = MakeCuts([selection,presel,tmass_cut])
-antitag = MakeCuts([sjbtag_cut,tau32_cut],'not') + '&&' + MakeCuts([presel,tmass_cut])
+tag = MakeCuts([selection,presel,tSDmass_cut])
+antitag = MakeCuts([sjbtag_cut,tau32_cut],'not') + '&&' + MakeCuts([presel,tSDmass_cut])
 
 print 'Presel 		= ' + presel
 print 'Selection 	= ' + selection
@@ -151,14 +169,31 @@ print 'Tag 		= ' + tag
 print 'Antitag 	= ' + antitag
 
 # -------------------- Do some binning -----------------------------------
-bins = array('d',[75,85,95,105,210,230,260,300])
+bins = array('d',[75,85,95,105,210,240])
 # bins = array('d',[75,85,95,105,115,125,135,145,155,165,175,185,195,210,230,260,320])
 truthbins = []
-if options.set == "QCD":
+if options.set == "QCD" and options.cheat == 'off':
 	truthbins = array('d',[105,115,125,135,145,155,165,175,185,195,210])
 	# truthbins = array('d',[165,170,175,180])
-elif options.set == "data":
-	truthbins = []
+elif options.set == "QCD" and options.cheat == 'on':
+	bins = array('d',[75,85,95,105,115,125,135,145,155,165,175,185,195,210,240])
+elif options.set == "QCD" and options.cheat == 'narrow':
+	bins = array('d',[75,85,95,105,115,125,135,145,155,195,210,240])
+	truthbins = array('d',[155,165,175,185,195])
+elif options.set == "data" and options.cheat == 'narrow':
+	bins = array('d',[75,85,95,105,115,125,135,145,155,195,210,240])
+	truthbins = array('d',[])
+
+# -------------- Define the function to fit in the Mtop direction ----------
+center = 80
+if options.fit == 'quad':
+	# fitfunction = '[0]+[1]*(x+'+str(center)+')+[2]*(x+'+str(center)+')**2'
+	fitfunction = '[0]+[1]*x+[2]*x**2'
+elif options.fit == 'lin':
+	fitfunction = '[0]+[1]*(x+'+str(center)+')'
+elif options.fit == 'new':
+	fitfunction = '[0]*exp(x*[1]-x**2*[2])'# Gaussian divided by decaying exponential
+
 
 # ---------------- Define a folder to save in ----------------------------
 if options.qcdsample == 'all':
@@ -170,7 +205,7 @@ else:
 c2D = TCanvas('c2D','c2D',800,700)
 c2D.SetRightMargin(0.15)
 
-Bstar.SetRegions(['mass_top','tau32',23,70,300,20,0,1],'('+presel+')')
+Bstar.SetRegions(['mass_top','tau32',17,70,240,20,0,1],'('+presel+')')
 Bstar.TwoDPlot.GetYaxis().SetTitle('#tau_{32}')
 Bstar.TwoDPlot.GetXaxis().SetTitle('M_{Top}')
 Bstar.TwoDPlot.SetTitle(options.qcdsample+' - Mtw ['+options.mtwcuts+']')
@@ -178,98 +213,52 @@ Bstar.TwoDPlot.Draw('COLZ')
 
 c2D.Print(printDir +'MtvsTau32_Mtw'+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+'.png','png')
 
-# ------------- Now Make the fit based on the Mt sideband ----------------
-center = 0
-# This should do everything
-quadfit = '[0]+[1]*(x+'+str(center)+')+[2]*(x+'+str(center)+')**2'
-linfit = '[0]+[1]*(x+'+str(center)+')'
-# newfit = '[0]*exp((-(x-[1])**2)/[2]+[3]*x)' # Gaussian divided by decaying exponential
-newfit = '[0]*exp(x*[1]-x**2*[2])'
-Bstar.doRatesFlexFit('mass_top','!('+tmass_cut+')',selection,presel,bins,truthbins,linfit,center)
-
-
-###### TESTING CODE FOR THE FIT ###########################
-# onesT = TTree('onesT','onesT')
-# myArray = array('d',[0])
-# onesT.Branch('ones',myArray,'ones/D')
-
-# onesH = TH1F('onesH','onesH',250,50,300)
-# onesHup = TH1F('onesHup','onesHup',250,50,300)
-# onesHdown = TH1F('onesHdown','onesHdown',250,50,300)
-
-# Bstar.Fit.MakeConvFactor('ones', 0)
-
-# for ibin in range(50,300):
-# 	myArray[0] = ibin
-# 	onesT.Fill()
-
-# onesT.Draw('ones>>onesH',Bstar.Fit.ConvFact,'goff')
-# onesT.Draw('ones>>onesHup',Bstar.Fit.ConvFactUp,'goff')
-# onesT.Draw('ones>>onesHdown',Bstar.Fit.ConvFactDn,'goff')
-
-# testC = TCanvas('testC','testC',800,700)
-# onesH.Draw('hist')
-# onesHup.Draw('same hist')
-# onesHdown.Draw('same hist')
-
-# parListUp = []
-# err = F.ErrUp
-# for par in range(9):
-# 	# parListUp.append(str(round(err.GetParameter(par),10)))
-# 	parListUp.append(str(err.GetParameter(par)))
-
-# print '(0.008598535 + (x*-0.000400739) + (x*x*0.000005700) + sqrt((0.009759305*0.009759305) + (x*x*0.000249488*0.000249488) + (x*x*x*x*0.000001569*0.000001569) + (2*x*-0.000002385) + (2*x*x*0.000000014) + (2*x*x*x*-0.000000000)))'
-# print '('+parListUp[0]+' + '+parListUp[1]+'*x + '+parListUp[2]+'*x*x'+' + sqrt(('+parListUp[3]+'*'+parListUp[3]+') + (x*x*'+parListUp[4]+'*'+parListUp[4]+') + (x*x*x*x*'+parListUp[5]+'*'+parListUp[5]+') + (2*x*'+parListUp[6]+') + (2*x*x*'+parListUp[7]+') + (2*x*x*x*'+parListUp[8]+'))'
-
-
-# thisConvFitUp = TF1('thisConvFitUp','(0.008598535 + (x*-0.000400739) + (x*x*0.000005700) + sqrt((0.009759305*0.009759305) + (x*x*0.000249488*0.000249488) + (x*x*x*x*0.000001569*0.000001569) + (2*x*-0.000002385) + (2*x*x*0.000000014) + (2*x*x*x*-0.000000000)))',50,300)
-# thisConvFitUp.Draw('same')
-
-# thisParFitUp = TF1('thisParFitUp','('+parListUp[0]+' + '+parListUp[1]+'*x + '+parListUp[2]+'*x*x'+' + sqrt(('+parListUp[3]+'*'+parListUp[3]+') + (x*x*'+parListUp[4]+'*'+parListUp[4]+') + (x*x*x*x*'+parListUp[5]+'*'+parListUp[5]+') + (2*x*'+parListUp[6]+') + (2*x*x*'+parListUp[7]+')))',50,300) # + (2*x*x*x*'+parListUp[8]+')
-# thisParFitUp.SetLineColor(kPink)
-# thisParFitUp.Draw('same')
-
-
-# raw_input('waiting')
-
-########## END TESTING CODE ###############################
-
-# ------------ Plot the fit -------------------------------
-C1 = TCanvas("C1", "", 800, 600)
-C1.cd()
-
-Bstar.G.Draw('AP')
-Bstar.EG.SetMaximum(0.5)
-Bstar.EG.Draw("p same")
-Bstar.G.Draw('p same')
-
-Bstar.G.SetTitle('Alphabet R_{P/F} - '+options.set+' - M_{tW} '+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1])
-Bstar.G.GetXaxis().SetTitle("M_{top} (GeV)")
-Bstar.G.GetYaxis().SetTitle("N_{passed}/N_{failed}")
-
-if Bstar.truthG != None:
-	Bstar.truthG.Draw("same")
-leg = TLegend(0.15,0.7,0.35,0.9)
-leg.SetTextSize(.025)
-leg.SetLineColor(0)
-leg.SetFillColor(0)
-leg.AddEntry(Bstar.G, "events used in fit", "PL")
-leg.Draw()
-
-C1.Print(printDir+"fit_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".pdf")
-C1.Print(printDir+"fit_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".png")
-
-# --------- Now save the fit info for use outside of alphabet -------
+# --------- Make a file to save out to ----------------------------
 myFile = TFile(printDir+"Alphabet"+options.set+'_'+options.cuts+"_Mtw_"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".root", "recreate")
 myFile.cd()
-Bstar.EH.Write()
-Bstar.Fit.Write()
+
+# ------------- Now Make the fit based on the Mt sideband ----------------
+# If doing 1D Mtop fit with Mtw slices
+if options.run2d != 'on':
+	# This should do everything
+	Bstar.doRatesFlexFit('mass_top',tmass_cut,selection,presel,bins,truthbins,fitfunction,center)
+
+
+	# ------------ Plot the fit -------------------------------
+	C1 = TCanvas("C1", "", 800, 600)
+	C1.cd()
+
+	Bstar.G.SetMaximum(0.37)
+	Bstar.G.Draw('AP')
+	Bstar.EG.SetMaximum(0.5)
+	Bstar.EG.Draw("p same")
+	Bstar.G.Draw('p same')
+
+	Bstar.G.SetTitle('Alphabet R_{P/F} - '+options.set+' - M_{tW} '+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1])
+	Bstar.G.GetXaxis().SetTitle("M_{top} (GeV)")
+	Bstar.G.GetYaxis().SetTitle("N_{passed}/N_{failed}")
+
+	if Bstar.truthG != None:
+		Bstar.truthG.Draw("same")
+	leg = TLegend(0.15,0.7,0.35,0.9)
+	leg.SetTextSize(.025)
+	leg.SetLineColor(0)
+	leg.SetFillColor(0)
+	leg.AddEntry(Bstar.G, "events used in fit", "PL")
+	leg.Draw()
+
+	C1.Print(printDir+"fit_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".pdf")
+	C1.Print(printDir+"fit_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".png")
+
+
+	Bstar.EH.Write()
+	Bstar.Fit.Write()
 
 
 #####################################
 # Now we actually run the Estimate! #
 #####################################
-if options.estimate == 'on':
+if options.estimate == 'on' and options.run2d == 'off':
 	# var we want to look at:
 	mtw_bins = (int(options.mtwcuts.split(',')[1])-int(options.mtwcuts.split(',')[0]))/100
 	# var_array2 = ["mass_tw", mtw_bins,float(options.mtwcuts.split(',')[0]),float(options.mtwcuts.split(',')[1])]
@@ -372,11 +361,72 @@ if options.estimate == 'on':
 	# ND.Write()
 
 
-# g = open(printDir+"fn_bstar_QUAD_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".txt",'w')
-# for i in range(Bstar.Fit.GetNpar()):
-# 	# Tecnically grabs parameters from errUp but the first three are the same as in the nominal fit
-# 	# and the next 6 are identital to ErrDown (it's the equation they are put in that's different)
-# 	g.write(str(Bstar.Fit.GetParameter(i))+"\n")
+# If doing the 2D fit and grabbing fitted parameter distributions
+if options.run2d == 'on':
+	# Grab the saved file with the parameter fits
+	TwoDFitFile = TFile.Open('results/'+options.cuts+'/MtwvsBkg_'+options.set+'_mtfit_'+options.fit+'_cheat_'+options.cheat+'.root')
+
+	# var we want to look at:
+	mtw_bins = (int(options.mtwcuts.split(',')[1])-int(options.mtwcuts.split(',')[0]))/100
+	var_array2 = ['mass_tw',35,500,4000]
+
+	Bstar.fitFunc = fitfunction
+
+	Bstar.MakeEstFlexFit(var_array2,'mass_top',antitag, tag, center,TwoDFitFile)
+
+	hbins = var_array2[1:]
+
+	# the real value is the sum of the histograms in self.hists_MSR
+	V = TH1F("V2d", "", hbins[0],hbins[1], hbins[2])
+	for i in Bstar.hists_MSR:
+		V.Add(i,1.)
+
+	# the estimate is the sum of the histograms in self.hists_EST and self.hist_MSR_SUB
+	N = TH1F("QCD2d", "", hbins[0], hbins[1], hbins[2])
+	for i in Bstar.hists_EST:
+		N.Add(i,1.)
+	for i in Bstar.hists_MSR_SUB:
+		N.Add(i,1.)
+	for i in Bstar.hists_EST_SUB:
+		N.Add(i,-1.)
+
+
+# ---- Lots of plot formatting --------------
+	vartitle = "M_{tW} (GeV)"
+
+	N.SetLineColor(kBlack)
+	N.SetFillColor(kPink+3)
+
+	V.SetStats(0)
+	V.SetLineColor(1)
+	V.SetFillColor(0)
+	V.SetMarkerColor(1)
+	V.SetMarkerStyle(20)
+	N.GetYaxis().SetTitle("events / "+str((hbins[2]-hbins[1])/hbins[0])+" GeV")
+	N.GetXaxis().SetTitle(vartitle)
+
+	leg2 = TLegend(0.75,0.75,0.95,0.95)
+	leg2.SetLineColor(0)
+	leg2.SetFillColor(0)
+	leg2.AddEntry(V, "Data in tag region", "PL")
+	leg2.AddEntry(N, "Data prediction", "F")
+
+	FindAndSetMax([V,N])
+	C3 = TCanvas("C3", "", 800, 600)
+	C3.cd()
+	N.Draw("Hist")
+	V.Draw("same E0")
+
+	leg2.Draw()
+	
+# --- Write out the canvas ---------------------
+	C3.Print(printDir+"bkg_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".pdf")
+	C3.Print(printDir+"bkg_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".png")
+
+# --- Save the histograms ----------------------
+	myFile.cd()
+	N.Write()
+	V.Write()
 
 
 myFile.Write()

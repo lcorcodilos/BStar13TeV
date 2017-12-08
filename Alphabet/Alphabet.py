@@ -237,12 +237,19 @@ class Alphabetizer:
 			self.hists_EST_SUB_DN.append(temphistD)
 			self.hists_ATAG.append(temphistA)
 
-	def MakeEstFlexFit(self, var_array, rate_var, antitag, tag, center=0):
+	def MakeEstFlexFit(self, var_array, rate_var, antitag, tag, center=0, twod=0):
 	# makes an estimate in a region, based on an anti-tag region, of that variable in all dists
 	# var_array - array for what we are plotting 
 	# rate_var - var in which the rate was made
+	# twod - 0 if no 2D fit, 2D fit Tfile otherwise
 		print self.fitFunc
-		fitString = CustomFit2String(rate_var,self.Fit,self.fitFunc,str(center))
+		if twod == 0:
+			fitString = CustomFit2String(rate_var,self.fitFunc,str(center),twod,self.Fit)
+			twodstring = ''
+		else:
+			fitString = CustomFit2String(rate_var,self.fitFunc,str(center),twod)
+			twodstring = '2d'
+
 		print 'Fit = ' + fitString
 		self.hists_EST = []
 		self.hists_EST_SUB = []
@@ -250,9 +257,9 @@ class Alphabetizer:
 		self.hists_MSR_SUB = []
 		self.hists_ATAG = []
 		for i in self.DP:
-			temphist = TH1F("Hist_VAL"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
-			temphistN = TH1F("Hist_NOMINAL"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
-			temphistA = TH1F("Hist_ATAG"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
+			temphist = TH1F("Hist_VAL"+twodstring+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
+			temphistN = TH1F("Hist_NOMINAL"+twodstring+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
+			temphistA = TH1F("Hist_ATAG"+twodstring+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
 			quickplot(i.File, i.Tree, temphist, var_array[0], tag, i.weight)
 			quickplot(i.File, i.Tree, temphistN, var_array[0], antitag, "("+i.weight+"*"+fitString+")")
 			quickplot(i.File, i.Tree, temphistA, var_array[0], antitag, i.weight)
@@ -260,9 +267,9 @@ class Alphabetizer:
 			self.hists_EST.append(temphistN)
 			self.hists_ATAG.append(temphistA) 
 		for i in self.DM:
-			temphist = TH1F("Hist_SUB_VAL"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
-			temphistN = TH1F("Hist_SUB_NOMINAL"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
-			temphistA = TH1F("Hist_SUB_ATAG"+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
+			temphist = TH1F("Hist_SUB_VAL"+twodstring+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
+			temphistN = TH1F("Hist_SUB_NOMINAL"+twodstring+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
+			temphistA = TH1F("Hist_SUB_ATAG"+twodstring+self.name+"_"+i.name, "", var_array[1], var_array[2], var_array[3])
 			quickplot(i.File, i.Tree, temphist, var_array[0], tag, i.weight)
 			quickplot(i.File, i.Tree, temphistN, var_array[0], antitag, "("+i.weight+"*"+fitString+")")
 			quickplot(i.File, i.Tree, temphistA, var_array[0], antitag, i.weight)
@@ -312,9 +319,10 @@ class Alphabetizer:
 			self.hists_EST_SUB_UP.append(temphistU)
 			self.hists_EST_SUB_DN.append(temphistD)
 	
-def CustomFit2String(var,fit,fitFunc,center):
+def CustomFit2String(var,fitFunc,center,twod,fit=False):
 	# Need to convert the fitFunc (of form '[0]+[1]*x...') to a string
 	# with the actual parameters in for [0],[1], etc and 'x' replace with our var
+	# twod - 0 if not running 2D fit, is the relevant 2D Tfile otherwise
 	thisFitFunc = '('
 	
 	# Need to have our own find algo to avoid messing up exp when 'x' gets replaced with var
@@ -342,15 +350,37 @@ def CustomFit2String(var,fit,fitFunc,center):
 		leftside = fitFunc[start:stop]
 
 		thisFitFunc += leftside + '(' + var + '-' + str(center) + ')'
-		print thisFitFunc
+
 	# Finish up by adding the final right side
 	thisFitFunc += fitFunc[xIndex[-1]+1:]
 
 	# Now swap in the parameter values
-	pars = []
-	for ipar in range(fit.GetNpar()):
-		thisPar = str(fit.GetParameter(ipar))
-		thisFitFunc = thisFitFunc.replace('['+str(ipar)+']','('+thisPar+')')
+	if twod == 0:
+		pars = []
+		for ipar in range(fit.GetNpar()):
+			thisPar = str(fit.GetParameter(ipar))
+			thisFitFunc = thisFitFunc.replace('['+str(ipar)+']','('+thisPar+')')
+	else:
+		paramFits = {} # Dictionary of parameters for the fits of the Mtw slice parameters
+		nParams = 0
+		# Sort through the keys in the file and find the p*fit objects
+		for key in twod.GetListOfKeys():
+			if key.GetClassName() == 'TF1':
+				# Grab the fit and get the parameters and store in paramFits dictionary
+				keyname = key.GetName()
+				thisFit = twod.Get(keyname)
+				nParams+=1
+				paramFits[keyname] = []
+				for ipar in range(thisFit.GetNpar()):
+					paramFits[keyname].append(thisFit.GetParameter(ipar))
+
+		# Now construct a 2D fit string to feed into MakeEstFlexFit() -- SPECIFIC TO PARAMETERS BEING FIT WITH A LINE
+		for ipar in range(nParams):
+			thisP0 = str(paramFits['p'+str(ipar)+'fit'][0])
+			thisP1 = str(paramFits['p'+str(ipar)+'fit'][1])
+			thisFittedParameterFunction = '('+thisP0+'+(mass_tw)*'+thisP1+')'
+			thisFitFunc = thisFitFunc.replace('['+str(ipar)+']',thisFittedParameterFunction)
+
 
 	return thisFitFunc+')'
 

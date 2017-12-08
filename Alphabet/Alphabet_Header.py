@@ -201,6 +201,9 @@ def AlphabetNDSlicer(DP,DM,var, varCuts, passCuts, presel, bins, center):
 	RateFail = RateFailP.Clone()
 	RateFail.Add(RateFailM,-1)
 
+	print 'Pass entries: ' + str(RatePass.GetEntries())
+	print 'Fail entries: ' + str(RateFail.GetEntries())
+
 	Rpf = RatePass.Clone()
 	Rpf.Divide(RateFail)
 
