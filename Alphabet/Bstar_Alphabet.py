@@ -52,16 +52,24 @@ parser.add_option('-e', '--estimate', metavar='F', type='string', action='store'
 				dest          =       'estimate',
 				help          =       'run the estimate or not')
 parser.add_option('-f', '--f', metavar='F', type='string', action='store',
-				default       =       'lin',
+				default       =       'quad',
 				dest          =       'fit',
 				help          =       'fit of Rp/f(mt) - lin,quad,new')
-parser.add_option('-D', '--run2d', metavar='F', type='string', action='store',
+parser.add_option('-r', '--run2d', metavar='F', type='string', action='store',
 				default       =       'off',
 				dest          =       'run2d',
 				help          =       'run the 2D fit or or not')
 
 (options, args) = parser.parse_args()
 
+# Turn on/off plotting the signal on the fit plots
+plotSignal = False
+if plotSignal:
+	fSR1200 = TFile.Open('../local_studies/SR1200_top_mass_dist.root')
+	hSR1200 = fSR1200.Get('hS1200')
+	hSR1200.Scale(2/hSR1200.Integral())
+	hSR1200.SetLineColor(kBlue)
+	hSR1200.SetLineWidth(2)
 
 print "Options summary"
 print "=================="
@@ -82,12 +90,15 @@ if options.cuts.find('default') != -1:
 elif options.cuts.find('sideband') != -1:
 	wmass_cut = '(SDmass_w>30.)&&(SDmass_w<65.)'
 
-tSDmass_cut = '(SDmass_top>105)&&(SDmass_top<210)'
+
 if options.cheat == 'off':
+	tSDmass_cut = '(SDmass_top>105)&&(SDmass_top<210)'
 	tmass_cut = '!((mass_top>105)&&(mass_top<210))'
 elif options.cheat == 'narrow':
+	tSDmass_cut = '(SDmass_top>155)&&(SDmass_top<195)'
 	tmass_cut = '!((mass_top>155)&&(mass_top<195))'
 elif options.cheat == 'on':
+	tSDmass_cut = '(SDmass_top>105)&&(SDmass_top<210)'
 	tmass_cut = '(1)'
 tau32_cut = '(tau32<0.65)'
 sjbtag_cut = '(sjbtag>0.5426)'
@@ -169,23 +180,23 @@ print 'Tag 		= ' + tag
 print 'Antitag 	= ' + antitag
 
 # -------------------- Do some binning -----------------------------------
-bins = array('d',[75,85,95,105,210,240])
+bins = array('d',[75,85,95,105,210,250])
 # bins = array('d',[75,85,95,105,115,125,135,145,155,165,175,185,195,210,230,260,320])
 truthbins = []
 if options.set == "QCD" and options.cheat == 'off':
 	truthbins = array('d',[105,115,125,135,145,155,165,175,185,195,210])
 	# truthbins = array('d',[165,170,175,180])
 elif options.set == "QCD" and options.cheat == 'on':
-	bins = array('d',[75,85,95,105,115,125,135,145,155,165,175,185,195,210,240])
-elif options.set == "QCD" and options.cheat == 'narrow':
-	bins = array('d',[75,85,95,105,115,125,135,145,155,195,210,240])
+	bins = array('d',[75,85,95,105,115,125,135,145,155,165,175,185,195,210,250])
+elif options.cheat == 'narrow':
+	bins = array('d',[75,85,95,105,115,125,135,145,155,195,210,250])
 	truthbins = array('d',[155,165,175,185,195])
 elif options.set == "data" and options.cheat == 'narrow':
-	bins = array('d',[75,85,95,105,115,125,135,145,155,195,210,240])
+	bins = array('d',[75,85,95,105,115,125,135,145,155,195,210,250])
 	truthbins = array('d',[])
 
 # -------------- Define the function to fit in the Mtop direction ----------
-center = 80
+center = 0
 if options.fit == 'quad':
 	# fitfunction = '[0]+[1]*(x+'+str(center)+')+[2]*(x+'+str(center)+')**2'
 	fitfunction = '[0]+[1]*x+[2]*x**2'
@@ -205,7 +216,7 @@ else:
 c2D = TCanvas('c2D','c2D',800,700)
 c2D.SetRightMargin(0.15)
 
-Bstar.SetRegions(['mass_top','tau32',17,70,240,20,0,1],'('+presel+')')
+Bstar.SetRegions(['mass_top','tau32',18,70,250,20,0,1],'('+presel+')')
 Bstar.TwoDPlot.GetYaxis().SetTitle('#tau_{32}')
 Bstar.TwoDPlot.GetXaxis().SetTitle('M_{Top}')
 Bstar.TwoDPlot.SetTitle(options.qcdsample+' - Mtw ['+options.mtwcuts+']')
@@ -219,7 +230,7 @@ myFile.cd()
 
 # ------------- Now Make the fit based on the Mt sideband ----------------
 # If doing 1D Mtop fit with Mtw slices
-if options.run2d != 'on':
+if options.run2d.find('on') == -1:
 	# This should do everything
 	Bstar.doRatesFlexFit('mass_top',tmass_cut,selection,presel,bins,truthbins,fitfunction,center)
 
@@ -228,29 +239,41 @@ if options.run2d != 'on':
 	C1 = TCanvas("C1", "", 800, 600)
 	C1.cd()
 
+	Bstar.G.SetMarkerStyle(10)
+
 	Bstar.G.SetMaximum(0.37)
 	Bstar.G.Draw('AP')
-	Bstar.EG.SetMaximum(0.5)
-	Bstar.EG.Draw("p same")
-	Bstar.G.Draw('p same')
+	Bstar.EG.Draw("same")	
+	Bstar.pG.Draw('p same')
 
 	Bstar.G.SetTitle('Alphabet R_{P/F} - '+options.set+' - M_{tW} '+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1])
 	Bstar.G.GetXaxis().SetTitle("M_{top} (GeV)")
 	Bstar.G.GetYaxis().SetTitle("N_{passed}/N_{failed}")
 
 	if Bstar.truthG != None:
-		Bstar.truthG.Draw("same")
-	leg = TLegend(0.15,0.7,0.35,0.9)
+		Bstar.truthG.SetMarkerStyle(25)
+		Bstar.truthG.Draw("P same")
+
+	leg = TLegend(0.15,0.7,0.35,0.88)
 	leg.SetTextSize(.025)
 	leg.SetLineColor(0)
 	leg.SetFillColor(0)
-	leg.AddEntry(Bstar.G, "events used in fit", "PL")
+	leg.AddEntry(Bstar.G, "events used in fit", "P")
+	if Bstar.truthG != None:
+		leg.AddEntry(Bstar.truthG, 'events not used in fit', 'P')
+
+	if plotSignal and center == 0:
+		hSR1200.Draw('samehist')
+		leg.AddEntry(hSR1200, 'b* signal 1200 GeV', 'L')
+
 	leg.Draw()
+
+	
 
 	C1.Print(printDir+"fit_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".pdf")
 	C1.Print(printDir+"fit_"+options.set+"_Mtw"+options.mtwcuts.split(',')[0]+'-'+options.mtwcuts.split(',')[1]+".png")
 
-
+	myFile.cd()
 	Bstar.EH.Write()
 	Bstar.Fit.Write()
 
@@ -362,33 +385,65 @@ if options.estimate == 'on' and options.run2d == 'off':
 
 
 # If doing the 2D fit and grabbing fitted parameter distributions
-if options.run2d == 'on':
+# Discrete 2D
+if options.run2d.find('on') != -1:
 	# Grab the saved file with the parameter fits
 	TwoDFitFile = TFile.Open('results/'+options.cuts+'/MtwvsBkg_'+options.set+'_mtfit_'+options.fit+'_cheat_'+options.cheat+'.root')
 
-	# var we want to look at:
-	mtw_bins = (int(options.mtwcuts.split(',')[1])-int(options.mtwcuts.split(',')[0]))/100
-	var_array2 = ['mass_tw',35,500,4000]
+	if options.run2d == 'on_disc':
+		# var we want to look at:
+		mtw_bins = (int(options.mtwcuts.split(',')[1])-int(options.mtwcuts.split(',')[0]))/100
+		mtw_center = (int(options.mtwcuts.split(',')[1])+int(options.mtwcuts.split(',')[0]))/2
+		var_array2 = ['mass_tw',35,500,4000]
 
-	Bstar.fitFunc = fitfunction
+		Bstar.fitFunc = fitfunction
 
-	Bstar.MakeEstFlexFit(var_array2,'mass_top',antitag, tag, center,TwoDFitFile)
+		# Same as MakeEstFlexFit except it reconstructs an Rp/f for the Mtw bin center
+		Bstar.MakeEstFlexFit(var_array2,'mass_top',antitag, tag, center,TwoDFitFile,mtw_center)
 
-	hbins = var_array2[1:]
+		hbins = var_array2[1:]
 
-	# the real value is the sum of the histograms in self.hists_MSR
-	V = TH1F("V2d", "", hbins[0],hbins[1], hbins[2])
-	for i in Bstar.hists_MSR:
-		V.Add(i,1.)
+		# the real value is the sum of the histograms in self.hists_MSR
+		V = TH1F("V2d", "", hbins[0],hbins[1], hbins[2])
+		for i in Bstar.hists_MSR:
+			V.Add(i,1.)
 
-	# the estimate is the sum of the histograms in self.hists_EST and self.hist_MSR_SUB
-	N = TH1F("QCD2d", "", hbins[0], hbins[1], hbins[2])
-	for i in Bstar.hists_EST:
-		N.Add(i,1.)
-	for i in Bstar.hists_MSR_SUB:
-		N.Add(i,1.)
-	for i in Bstar.hists_EST_SUB:
-		N.Add(i,-1.)
+		# the estimate is the sum of the histograms in self.hists_EST and self.hist_MSR_SUB
+		N = TH1F("QCD2d", "", hbins[0], hbins[1], hbins[2])
+		for i in Bstar.hists_EST:
+			N.Add(i,1.)
+		for i in Bstar.hists_MSR_SUB:
+			N.Add(i,1.)
+		for i in Bstar.hists_EST_SUB:
+			N.Add(i,-1.)
+		
+
+
+	# OLD CODE WE DON'T WANT TO RUN RIGHT NOW - CONTINUOUS 2D
+	if options.run2d == 'on':
+		# var we want to look at:
+		mtw_bins = (int(options.mtwcuts.split(',')[1])-int(options.mtwcuts.split(',')[0]))/100
+		var_array2 = ['mass_tw',35,500,4000]
+
+		Bstar.fitFunc = fitfunction
+
+		Bstar.MakeEstFlexFit(var_array2,'mass_top',antitag, tag, center,TwoDFitFile)
+
+		hbins = var_array2[1:]
+
+		# the real value is the sum of the histograms in self.hists_MSR
+		V = TH1F("V2d", "", hbins[0],hbins[1], hbins[2])
+		for i in Bstar.hists_MSR:
+			V.Add(i,1.)
+
+		# the estimate is the sum of the histograms in self.hists_EST and self.hist_MSR_SUB
+		N = TH1F("QCD2d", "", hbins[0], hbins[1], hbins[2])
+		for i in Bstar.hists_EST:
+			N.Add(i,1.)
+		for i in Bstar.hists_MSR_SUB:
+			N.Add(i,1.)
+		for i in Bstar.hists_EST_SUB:
+			N.Add(i,-1.)
 
 
 # ---- Lots of plot formatting --------------

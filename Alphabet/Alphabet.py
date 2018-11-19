@@ -82,6 +82,8 @@ class Alphabetizer:
 		else:
 			self.truthG = None
 
+		self.pG = self.G.Clone()
+
 		# Now do the fitting
 		self.fitFunc = fitFunc
 		# If we have something with an exponential
@@ -237,17 +239,18 @@ class Alphabetizer:
 			self.hists_EST_SUB_DN.append(temphistD)
 			self.hists_ATAG.append(temphistA)
 
-	def MakeEstFlexFit(self, var_array, rate_var, antitag, tag, center=0, twod=0):
+	def MakeEstFlexFit(self, var_array, rate_var, antitag, tag, center=0, twod=0, twodMode=0):
 	# makes an estimate in a region, based on an anti-tag region, of that variable in all dists
 	# var_array - array for what we are plotting 
 	# rate_var - var in which the rate was made
 	# twod - 0 if no 2D fit, 2D fit Tfile otherwise
+	# twodMode - center of Mtw bin if running twod and want to do discrete Rpf weighting, 0 otherwise
 		print self.fitFunc
 		if twod == 0:
-			fitString = CustomFit2String(rate_var,self.fitFunc,str(center),twod,self.Fit)
+			fitString = CustomFit2String(rate_var,self.fitFunc,str(center),twod,twodMode,self.Fit)
 			twodstring = ''
 		else:
-			fitString = CustomFit2String(rate_var,self.fitFunc,str(center),twod)
+			fitString = CustomFit2String(rate_var,self.fitFunc,str(center),twod,twodMode)
 			twodstring = '2d'
 
 		print 'Fit = ' + fitString
@@ -277,49 +280,8 @@ class Alphabetizer:
 			self.hists_EST_SUB.append(temphistN)
 			self.hists_ATAG.append(temphistA)
 
-	def MakeEstVariable(self, variable, binBoundaries, antitag, tag):
-		# makes an estimate in a region, based on an anti-tag region, of that variable in all dists
-		# self.Fit.MakeConvFactor(self.X, self.center)
-		self.hists_EST = []
-		self.hists_EST_SUB = []
-		self.hists_EST_UP = []
-		self.hists_EST_SUB_UP = []
-		self.hists_EST_DN = []
-		self.hists_EST_SUB_DN = []
-		self.hists_MSR = []
-		self.hists_MSR_SUB = []
-		self.hists_ATAG = []
-		for i in self.DP:
-			temphist = TH1F("Hist_VAL"+self.name+"_"+i.name, "", len(binBoundaries)-1, array('d',binBoundaries))
-			temphistN = TH1F("Hist_NOMINAL"+self.name+"_"+i.name, "", len(binBoundaries)-1, array('d',binBoundaries))
-			temphistU = TH1F("Hist_UP"+self.name+"_"+i.name, "", len(binBoundaries)-1, array('d',binBoundaries))
-			temphistD = TH1F("Hist_DOWN"+self.name+"_"+i.name, "", len(binBoundaries)-1, array('d',binBoundaries))
-			temphistA = TH1F("Hist_ATAG"+self.name+"_"+i.name, "", len(binBoundaries)-1, array('d',binBoundaries))
-			quickplot(i.File, i.Tree, temphist, variable, tag, i.weight)
-			quickplot(i.File, i.Tree, temphistN, variable, antitag, "("+i.weight+"*"+self.Fit.ConvFact+")")
-			quickplot(i.File, i.Tree, temphistU, variable, antitag, "("+i.weight+"*"+self.Fit.ConvFactUp+")")
-			quickplot(i.File, i.Tree, temphistD, variable, antitag, "("+i.weight+"*"+self.Fit.ConvFactDn+")")
-			quickplot(i.File, i.Tree, temphistA, variable, antitag, i.weight)
-			self.hists_MSR.append(temphist)
-			self.hists_EST.append(temphistN)
-			self.hists_EST_UP.append(temphistU)
-			self.hists_EST_DN.append(temphistD)
-			self.hists_ATAG.append(temphistA)
-		for i in self.DM:
-			temphist = TH1F("Hist_SUB_VAL"+self.name+"_"+i.name, "", len(binBoundaries)-1, array('d',binBoundaries))
-			temphistN = TH1F("Hist_SUB_NOMINAL"+self.name+"_"+i.name, "", len(binBoundaries)-1, array('d',binBoundaries))
-			temphistU = TH1F("Hist_SUB_UP"+self.name+"_"+i.name, "",len(binBoundaries)-1, array('d',binBoundaries))
-			temphistD = TH1F("Hist_SUB_DOWN"+self.name+"_"+i.name, "", len(binBoundaries)-1, array('d',binBoundaries))
-			quickplot(i.File, i.Tree, temphist, variable, tag, i.weight)
-			quickplot(i.File, i.Tree, temphistN, variable, antitag, "("+i.weight+"*"+self.Fit.ConvFact+")")
-			quickplot(i.File, i.Tree, temphistU, variable, antitag, "("+i.weight+"*"+self.Fit.ConvFactUp+")")
-			quickplot(i.File, i.Tree, temphistD, variable, antitag, "("+i.weight+"*"+self.Fit.ConvFactDn+")")
-			self.hists_MSR_SUB.append(temphist)
-			self.hists_EST_SUB.append(temphistN)
-			self.hists_EST_SUB_UP.append(temphistU)
-			self.hists_EST_SUB_DN.append(temphistD)
 	
-def CustomFit2String(var,fitFunc,center,twod,fit=False):
+def CustomFit2String(var,fitFunc,center,twod,twodMode=0,fit=False):
 	# Need to convert the fitFunc (of form '[0]+[1]*x...') to a string
 	# with the actual parameters in for [0],[1], etc and 'x' replace with our var
 	# twod - 0 if not running 2D fit, is the relevant 2D Tfile otherwise
@@ -373,13 +335,21 @@ def CustomFit2String(var,fitFunc,center,twod,fit=False):
 				paramFits[keyname] = []
 				for ipar in range(thisFit.GetNpar()):
 					paramFits[keyname].append(thisFit.GetParameter(ipar))
-
+		
 		# Now construct a 2D fit string to feed into MakeEstFlexFit() -- SPECIFIC TO PARAMETERS BEING FIT WITH A LINE
-		for ipar in range(nParams):
-			thisP0 = str(paramFits['p'+str(ipar)+'fit'][0])
-			thisP1 = str(paramFits['p'+str(ipar)+'fit'][1])
-			thisFittedParameterFunction = '('+thisP0+'+(mass_tw)*'+thisP1+')'
-			thisFitFunc = thisFitFunc.replace('['+str(ipar)+']',thisFittedParameterFunction)
+		if twodMode != 0:
+			for ipar in range(nParams):
+				thisP0 = str(paramFits['p'+str(ipar)+'fit'][0])
+				thisP1 = str(paramFits['p'+str(ipar)+'fit'][1])
+				thisFittedParameterFunction = '('+thisP0+'+('+twodMode+')*'+thisP1+')'
+				thisFitFunc = thisFitFunc.replace('['+str(ipar)+']',thisFittedParameterFunction)
+
+		else:
+			for ipar in range(nParams):
+				thisP0 = str(paramFits['p'+str(ipar)+'fit'][0])
+				thisP1 = str(paramFits['p'+str(ipar)+'fit'][1])
+				thisFittedParameterFunction = '('+thisP0+'+(mass_tw)*'+thisP1+')'
+				thisFitFunc = thisFitFunc.replace('['+str(ipar)+']',thisFittedParameterFunction)
 
 
 	return thisFitFunc+')'

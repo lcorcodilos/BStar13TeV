@@ -90,7 +90,7 @@ parser.add_option('-S', '--split', metavar='F', type='string', action='store',
 (options, args) = parser.parse_args()
 
 #------------------Jet energy mods--------------------------------
-# Postuncorr is used for softdrop mass, post is used for LV
+# Post2 is used for softdrop mass (JMR/S), post is used for LV (JER/S)
 mod = ''
 post = ''
 post2 = ''

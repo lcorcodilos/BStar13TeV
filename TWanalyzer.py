@@ -389,7 +389,7 @@ if options.Alphabet == 'on':
 	alphaString = 'alphabet_on'
 	MtwBinSides = []
 	# Have to grab the Mtw bins from the Alphabet output file
-	binsFile = TFile.Open(di+'Alphabet/results/'+options.cuts+'/MtwvsBkg_'+setstr+'.root')
+	binsFile = TFile.Open(di+'Alphabet/results/'+options.cuts+'/MtwvsBkg_'+setstr+'_mtfit_quad_cheat_narrow.root')
 	binsHist = binsFile.Get('binsHist')
 	for ibin in range(binsHist.GetXaxis().GetNbins()+1):
 		# Store the ints in a list

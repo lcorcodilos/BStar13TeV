@@ -12,6 +12,8 @@ from Plotting_Header import FindAndSetMax
 import optparse
 from optparse import OptionParser
 
+gStyle.SetOptStat(0)
+
 parser = OptionParser()
 
 parser.add_option('-s', '--set', metavar='F', type='string', action='store',
@@ -35,7 +37,7 @@ parser.add_option('-m', '--make', metavar='F', type='string', action='store',
 				dest          =       'make',
 				help          =       'Makes the alphabet Rpf files - On or off')
 parser.add_option('-C', '--cheat', metavar='F', type='string', action='store',
-				default       =       'off',
+				default       =       'narrow',
 				dest          =       'cheat',
 				help          =       'Turns the top mass blinding on and off and narrow')
 parser.add_option('-e', '--estimate', metavar='F', type='string', action='store',
@@ -50,7 +52,7 @@ parser.add_option('-d', '--fit2d', metavar='F', type='string', action='store',
 				default       =       'off',
 				dest          =       'fit2d',
 				help          =       'fit the fit parameters or or not')
-parser.add_option('-D', '--run2d', metavar='F', type='string', action='store',
+parser.add_option('-r', '--run2d', metavar='F', type='string', action='store',
 				default       =       'off',
 				dest          =       'run2d',
 				help          =       'run the 2D fit or or not')
@@ -80,6 +82,8 @@ if options.make == 'on':
 		print 'executing ' + s
 		subprocess.call([s], shell=True)
 
+
+
 # Save the Mtw binning for the analyzer
 myFile = TFile('results/'+options.cuts+'/MtwvsBkg_'+options.set+'_mtfit_'+options.fit+'_cheat_'+options.cheat+'.root','recreate')
 Mtwbins = [float(thisBin) for thisBin in cutList]
@@ -89,6 +93,14 @@ binsHist.Write()
 
 # --- Run the estimate (no error bars)--------
 if options.estimate == 'on':
+	# Book some 'total' histograms
+	totV = TH1F('FullMtwV','Alphabet estimate in full Mtw - '+options.cuts,35,500,4000)
+	totN = TH1F('FullMtwN','Alphabet estimate in full Mtw - '+options.cuts,35,500,4000)
+	totAT = TH1F('FullMtwAT','Alphabet estimate in full Mtw - '+options.cuts,35,500,4000)
+
+	cRpfs = TCanvas('cRpfs','cRpfs',800,700)
+	hRpfs = TH2F('hRpfs','Alphabet Pseudo-2D',33,700,4000,33,75,240,)
+
 	# Grab the outputed files
 	inFiles = []
 	for icut in range(len(cutList)-1):
@@ -103,13 +115,8 @@ if options.estimate == 'on':
 			else:
 				print 'File missing. Skipping results/'+options.cuts+'/Alphabet'+options.set+'_'+options.cuts+'_Mtw_'+cutList[icut]+'-'+cutList[icut+1]+'.root'		
 
-	# Book some 'total' histograms
-	totV = TH1F('FullMtwV','Alphabet estimate in full Mtw - '+options.cuts,35,500,4000)
-	totN = TH1F('FullMtwN','Alphabet estimate in full Mtw - '+options.cuts,35,500,4000)
-	totAT = TH1F('FullMtwAT','Alphabet estimate in full Mtw - '+options.cuts,35,500,4000)
+		file = inFiles[icut]
 
-
-	for file in inFiles:
 		thisV = file.Get('V')
 		totV.Add(thisV)
 
@@ -119,6 +126,25 @@ if options.estimate == 'on':
 		thisAT = file.Get('AT')
 		totAT.Add(thisAT)
 
+		thisRpf = file.Get('fit')
+
+		# this2DRpf = TF2('this2DRpf',thisRpf.GetFormula(),thisRpf.GetMinimumX(),thisRpf.GetMaximumX(),int(cutList[icut]),int(cutList[icut+1]))
+		xbinmin = (int(cutList[icut])-int(cutList[0]))/100 + 1
+		xbinmax = (int(cutList[icut+1])-int(cutList[0]))/100 + 1
+
+		for ybin in range(33):
+			for xbin in range(xbinmin,xbinmax):
+				hRpfs.SetBinContent(hRpfs.GetBin(xbin,ybin),thisRpf.Eval(hRpfs.GetYaxis().GetBinCenter(ybin)))
+
+	hRpfs.GetYaxis().SetTitle('M_{top}')
+	hRpfs.GetXaxis().SetTitle('M_{tW}')
+	hRpfs.GetZaxis().SetTitle('R_{P/F}')
+	hRpfs.GetYaxis().SetTitleOffset(2.0)
+	hRpfs.GetXaxis().SetTitleOffset(1.5)
+	hRpfs.GetZaxis().SetTitleOffset(1.5)
+
+	hRpfs.Draw('surf')
+	cRpfs.Print('results/'+options.cuts+'/Rpfs_'+options.set+'_'+options.cuts+'_fit_'+options.fit+'.png','png')
 
 	cmain = TCanvas('c1','c1',800,700)
 	cmain.cd()
@@ -150,7 +176,7 @@ if options.estimate == 'on':
 	cmain.Print('results/'+options.cuts+'/MtwvsBkg_'+options.set+'_'+options.qcdsample+'.png','png')
 
 # ------ 2D - Grab the fit parameters and put them in a TGraph -------
-if options.fit2d == 'on':
+if options.fit2d == 'on' and options.run2d == 'off':
 	# Make a nested dict to store the parameters
 	# {'low-high':
 	#	{'low':int lowval,
@@ -200,36 +226,15 @@ if options.fit2d == 'on':
 			# Get the error on the y value
 			ey.append(paramDict[band]['paramsE'][ipar])
 
-		# print x
-		# print y
-		# print ex
-		# print ey
-
 		thisTGraph = TGraphErrors(len(x),array('d',x),array('d',y),array('d',ex),array('d',ey))
 		thisTGraph.SetName('p'+str(ipar))
 		thisTGraph.SetTitle('p'+str(ipar))
 
 		# # Now we can fit each one of this
-		parFit = TF1('p'+str(ipar)+'fit','pol1',float(cutList[0]),float(cutList[-1]))#'[0]*exp([1]*x)+[2]'
-		# parFit.SetParameter(1,1200)
-		# parFit.SetParLimits(1,900,1300)
-		# parFit.SetParameter(2,200)
-		# parFit.SetParLimits(2,100,500)
-		# if ipar == 0:
-		# 	parFit.SetParameter(0,-0.1)
-		# 	parFit.SetParLimits(0,-0.2,0.001)
-		# 	parFit.SetParameter(3,-0.06)
-		# 	parFit.SetParLimits(3,-0.07,-0.04)
-		# elif ipar == 1:
-		# 	parFit.SetParameter(0,0.0012)
-		# 	parFit.SetParLimits(0,0.0001,0.002)
-		# 	parFit.SetParameter(3,0.0008)
-		# 	parFit.SetParLimits(3,0,0.001)
-			
+		parFit = TF1('p'+str(ipar)+'fit','pol1',float(cutList[0]),float(cutList[-1]))#'[0]*exp([1]*x)+[2]'			
 
 		parFit.SetLineColor(kBlue)
 		FitResults = thisTGraph.Fit(parFit)
-		# print 'Chi2 for p' +str(ipar)+': ' + str(parFit.GetChisquare())
 		parErrs = TGraphErrors(1000)
 		parErrs.SetName('parFitErrs')
 		for i in range(1000):
@@ -252,6 +257,71 @@ myFile.Close()
 
 # Now we do one final cross check and rerun the estimate but with the parameter fits
 if options.run2d == 'on':
-	print 'executing ' + 'python Bstar_Alphabet.py -D '+options.run2d+' -f '+options.fit+' -C ' + options.cheat+ ' -s '+options.set+' -c '+options.cuts+' -q '+options.qcdsample+' -e '+options.estimate+' -p '+cutList[0]+','+cutList[-1]
-	subprocess.call(['python Bstar_Alphabet.py -D '+options.run2d+' -f '+options.fit+' -C ' + options.cheat+ ' -s '+options.set+' -c '+options.cuts+' -q '+options.qcdsample+' -e '+options.estimate+' -p '+cutList[0]+','+cutList[-1]], shell=True)
+	print 'executing ' + 'python Bstar_Alphabet.py -r '+options.run2d+' -f '+options.fit+' -C ' + options.cheat+ ' -s '+options.set+' -c '+options.cuts+' -q '+options.qcdsample+' -e '+options.estimate+' -p '+cutList[0]+','+cutList[-1]
+	subprocess.call(['python Bstar_Alphabet.py -r '+options.run2d+' -f '+options.fit+' -C ' + options.cheat+ ' -s '+options.set+' -c '+options.cuts+' -q '+options.qcdsample+' -e '+options.estimate+' -p '+cutList[0]+','+cutList[-1]], shell=True)
 
+elif options.run2d == 'on_disc':
+	# Run alphabet for every 100 GeV in Mtw
+	mtwCutsPer100 = []
+	for i in range((int(cutList[-1])-int(cutList[0]))/100):
+		mtwCutsPer100.append([str(int(cutList[0])+i*100),str(int(cutList[0])+(i+1)*100)])
+
+	print mtwCutsPer100
+
+	commands1 = []
+	for ibin in range(len(mtwCutsPer100)):
+		commands1.append('python Bstar_Alphabet.py -r '+options.run2d+' -f '+options.fit+' -C ' + options.cheat+ ' -s '+options.set+' -c '+options.cuts+' -q '+options.qcdsample+' -e '+options.estimate+' -p '+mtwCutsPer100[ibin][0]+','+mtwCutsPer100[ibin][1])
+
+	for s in commands1 :
+		print 'executing ' + s
+		subprocess.call([s], shell=True)
+
+	inFiles = []
+	for ibin in range(len(mtwCutsPer100)):
+		if os.path.exists('results/'+options.cuts+'/Alphabet'+options.set+'_'+options.cuts+'_Mtw_'+mtwCutsPer100[ibin][0]+'-'+mtwCutsPer100[ibin][1]+'.root'):
+			inFiles.append(TFile.Open('results/'+options.cuts+'/Alphabet'+options.set+'_'+options.cuts+'_Mtw_'+mtwCutsPer100[ibin][0]+'-'+mtwCutsPer100[ibin][1]+'.root'))
+		else:
+			print 'File missing. Skipping results/'+options.cuts+'/Alphabet'+options.set+'_'+options.cuts+'_Mtw_'+mtwCutsPer100[ibin][0]+'-'+mtwCutsPer100[ibin][1]+'.root'		
+
+
+	# Book some 'total' histograms
+	totV2D = TH1F('FullMtwV_Disc2D','Alphabet estimate in full Mtw - '+options.cuts,35,500,4000)
+	totN2D = TH1F('FullMtwN_Disc2D','Alphabet estimate in full Mtw - '+options.cuts,35,500,4000)
+
+
+	for file in inFiles:
+		thisV2D = file.Get('V2d')
+		totV.Add(thisV2D)
+
+		thisN2D = file.Get('QCD2d')
+		totN.Add(thisN2D)
+
+
+	cmain = TCanvas('c1','c1',800,700)
+	cmain.cd()
+
+	main = ROOT.TPad("main", "main", 0, 0, 1, 1)
+
+	main.Draw()
+
+	main.cd()
+
+	leg2 = TLegend(0.75,0.75,0.95,0.95)
+	leg2.SetLineColor(0)
+	leg2.SetFillColor(0)
+
+	leg2.AddEntry(totV2D, "Data in tag region", "PL")
+	leg2.AddEntry(totN2D, "Data prediction", "F")
+
+	FindAndSetMax([totV2D,totN2D])
+
+	totV2D.SetLineColor(kBlack)
+	totN2D.SetFillColor(kYellow)
+	totN2D.SetLineColor(kBlack)
+
+
+	totN2D.Draw('Hist')
+	totV2D.Draw('same E0')
+	leg2.Draw()
+
+	cmain.Print('results/'+options.cuts+'/MtwvsBkg_Disc2D_'+options.set+'_'+options.qcdsample+'.png','png')

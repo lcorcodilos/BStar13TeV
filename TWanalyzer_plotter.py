@@ -575,12 +575,12 @@ for i in range(0, iterations):
 
 	if options.set == 'data':
 		DataBE.Add(TTmcBE,-1)
-		DataBE2d.Add(TTmcBE2d,-1)
 		DataBEl.Add(TTmcBE,-1)
 		DataBEh.Add(TTmcBE,-1)
 		if options.alphabet == 'off':
 			DataBEMmup.Add(TTmcBE,-1)
 			DataBEMmdown.Add(TTmcBE,-1)
+			DataBE2d.Add(TTmcBE2d,-1)
 			DataBE2dup.Add(TTmcBE2d,-1)
 			DataBE2ddown.Add(TTmcBE2d,-1)
 		
@@ -633,11 +633,11 @@ for i in range(0, iterations):
 		if ifile<=1:
 			schanst.Add(shists[ifile])	
 
-	# if options.set == "QCD":	
-	# 	DataFS.Add(TTmcFS[0])
-	# 	DataFS.Add(singletop)
+	if options.set == "QCD":	
+		DataFS.Add(TTmcFS[0])
+		DataFS.Add(singletop)
 
-	# st1.Add(singletop)
+	st1.Add(singletop)
 #output.cd()
 
 	if options.alphabet == 'off':
@@ -712,14 +712,14 @@ for i in range(0, iterations):
 
 
 
-	# DataTOTALBEL.Add(TTmcFS[0])
-	# DataTOTALBEH.Add(TTmcFS[0])
-	# DataTOTALBEL.Add(singletop)
-	# DataTOTALBEH.Add(singletop)
+	DataTOTALBEL.Add(TTmcFS[0])
+	DataTOTALBEH.Add(TTmcFS[0])
+	DataTOTALBEL.Add(singletop)
+	DataTOTALBEH.Add(singletop)
 
-	#for ifile in range(0,len(stop)):
-	#	DataTOTALBEL.Add(shists[ifile])
-	#	DataTOTALBEH.Add(shists[ifile])		
+	for ifile in range(0,len(stop)):
+		DataTOTALBEL.Add(shists[ifile])
+		DataTOTALBEH.Add(shists[ifile])		
 
 # -------- Systematic uncertainties ----------------------------------------------
 
@@ -1016,8 +1016,8 @@ for i in range(0, iterations):
 
 	centerqcd = DataTOTALBEL.Clone("centerqcd")
 	centerqcd.SetFillColor(kYellow)
-	# centerqcd.Add(TTmcFS[0],-1)
-	# centerqcd.Add(singletop,-1)
+	centerqcd.Add(TTmcFS[0],-1)
+	centerqcd.Add(singletop,-1)
 
 	DataTOTALBEL.SetLineColor(kBlue)
 	DataTOTALBEL.SetLineWidth(2)
@@ -1030,14 +1030,14 @@ for i in range(0, iterations):
 	centerqcd.SetLineColor(kYellow)
 
 	sigma.Add(DataTOTALBEL,-1)
-	# sigst.Add(singletop)
+	sigst.Add(singletop)
 
 
 	# ONLY WORKS WHEN RUN LOCALLY - I HAVE NO IDEA WHY
 	if kinVar[i] == 'Mt':
 		testHist = DataBE.Clone('testHist')
-		# testHist.Add(TTmcFS[0])
-		# testHist.Add(singletop)
+		testHist.Add(TTmcFS[0])
+		testHist.Add(singletop)
 		for b in range(1,testHist.GetNbinsX()+1):
 			thisBinError = sigma.GetBinContent(b)/2
 			testHist.SetBinError(b, thisBinError)
@@ -1049,12 +1049,12 @@ for i in range(0, iterations):
 
 
 		st1.Add(DataBE)
-		# st1.Add(TTmcFS[0])
+		st1.Add(TTmcFS[0])
 	else:
-		# st1.Add(TTmcFS[0])
+		st1.Add(TTmcFS[0])
 		st1.Add(DataBE)
 
-	# sigst.Add(TTmcFS[0])
+	sigst.Add(TTmcFS[0])
 	
 	sigst.Add(centerqcd)
 	sigst.Add(sigma)

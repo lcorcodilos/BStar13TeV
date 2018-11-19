@@ -11,10 +11,10 @@ import subprocess
 #	print 'executing ' + s
 #	subprocess.call( [s], shell=True )
 
-subprocess.call(["sed 's/-g on/-g on -A on/g' ana.listOfJobs > anaAlpha.listOfJobs"], shell=True)
-subprocess.call(["sed -i 's/ana.listOfJobs/anaAlpha.listOfJobs/g' grid_analyzer_sub.csh"], shell=True)
-subprocess.call(['sh grid_analyzer_sub.csh'], shell=True)
-WaitForJobs('anaAlpha')
+#subprocess.call(["sed 's/-g on/-g on -A on/g' ana.listOfJobs > anaAlpha.listOfJobs"], shell=True)
+#subprocess.call(["sed -i 's/ana.listOfJobs/anaAlpha.listOfJobs/g' grid_analyzer_sub.csh"], shell=True)
+#subprocess.call(['sh grid_analyzer_sub.csh'], shell=True)
+#WaitForJobs('anaAlpha')
 
 commands2 = []
 
